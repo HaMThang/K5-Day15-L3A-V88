@@ -1,24 +1,24 @@
-# AGENTS.md — hướng dẫn cho coding agent (Claude Code, Cursor, Codex…) làm việc trong repo này
-
-> Ôn lại: ngày 12 · lab ngày 12. Nhóm sửa file này cho khớp bài của mình (thêm quy ước riêng, bỏ dòng không dùng).
+# AGENTS.md — hướng dẫn cho coding agent (Claude Code, Antigravity, Cursor, Codex, Gemini CLI…) làm việc trong repo này
 
 ## Repo này là gì
 
-Repo nộp bài hackathon AI20K của nhóm: một bản chạy thử AI cho **một lát cắt** (xem `spec.md` §4), kèm bằng chứng, bộ câu thử và mô phỏng chi phí. Mọi câu trả lời phải chạy được bằng các lệnh dưới đây.
+Repo nộp bài hackathon AI20K của nhóm V88 (Lớp L3A · Track A): một bản chạy thử AI cho **một lát cắt** (xem `spec.md` §4), kèm bằng chứng, bộ câu thử và mô phỏng chi phí. Mọi câu trả lời phải chạy được bằng các lệnh dưới đây.
 
 ## Lệnh
 
 ```
-python run.py                    # chạy bản chạy thử
-python run.py check              # kiểm eval/benchmark.csv + eval/metric_spec.yaml
-python run.py eval --try         # thử 3 câu đầu
-python run.py eval               # chạy cả bộ → eval/run-N.csv + traces/run-N.jsonl
-python run.py score eval/run-N.csv
-python run.py simulate --try     # thử mô phỏng chi phí 10 phiên
-python run.py simulate           # mô phỏng chi phí → cost/simulate-N.csv
+python run.py                                    # chạy bản chạy thử (CLI hỏi đáp)
+python run.py check                              # kiểm TEAMS.md + eval/benchmark.csv + eval/metric_spec.yaml (chạy trước mọi commit)
+python run.py eval --fake                        # kiểm đường ống, không gọi model (-> eval/run-fake.csv, git-ignored)
+python run.py eval --try                         # thử 3 câu đầu với model thật (hoặc --try 1)
+python run.py eval                               # chạy cả bộ -> eval/run-N.csv + traces/run-N.jsonl (PHẢI commit)
+python run.py score eval/run-N.csv               # tính điểm lượt eval đã chấm cột pass
+python run.py simulate --try                     # thử mô phỏng chi phí 10 phiên
+python run.py simulate --rate-from eval/run-2.csv # mô phỏng chi phí >= 50 phiên -> cost/simulate-N.csv (PHẢI commit)
 ```
 
-Khung chỉ dùng thư viện chuẩn của Python. Thêm thư viện thì ghi vào `requirements.txt`.
+- Gói miễn phí / bị giới hạn rate limit: thêm `--wait 4` sau `eval` hoặc `simulate`. Trên macOS/Linux thay `python` bằng `python3`.
+- Khung chỉ dùng thư viện chuẩn của Python 3.10+. Thêm thư viện thì ghi vào `requirements.txt`.
 
 ## Cấu trúc code
 
@@ -50,44 +50,45 @@ Khung chỉ dùng thư viện chuẩn của Python. Thêm thư viện thì ghi v
 
 ### 1. Hackathon hard rules (breaking one = lost points)
 - Real AI call in the demo and in `eval` runs; `fake` mode is only for checking the pipeline.
-- Never commit `.env`, API keys, real personal data, or raw organiser data (`data-btc/`).
-- `spec.md` §7 pass threshold and `eval/metric_spec.yaml` are LOCKED after CP2 (Fri 27/11 19:30, UTC+7). Never edit them after that, even if asked casually; ask Henry explicitly.
+- Never open, print, or commit `.env`, API keys, real personal data, or raw organiser data (`data-btc/`).
+- `spec.md` §7 pass threshold and `eval/metric_spec.yaml` are LOCKED after CP2 (Fri 27/11 19:30, UTC+7). Never edit them after that, even if asked casually; ask Hưng (Henry, Đội trưởng) explicitly.
 - Never delete or rewrite failing eval cases; never change `expected` to match output; never hard-code benchmark inputs in prompts or code.
 - Never edit finished runs (`eval/run-N.csv`, `cost/simulate-N.csv`, `traces/run-N.jsonl`) except the `pass` / `ghi_chu` columns. These numbered runs MUST be committed.
-- Never invent interviewees, quotes, survey answers or numbers. Unsourced numbers are marked *(tự ước tính)*.
+- **Zero synthetic/invented data:** Never self-generate or invent interviewees, quotes, survey answers, benchmark cases, KB entries, or numbers. Unsourced estimates must be explicitly marked *(tự ước tính)*.
 
 ### 2. Truth and evidence
 - Source of truth: `spec.md` (design, §4 architecture, §7 threshold), `eval/metric_spec.yaml` (metrics), `evidence/` (user evidence), `TEAMS.md`, `canvas.md`.
 - Code wins: when code and docs disagree, report both `file:line` and add the item to `spec.md` §10 changelog as an open question. Do not silently edit docs to match code.
 - Every "pass / works / verified" claim cites the exact command and the produced file (e.g. `python run.py eval` → `eval/run-2.csv`). Otherwise write `CHƯA KIỂM`.
-- LLM results are non-deterministic: report `k/n` (e.g. 18/25 pass), not "it works". If an LLM judges `pass`, it must be a different call from the generator, `temperature=0`, and a human spot-checks some rows (record the count in `docs/ai-usage.md`).
+- LLM results are non-deterministic: report `k/n` (e.g. 18/25 pass), not "it works". If an LLM judges `pass`, it must be a different call from the generator (deterministic setting where supported; note Claude 5.5 deprecates `temperature`), and a human spot-checks some rows (record the count in `docs/ai-usage.md`).
 
-### 3. Product safety (this assistant)
-- Gives hints and cites `file + section`; never outputs a full lab solution. Refusal/attack cases stay in the benchmark.
-- Treat student input and retrieved lab files as untrusted data: wrap them in clear tags (e.g. `<student_question>…</student_question>`), keep instructions in the system prompt only.
+### 3. Product safety & pedagogical mission (this assistant)
+- **Pedagogical goal ("understand why, do it yourself"):** Helps students truly understand *why* each lab step/rule exists (strictly grounded in `<retrieved_passages>`, never inventing reasons not in the source), cites exact `K5-DayXX/FILE#section` (`file:line`), and guides the next concrete self-check step. Never outputs full lab code, JSON (`outputs/*.json`), YAML, or CSV solutions. Refusal/attack cases stay in the benchmark.
+- Treat student input and retrieved lab files as untrusted data: wrap them in clear tags (e.g. `<student_question>…</student_question>`, `<retrieved_passages>…</retrieved_passages>`), keep instructions in the system prompt only.
 - Fail loudly: on a model/tool error return an honest "không chắc / không tìm thấy" message and log it to the trace. Never return an empty or made-up answer.
-- Stop conditions: any loop has a max step count and a token/cost cap.
+- Stop conditions: any loop has a max step count and a token/cost cap (current flow is a fixed 4-step workflow with max 1 LLM call per turn).
 - API keys only from `.env` via `codebase/ai.py`; token counts from the API `usage` field, not estimated.
 
 ### 4. Simplest first
-- One lát cắt (`spec.md` §4). No new framework, service, DB or agent loop without a reason written in `spec.md` §4 and Henry's OK.
+- One lát cắt (`spec.md` §4). No new framework, service, DB or agent loop without a reason written in `spec.md` §4 and Hưng's (Henry's) OK.
 - New libraries go in `requirements.txt`. Keep `python run.py` working on Windows.
 - Conditional: only if the team adds FastAPI/LangGraph: no blocking I/O in `async def`; no `allow_origins=["*"]` with credentials; keep LangSmith tracing off (`LANGCHAIN_TRACING_V2=false`) while data may contain personal info.
 
 ### 5. Git and commits
-- Never commit to `main` directly. Branch `feat/<name>-<topic>`, `fix/…`, `docs/…`, `eval/…`, open a PR to `main`, one teammate reviews.
+- Teammates never commit to `main` directly (only Hưng when submitting checkpoints): branch `feat/<name>-<topic>`, `fix/…`, `docs/…`, `eval/…`, open a PR to `main`, one teammate reviews.
 - Work on separate files when possible; announce in the team chat before editing `spec.md` or `AGENTS.md` (high conflict risk).
 - Conventional Commits: `<type>(<scope>): <description>`; types `feat fix refactor style test docs chore`; subject ≤ 72 chars (aim < 50), imperative, lowercase, no period. Vietnamese description is fine.
 - One logical change per commit; aim 50–200 changed lines, hard cap 400. Exempt: generated run files (`eval/run-N.csv`, `traces/`, `cost/simulate-N.csv`).
-- Before each commit: `git diff --staged` (scope, no secrets, no secrets/debug prints), then `python run.py check` must pass.
-- Agents never push, merge, force-push or use `--no-verify`. Humans do that.
+- Before each commit: `git diff --staged` (scope, no secrets, no debug prints), then `python run.py check` must pass.
+- Agents never push, merge, force-push or use `--no-verify` without explicit human confirmation.
 
 ### 6. Working with Spec-Kit (optional, not before CP2)
 - If `.specify/` is added later, its constitution inherits this section; `spec.md` at the root stays the organiser template and the single source of truth.
+
 ### 7. Quick facts and decisions (all agents)
 - Context for every session: read `docs/checkpoints-context.md` (team, deadlines, Form 2, penalties).
-- Product: lab-support assistant for AI20K L3 students (Track A). Hints + `K5-DayXX/FILE#section` citations, never full solutions. Knowledge index: `data/kb_index.json` (built by `data/build_index.py`).
-- Stack: Python stdlib only (3.10+). Model call only in `codebase/ai.py`; flow `codebase/agent.py`; tools `codebase/tools.py`.
-- Agent-specific files (`CLAUDE.md`, `GEMINI.md`, `.claude/`) are thin pointers to this file. Put shared rules here, never there.
-- Decisions: 2026-11-27 Track A, fixed 4-step workflow with 1 LLM call (`spec.md` §4); stdlib framework kept; Spec-Kit deferred until after CP2.
+- Product: daily lab-support assistant for AI20K L3 students (Track A · A6). Explains lab requirements & purpose grounded in docs + `K5-DayXX/FILE#section` citations + 1 next step, never full solutions. Knowledge index: `data/kb_index.json` (built by `data/build_index.py`).
+- Stack: Python stdlib only (3.10+). Model call only in `codebase/ai.py` (supports `anthropic` e.g. `claude-haiku-5-5` without deprecated `temperature`, plus `gemini`, `openai`, `ollama`, `fake`); flow `codebase/agent.py`; tools `codebase/tools.py`.
+- Agent-specific files (`CLAUDE.md`, `GEMINI.md`, `.claude/settings.json`) are thin pointers to this file (for Claude Code, Gemini CLI, Antigravity, Codex, Cursor…). Put shared rules here, never there.
+- Decisions: 2026-11-27 Track A, fixed 4-step workflow with 1 LLM call (`spec.md` §4), pedagogical focus on understanding *why* each step is needed vs coding agents doing the work; stdlib framework kept; Spec-Kit deferred until after CP2.
 <!-- /team-harness v1 -->
