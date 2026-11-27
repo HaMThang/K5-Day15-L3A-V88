@@ -2,22 +2,18 @@
 
 > **File độc quyền sở hữu trên nhánh này:** `spec.md` (§0–§6, §8–§10 — **TUYỆT ĐỐI KHÔNG SỬA §7**), `canvas.md`, `README.md`, `slides/*` → `demo-slides.pdf`, `reflection/le-gia-hung.md`, `docs/tasks/hung.md`.
 
-## 1. Việc cần hoàn thành trước CP3 (09:15 sáng Thứ Bảy 28/11 — hạn nộp Form 2: 10:00)
-- [ ] **Cập nhật số bằng chứng thật vào `spec.md` §1–§2:** Sau khi Thắng chốt số người ngoài nhóm trên bộ khảo sát 52 phản hồi (`evidence/survey/results.csv` + `evidence/summary.md`) và ≥ 3 phỏng vấn (`P1..P3.md`), thay các chỗ *(tạm ước tính)* ở `spec.md` §1–§2 bằng con số thật có trỏ file nguồn.
-- [ ] **Dán link video 30s AI thật (từ Hoàng):** Kiểm tra link mở được ở cửa sổ ẩn danh (Incognito), cập nhật vào mục 7 cuối `README.md` và chuẩn bị điền vào Form 2.
-- [ ] **Ghi nhật ký thay đổi `spec.md` §10 (`CP2 → CP4`):** Mọi lần sửa `spec.md` sau 19:30 ngày 27/11 bắt buộc thêm 1 dòng `Thời điểm | Đổi gì | Vì sao`.
-- [ ] **Gom nhánh (09:15–09:45) & Nộp Form 2 CP3 (trước 10:00):**
-  1. Merge `feat/thang-evidence` → `main`
-  2. Merge `feat/hoang-codebase-demo` → `main`
-  3. Để Cương merge `main` vào `feat/cuong-eval-cost`, chạy `eval/run-1.csv` + chấm `pass` → merge `feat/cuong-eval-cost` → `main`
-  4. Merge `main` vào `feat/hung-spec-slides`, điền số chốt + changelog → merge vào `main` → `python run.py check` → push `main` → nộp Form 2 bằng MSSV `2A202603706`.
+## 1. Các hạng mục ĐÃ HOÀN TẤT trên nhánh `feat/hung-spec-slides`
+- [x] **Cập nhật số khảo sát thật 52 phản hồi học viên L3 vào `spec.md` §0–§2 & `canvas.md`:** Đã tích hợp đầy đủ tỉ lệ thật (`80,8%` mất ≥ 15 phút/mốc, `82,7%` mở ≥ 3 loại tài liệu, `67,3%` từng sót/hiểu nhầm, `55,8%` hỏi AI chung đầu tiên), trích dẫn nguyên văn (`results.csv` dòng 32, 51) và công thức Impact có nguồn (`462 × 15 × 15 = 1.732,5 giờ/tháng`, `3,75 giờ/người/tháng`).
+- [x] **Đồng bộ bảng giá Claude ở `spec.md` §8 & ghi đầy đủ `spec.md` §10 changelog** (kiểm chứng byte-for-byte **0 thay đổi** ở §7 so với commit khóa `41ff190`).
+- [x] **Dựng xong bộ Slide 8 trang chuẩn 16:9 (`slides/slides.html`) + script xuất PDF (`slides/build_pdf.py`) + xuất sẵn bản `demo-slides.pdf`** ở thư mục gốc repo (các ô chờ kết quả `run-1`, `run-2`, `simulate-1` gắn nhãn trung thực `CHƯA KIỂM`).
+- [x] **Viết sẵn câu 1 & câu 2 sát thực tế trong `reflection/le-gia-hung.md`** (câu 3 để chờ điền mã câu trượt thật từ `eval/run-1.csv`).
 
-## 2. Việc cần hoàn thành trước CP4 (13:45 chiều Thứ Bảy 28/11 — hạn nộp Form 2: 14:30)
-- [ ] Điền kết quả Lượt 1 → Lượt 2 (từ `eval/report.md` của Cương) vào `spec.md` §7 dòng *Kết quả* (**chỉ điền dòng Kết quả, tuyệt đối không chạm câu Chuẩn "đạt"**).
-- [ ] Điền số mô phỏng chi phí ≥ 50 phiên (từ `cost/cost-estimate.md` của Cương) vào `spec.md` §8.
-- [ ] Hoàn thiện 8 trang slide theo `slides/outline.md`, xuất ra file `demo-slides.pdf` đặt ngay thư mục gốc repo.
-- [ ] Nộp Form 2 CP4 trước **14:30** và tick đủ **4 Điều kiện cứng xét giải**.
-
-## 3. Trước khóa repo 23:59 Thứ Bảy 28/11
-- [ ] Tự viết 3–6 dòng/câu vào `reflection/le-gia-hung.md`.
-- [ ] Rà lại bảng `docs/ai-usage.md` và `spec.md` §10 changelog lần cuối.
+## 2. Việc còn lại khi đồng đội gửi kết quả (Sáng & Trưa Thứ Bảy 28/11)
+- [ ] **Trước CP3 (09:15–09:50 sáng 28/11):**
+  1. Nhận số xác nhận người ngoài nhóm + tóm tắt phỏng vấn `P1..P3` từ Thắng → cập nhật dòng phỏng vấn ở `spec.md` §1 (+ ghi 1 dòng §10 changelog).
+  2. Nhận link video 30s AI thật từ Hoàng → mở thử cửa sổ ẩn danh → dán vào dòng cuối `README.md` mục 7.
+  3. Merge theo thứ tự: `feat/thang-evidence` → `feat/hoang-codebase-demo` → `feat/cuong-eval-cost` (đã có `run-1.csv`) → `feat/hung-spec-slides` vào `main` → chạy `python run.py check` → push `main` → bấm nộp **Form 2 CP3 trước 10:00** bằng MSSV `2A202603706`.
+- [ ] **Trước CP4 (13:45–14:20 chiều 28/11):**
+  1. Điền con số kết quả Lượt 1 → Lượt 2 (từ `eval/report.md`) vào dòng *Kết quả* cuối `spec.md` §7 (**chỉ sửa dòng Kết quả, tuyệt đối không chạm câu Chuẩn "đạt"**) và lên Trang 5 của `slides/slides.html`.
+  2. Điền con số từ `cost/simulate-1-summary.md` vào `spec.md` §8 và Trang 6 của `slides/slides.html`, rồi chạy `python slides/build_pdf.py` (2 giây) để cập nhật `demo-slides.pdf`.
+  3. Điền nốt câu 3 trong `reflection/le-gia-hung.md` từ 1 câu trượt thật, ghi dòng changelog §10, push `main` và nộp **Form 2 CP4 trước 14:30** (tick đủ 4 Điều kiện cứng xét giải).
