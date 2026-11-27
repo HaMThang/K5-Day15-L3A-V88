@@ -6,7 +6,7 @@ Track: [x] A · [ ] B · [ ] C · [ ] D · [ ] E · [ ] F — bài toán: **A6 �
 Data đã dùng: (1) Nhật ký hành vi ẩn danh `data/preclass/` do BTC cấp (đếm tái lập bằng `evidence/count_preclass.py`, dữ liệu thô để ở `data-btc/` đã gitignore); (2) Thống kê cấu trúc 40 đơn vị bài lab L3 (`evidence/lab-checkpoints.csv`, `evidence/lab-checkpoint-analysis.md`) và chỉ mục 21 mục quy định có nguồn `file:dòng` của 12 bài Lab ngày Phase 1 K5 (`data/kb_index.json`, chỉ trích đoạn ngắn ≤ 60 từ, không commit nguyên tài liệu khoá).
 
 ## §0. Hiện tại việc này diễn ra thế nào *(guide 1.1)*
-- **Bối cảnh & nhịp làm lab thực tế của lớp L3:** Khoá học kéo dài **6 tuần**, tổng cộng **686 học viên lớp L3** (chia L3A và L3B). Trong **3 tuần đầu học liên tục của Phase 1, mỗi ngày học viên đều phải làm 1 bài lab** (trung bình `5,8` checkpoint/bài lab trong buổi ~240 phút); hạn nộp thường là **trước 23:59 cùng ngày**, hoặc **trước 11:59 trưa ngày hôm sau** nếu ca học lab bắt đầu lúc **16:00 (4h chiều)**.
+- **Bối cảnh & nhịp làm lab thực tế của lớp L3:** Khoá học kéo dài **6 tuần**, tổng cộng **686 học viên toàn khoá** (bảng xếp hạng XP toàn khoá trên cổng học, chụp 27/11: `evidence/sources/leaderboard-686.png`; số riêng L3A/L3B CHƯA KIỂM). Trong **3 tuần đầu học liên tục của Phase 1, mỗi ngày học viên đều phải làm 1 bài lab** (trung bình `5,8` checkpoint/bài lab trong buổi ~240 phút); hạn nộp thường là **trước 23:59 cùng ngày**, hoặc **trước 11:59 trưa ngày hôm sau** nếu ca học lab bắt đầu lúc **16:00 (4h chiều)**.
 - **Luồng hiện tại của học viên khi làm một bài lab (5 bước):**
   1. Học viên clone/mở thư mục bài lab của ngày hôm đó (chứa từ **3 đến 16 file `.md`** hướng dẫn).
   2. Mở `CHECKPOINTS.md` để xem thời lượng các mốc (`CP0..CP8` hoặc `M0..M5`), sau đó phải nhảy sang `CODE_LAB.md` / `GUIDE.md`, `RUBRIC.md`, `RULES.md` và `SUBMISSION.md` để tìm điều kiện qua mốc, file bắt buộc nộp và hạn khoá sổ thực tế.
@@ -16,7 +16,7 @@ Data đã dùng: (1) Nhật ký hành vi ẩn danh `data/preclass/` do BTC cấp
 - **Công cụ / AI đang được dùng cho việc này:** Trên trang `preclass-online.com` có khung chat trợ giảng AI gắn dưới bài giảng lý thuyết, nhưng log thực tế cho thấy chỉ `14/1.260` (`1,11%`) tin `chat_sent` gắn `lab_key`. Khi làm bài lab nhiều file trên máy, học viên thường dán lẻ từng file vào ChatGPT / Claude / Cursor cá nhân — *(tỉ lệ cụ thể và lỗi gặp phải đang được kiểm chứng qua phỏng vấn học viên L3 chiều 27/11)*.
 
 ## §1. Người dùng & bằng chứng *(guide 1.1, 1.2)*
-- **Người dùng chính:** Học viên khoá AI20K lớp L3 (**686 học viên**) đang làm các bài lab hàng ngày (đặc biệt trong 3 tuần đầu học liên tục Phase 1 mỗi ngày 1 bài lab và các bài lab Track tiếp theo trong lộ trình 6 tuần).
+- **Người dùng chính:** Học viên khoá AI20K lớp L3 (**686 học viên toàn khoá**, bảng xếp hạng XP cổng học 27/11) đang làm các bài lab hàng ngày (đặc biệt trong 3 tuần đầu học liên tục Phase 1 mỗi ngày 1 bài lab và các bài lab Track tiếp theo trong lộ trình 6 tuần).
 - **Việc họ cố làm xong:** Biết chính xác từng checkpoint của bài lab ngày hôm đó yêu cầu làm phần nào, nộp file gì, chạy lệnh kiểm tra nào và hạn nộp theo ca học là mấy giờ để hoàn thành đúng quy định.
 - **Hôm nay họ giải bằng gì, hỏng ở đâu, vì sao chưa bỏ:** Đọc dò thủ công qua nhiều tab `.md` hoặc dán lẻ file vào chatbot cá nhân. Hỏng ở chỗ: (1) mỗi thư mục lab có 3–16 file `.md` (riêng `CHECKPOINTS.md` của Day14 trỏ sang 6 file khác); (2) giờ mốc trong `CHECKPOINTS.md` dễ bị nhầm là hạn nộp, trong khi hạn thật nằm ở `SUBMISSION.md` hoặc theo ca học (`23:59` cùng ngày / `11:59` trưa hôm sau với ca `16:00`); (3) dán thiếu file vào chatbot chung khiến nó trả lời theo lộ trình gốc `CODE_LAB.md` thay vì bản rút gọn của lớp K5, hoặc viết luôn code giải bài làm học viên vi phạm quy tắc tự làm (như tự tạo JSON giả trong `outputs/`).
 - **Pain (KHÔNG chữ AI):** Học viên lớp L3 làm bài lab mỗi ngày phải mở đối chiếu cùng lúc từ 3 đến 16 file hướng dẫn (trong khi giờ mốc khác hạn nộp thật và có file ghi lệch nhau) để biết mỗi checkpoint cần nộp gì và làm thế nào là đạt, nên mất thời gian tìm kiếm và dễ bỏ sót yêu cầu, dẫn đến mất điểm bài lab.
@@ -29,11 +29,11 @@ Data đã dùng: (1) Nhật ký hành vi ẩn danh `data/preclass/` do BTC cấp
 
 | Hướng | Bao nhiêu người gặp | Bao nhiêu lần / tháng | Mỗi lần tốn gì | Impact / tháng | Làm kịp không | Chọn? |
 |---|---|---|---|---|---|---|
-| **1. Trợ lý tra cứu yêu cầu bài lab có nguồn (`file#mục`) & gợi ý bước tiếp** | **686 học viên L3** (sĩ số thực tế lớp L3) × tỉ lệ gặp *(tạm ước tính 70% = 480 người, cập nhật từ phỏng vấn ở CP3)* | **~15 bài lab / tháng** (nhịp mỗi ngày 1 bài lab liên tục trong 3 tuần đầu Phase 1, cộng lab Track trong 6 tuần) | ~10 phút mở đối chiếu 3–16 file `.md` mỗi bài lab *(tự ước tính, kiểm lại qua phỏng vấn)* + rủi ro làm nhầm phần / nộp sót file | `480 × 15 × 10 = 72.000 phút` (**1.200 giờ/tháng**, tức ~150 phút/người gặp/tháng) *(tự ước tính cho tới khi chốt phỏng vấn CP3)* | **Có** (workflow 4 bước gọn trên chỉ mục bài lab chuẩn hoá) | **Chọn** |
+| **1. Trợ lý tra cứu yêu cầu bài lab có nguồn (`file#mục`) & gợi ý bước tiếp** | **686 học viên toàn khoá** (bảng xếp hạng XP cổng học, 27/11) × tỉ lệ gặp *(tạm ước tính 70% = 480 người, cập nhật từ phỏng vấn ở CP3)* | **~15 bài lab / tháng** (nhịp mỗi ngày 1 bài lab liên tục trong 3 tuần đầu Phase 1, cộng lab Track trong 6 tuần) | ~10 phút mở đối chiếu 3–16 file `.md` mỗi bài lab *(tự ước tính, kiểm lại qua phỏng vấn)* + rủi ro làm nhầm phần / nộp sót file | `480 × 15 × 10 = 72.000 phút` (**1.200 giờ/tháng**, tức ~150 phút/người gặp/tháng) *(tự ước tính cho tới khi chốt phỏng vấn CP3)* | **Có** (workflow 4 bước gọn trên chỉ mục bài lab chuẩn hoá) | **Chọn** |
 | **2. Trợ lý debug sửa code trực tiếp cho từng bài lab hàng ngày** | ~480 học viên L3 *(tự ước tính)* | ~15 bài lab / tháng | ~20 phút gỡ lỗi code *(tự ước tính)* | ~2.400 giờ/tháng *(tự ước tính)* | **Không kịp** (phải nối bộ test/môi trường của hàng chục bài lab khác nhau và rất dễ biến thành viết code hộ) | Loại |
 | **3. Bảng tổng hợp câu hỏi lặp theo ca cho Lab Coach / TA** | ~15–20 Lab Coach & TA *(tự ước tính)* | ~20 ca lab / tháng | ~15 phút gom câu hỏi cuối ca *(tự ước tính)* | ~75–100 giờ/tháng *(tự ước tính)* | Có, nhưng người dùng trực tiếp là Coach và tổng thời gian tiết kiệm nhỏ hơn nhiều so với 686 học viên | Loại (để hướng mở rộng 1 tuần) |
 
-- **Impact / tháng** của hướng chọn = `480 người gặp *(tự ước tính = 70% của 686 học viên L3)* × 15 bài lab/tháng *(theo nhịp mỗi ngày 1 bài lab trong 3 tuần liên tục Phase 1)* × 10 phút/bài *(tự ước tính, kiểm qua phỏng vấn)* = 72.000 phút/tháng (1.200 giờ/tháng; trung bình 150 phút = 2,5 giờ/người gặp/tháng)`.
+- **Impact / tháng** của hướng chọn = `480 người gặp *(tự ước tính = 70% của 686 học viên toàn khoá)* × 15 bài lab/tháng *(theo nhịp mỗi ngày 1 bài lab trong 3 tuần liên tục Phase 1)* × 10 phút/bài *(tự ước tính, kiểm qua phỏng vấn)* = 72.000 phút/tháng (1.200 giờ/tháng; trung bình 150 phút = 2,5 giờ/người gặp/tháng)`.
 - **Hướng ĐÃ LOẠI + vì sao:**
   - *Hướng 2 (Debug sửa code từng bài lab):* Ranh giới giữa gợi ý sửa lỗi và viết code làm hộ rất mỏng (vi phạm mục tiêu tự học của khoá), đồng thời mỗi ngày lab có codebase riêng nên không khả thi làm sâu trong lát cắt đầu tiên.
   - *Hướng 3 (Gom câu hỏi lặp cho Lab Coach):* Không giúp học viên tự gỡ vướng ngay lúc 23:00 tối hoặc sáng hôm sau trước hạn nộp `23:59` / `11:59`.
@@ -127,7 +127,7 @@ flowchart TD
 
 ## §8. Chi phí khi dùng thật *(guide 4.2 — hoàn thiện tại CP4)*
 - Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `CHƯA KIỂM` (chạy `python run.py simulate` ≥ 50 phiên sau lượt 2).
-- Chi phí / task thành công: `CHƯA KIỂM` · Chi phí / tháng ở quy mô thật (thấp `300` · cơ sở **`686` học viên L3** · cao `1.000` học viên toàn khoá): `CHƯA KIỂM` → chi tiết `cost/cost-estimate.md`.
+- Chi phí / task thành công: `CHƯA KIỂM` · Chi phí / tháng ở quy mô thật (thấp `300` · cơ sở **`686` học viên toàn khoá** · cao `1.000` học viên *(tự ước tính)*): `CHƯA KIỂM` → chi tiết `cost/cost-estimate.md`.
 - So với impact / người / tháng (§2): đối chiếu sau khi có số đo token thật ở CP4.
 
 ## §9. Rủi ro & an toàn

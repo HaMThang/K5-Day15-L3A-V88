@@ -5,7 +5,7 @@ Bảng số liệu chi tiết của **40 đơn vị bài lab** (không tính hac
 
 ## 1. Phạm vi khoá học, nhịp làm lab và cách đếm
 
-- **Quy mô và thời lượng khoá học:** Lớp L3 có tổng cộng **686 học viên** (chia L3A và L3B). Lộ trình học tổng thể kéo dài **6 tuần**, trong đó **3 tuần đầu học liên tục Phase 1 (mỗi ngày đều làm bài lab)**, tiếp theo là giai đoạn học chuyên sâu theo các Track.
+- **Quy mô và thời lượng khoá học:** Toàn khoá có tổng cộng **686 học viên** (bảng xếp hạng XP toàn khoá trên cổng học, chụp 27/11: `sources/leaderboard-686.png`; số riêng L3A/L3B CHƯA KIỂM). Lộ trình học tổng thể kéo dài **6 tuần**, trong đó **3 tuần đầu học liên tục Phase 1 (mỗi ngày đều làm bài lab)**, tiếp theo là giai đoạn học chuyên sâu theo các Track.
 - **Nhịp nộp bài lab thực tế:** Mỗi ngày học đều có bài lab đi kèm nhiều mốc tự kiểm (checkpoint). Hạn nộp bài lab thường rơi vào **trước 23:59 cùng ngày**, hoặc **11:59 trưa ngày hôm sau** nếu ca học lab diễn ra lúc **16:00 (4h chiều)**.
 - **Nguồn tài liệu cấu trúc bài lab đã kiểm đếm:**
   - Phase 1 (Nền tảng L3): các bài lab ngày của K3, K4, K5 (riêng K5 gồm 12 bài lab ngày có bảng checkpoint rõ từ `Day01` đến `Day14`).
