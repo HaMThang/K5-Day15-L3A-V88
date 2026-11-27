@@ -69,7 +69,7 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 | File | Viết gì | Bước guide |
 |---|---|---|
-| `codebase/app.py` | Giao diện CLI tương tác: gắn thư mục bài lab vừa clone (`/repo <path>`) và chuyển nhanh 3 mức `/1` Giải thích · `/2` Gợi ý · `/3` Cầm tay chỉ việc | 3.2 |
+| `codebase/app.py` | Giao diện CLI (`python run.py`) & Web UI cục bộ (`python codebase/app.py --web`): gắn thư mục bài lab vừa clone và chuyển nhanh 3 mức `/1` Giải thích · `/2` Gợi ý · `/3` Cầm tay chỉ việc | 3.2 |
 | `codebase/agent.py` | `answer(text)` — workflow cố định 4 bước khớp sơ đồ `spec.md` §4 (điều phối 3 mức sư phạm + hậu kiểm Read-Only) | 3.2 |
 | `codebase/tools.py` | 4 công cụ Read-Only có `@tool`: `scan_lab_codebase`, `search_docs`, `get_section`, `draft_coach_question` | 2.2, 3.2 |
 | `codebase/ai.py` | `call_model(system, user)` — chỗ duy nhất gọi model (`anthropic` / `gemini` / `openai` / `ollama` / `fake`) | 3.3 |
@@ -123,5 +123,5 @@ Nhóm dùng **Claude** và **Antigravity (Gemini)** để tổng hợp tài li�
 | 4 | Bản chạy thử làm trọn lát cắt | `codebase/` · lệnh ở mục "Lệnh" |
 | 5 | Định nghĩa "tốt" + bộ câu thử | `data/DATA_CARD.md` · `eval/` |
 | 6 | Mô phỏng chi phí khi dùng thật | `cost/` |
-| 7 | Slide + demo + video dự phòng | slide trong repo (PDF, PPTX, HTML…) hoặc link slide ở form CP4 · link video: ____ |
+| 7 | Slide + demo + video dự phòng | `demo-slides.pdf` (`slides/slides.html`) · [Video 30s AI thật (CP3)](https://drive.google.com/file/d/1Y3YC_Mc-mHNwg-iQ-jhyK_tjjcyo7OJC/view) |
 | + | *Bonus:* người dùng thử | `validation/log.md` |
