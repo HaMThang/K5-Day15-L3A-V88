@@ -18,13 +18,15 @@ python run.py eval --try 3
 Kết quả thử kết nối: `python run.py eval --try 3` → `eval/run-try.csv` và `traces/run-try.jsonl`. Cả 3 câu trả token vào và ra với `claude-haiku-5-5`.
 
 ## 2. Việc cần hoàn thành trước CP3 (09:00 sáng Thứ Bảy 28/11 — hạn nộp Form 2: 10:00)
+
+Xem [bản bàn giao CP3 và CP4](ban-giao-hoang.md) để lấy link nộp, lệnh chạy và thứ tự phối hợp.
 - [x] **Quay và đăng video 30 giây AI thật chạy (BẮT BUỘC CP3):**
   - Mở `python run.py` (hoặc Web UI nếu tích hợp xong), gõ 1 câu hỏi thật (ví dụ câu xung đột lộ trình Day14 `B08` hoặc chuyển mức `/3` hỏi hướng dẫn sửa lỗi), quay màn hình thấy rõ câu trả lời sinh ra kèm dòng `(model: claude-haiku-5-5 · gọi model 1 lần · công cụ 2 lần · token vào ... / ra ...)`.
   - Upload lên YouTube chế độ **Không công khai (Unlisted)** hoặc Google Drive (*Anyone with the link can view*), mở thử bằng **cửa sổ ẩn danh (Incognito)** rồi gửi link cho Hưng trước **09:00 sáng 28/11**.
   - [Video CP3 của V88](https://drive.google.com/file/d/1Y3YC_Mc-mHNwg-iQ-jhyK_tjjcyo7OJC/view) dài đúng 30 giây. Quyền Người xem cho ai có link, đã phát thử trong Chrome ẩn danh. Demo Day14 gọi model 1 lần, công cụ 5 lần, với 5.844 token vào và 1.067 token ra.
 - [ ] Gửi link video cho Hưng trước **09:00 sáng 28/11**.
 - [x] **(Tuỳ chọn nhưng ăn điểm cao) Nối `codebase/web/` vào `codebase/app.py`:**
-  - Thư mục `codebase/web/` (`index.html`, `app.js`, `style.css`) đã được chép sẵn sang nhánh này. Bạn có thể thêm tuỳ chọn khởi chạy `http.server` chuẩn của Python trong `codebase/app.py` (ví dụ khi chạy `python codebase/app.py --web`) gọi vào `answer(text)` kèm chọn 3 mức `giai_thich | goi_y | cam_tay` và ô nhập đường dẫn `repo_path`. Giữ mặc định `python run.py` luôn hoạt động mượt trên Windows/macOS.
+  - Chạy `python codebase/app.py --web` rồi mở `http://127.0.0.1:8000/`. Web gọi `answer()`, có ba mức hướng dẫn và ô đường dẫn thư mục lab. Chạy `python run.py` để mở CLI.
 - [ ] **Ghim mã phiên bản / hash tài liệu trong `data/build_index.py` & `data/kb_index.json`:**
   - Bổ sung trường `doc_sha256` ngắn (8 ký tự) cho mỗi mục trong `kb_index.json` để xử lý rủi ro tài liệu lab bị sửa đổi giữa chừng.
   - `python data/build_index.py` → `data/kb_index.json` đã tạo hash cho 21 mục. Một mục dùng file gốc và 20 mục dùng bản trích. Cần bộ tài liệu gốc để chạy lại với `--source-root <thư_mục_chứa_Lab>` và ghim hash file nguồn cho các mục còn lại.
@@ -34,4 +36,5 @@ Kết quả thử kết nối: `python run.py eval --try 3` → `eval/run-try.cs
 - [ ] Cùng Cương đọc các câu bị trượt ở `eval/run-1.csv`, gom nhóm lỗi và thực hiện **đúng 1 đợt cải tiến có chủ đích** trong `codebase/agent.py` / `codebase/tools.py` nhắm vào nhóm lỗi đau nhất với người dùng, sau đó merge để Cương chạy `eval/run-2.csv`.
 
 ## 4. Trước khóa repo 23:59 Thứ Bảy 28/11
-- [ ] Tự viết 3–6 dòng/câu vào `reflection/nguyen-the-hoang.md` (phải nắm rõ luồng 4 bước, BM25 kéo `conflicts_with`, và 3 chốt chặn hậu kiểm để trả lời Q&A).
+- [x] Điền ba mục trong `reflection/nguyen-the-hoang.md`, commit `7287516`.
+- [ ] Bổ sung mục 3 bằng câu trượt đã chấm và kết quả sau cải tiến khi có hai lượt eval chính thức.
