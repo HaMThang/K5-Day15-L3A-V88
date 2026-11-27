@@ -6,7 +6,8 @@ const status = document.querySelector('#status');
 const conversation = document.querySelector('#conversation');
 const reset = document.querySelector('#reset');
 const examples = document.querySelector('.examples');
-let previousQuestion = '';
+const mode = document.querySelector('#mode');
+const repoPath = document.querySelector('#repo-path');
 
 function addMessage(label, text, role = 'assistant') {
   const message = document.createElement('div');
@@ -90,7 +91,6 @@ document.querySelectorAll('.example').forEach(button => button.addEventListener(
 reset.addEventListener('click', () => {
   conversation.replaceChildren();
   addMessage('✳ LAB COMPASS', 'Chào bạn! Hãy cho mình biết ngày lab và checkpoint bạn đang vướng nhé.');
-  previousQuestion = '';
   question.value = '';
   question.dispatchEvent(new Event('input'));
   status.textContent = '';
@@ -110,13 +110,17 @@ form.addEventListener('submit', async event => {
   status.textContent = 'Đang tìm tài liệu và chuẩn bị câu trả lời…';
   examples.hidden = true;
   try {
-    const response = await fetch('/api/answer', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({question: current, previous_question: previousQuestion})});
+    const response = await fetch('/api/answer', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question: current, mode: mode.value, repo_path: repoPath.value}),
+    });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Không thể tra cứu lúc này.');
     addResponse(data.output);
     const details = document.createElement('div');
     details.className = 'conversation-meta';
-    details.textContent = data.fake ? 'Chế độ giả · chưa dùng AI thật.' : 'Model: ' + (data.model || 'không xác định') + ' · Hãy đối chiếu nguồn trước khi thực hiện.';
+    details.textContent = `Model: ${data.model || '—'} · gọi model ${data.model_calls} lần · công cụ ${data.tool_calls} lần · token vào ${data.tokens_in} / ra ${data.tokens_out}`;
     const copy = document.createElement('button');
     copy.type = 'button';
     copy.className = 'copy';
@@ -130,7 +134,6 @@ form.addEventListener('submit', async event => {
     });
     details.append(' ', copy);
     conversation.append(details);
-    previousQuestion = current;
     status.textContent = '';
   } catch (error) {
     addMessage('✳ LAB COMPASS', error.message || 'Không thể kết nối. Hãy thử lại.');

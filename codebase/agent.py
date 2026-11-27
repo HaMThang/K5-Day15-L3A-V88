@@ -238,9 +238,12 @@ def _fallback_lab_code(signals_text: str, valid_map: dict[str, str], repo_path: 
     return next(iter(valid_map.values()), preferred)
 
 
-def answer(text: str) -> dict:
+def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
     raw_input = (text or "").strip()
-    mode, repo_path, clean_input = _extract_metadata(raw_input)
+    if mode is None:
+        mode, repo_path, clean_input = _extract_metadata(raw_input)
+    else:
+        clean_input = raw_input
     if not clean_input:
         note("dừng: đầu vào rỗng")
         return {

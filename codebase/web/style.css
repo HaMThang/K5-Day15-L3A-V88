@@ -44,3 +44,7 @@ button:focus-visible,textarea:focus-visible{outline:2px solid #8be1ff;outline-of
 .response-part{white-space:pre-wrap}
 .response-part + .response-part{border-top:1px solid #315174;padding-top:12px}
 .response-source{color:#a8dcff;font-size:12px}
+.guidance-settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.guidance-settings label{display:block;margin-bottom:5px}
+.guidance-settings input,.guidance-settings select{box-sizing:border-box;width:100%;font:inherit;padding:9px;border-radius:8px;border:1px solid #315174;background:#152e50;color:#edf5ff}
+.guidance-settings input:focus-visible,.guidance-settings select:focus-visible{outline:2px solid #8be1ff;outline-offset:2px}
