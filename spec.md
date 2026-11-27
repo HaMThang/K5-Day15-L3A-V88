@@ -27,18 +27,18 @@ Data đã dùng: (1) Nhật ký hành vi ẩn danh `data/preclass/` do BTC cấp
 
 | Hướng | Bao nhiêu người gặp | Bao nhiêu lần / tháng | Mỗi lần tốn gì | Impact / tháng | Làm kịp không | Chọn? |
 |---|---|---|---|---|---|---|
-| **1. Trợ lý tra cứu yêu cầu bài lab có nguồn (`file#mục`) & gợi ý bước tiếp** | **686 học viên toàn khoá** (bảng xếp hạng XP cổng học, 27/11) × tỉ lệ gặp *(tạm ước tính 70% = 480 người, cập nhật từ phỏng vấn ở CP3)* | **~15 bài lab / tháng** (nhịp mỗi ngày 1 bài lab liên tục trong 3 tuần đầu Phase 1, cộng lab Track trong 6 tuần) | ~10 phút mở đối chiếu 3–16 file `.md` mỗi bài lab *(tự ước tính, kiểm lại qua phỏng vấn)* + rủi ro làm nhầm phần / nộp sót file | `480 × 15 × 10 = 72.000 phút` (**1.200 giờ/tháng**, tức ~150 phút/người gặp/tháng) *(tự ước tính cho tới khi chốt phỏng vấn CP3)* | **Có** (workflow 4 bước gọn trên chỉ mục bài lab chuẩn hoá) | **Chọn** |
-| **2. Trợ lý debug sửa code trực tiếp cho từng bài lab hàng ngày** | ~480 học viên L3 *(tự ước tính)* | ~15 bài lab / tháng | ~20 phút gỡ lỗi code *(tự ước tính)* | ~2.400 giờ/tháng *(tự ước tính)* | **Không kịp** (phải nối bộ test/môi trường của hàng chục bài lab khác nhau và rất dễ biến thành viết code hộ) | Loại |
+| **1. Trợ lý đọc tĩnh codebase & hướng dẫn làm lab 3 mức sư phạm (`Giải thích` · `Gợi ý` · `Cầm tay chỉ việc`)** | **686 học viên toàn khoá** (bảng xếp hạng XP cổng học, 27/11) × tỉ lệ gặp *(tạm ước tính 70% = 480 người, cập nhật từ phỏng vấn ở CP3)* | **~15 bài lab / tháng** (nhịp mỗi ngày 1 bài lab liên tục trong 3 tuần đầu Phase 1, cộng lab Track trong 6 tuần) | ~10 phút mở đối chiếu 3–16 file `.md`/code khung mỗi bài lab *(tự ước tính, kiểm lại qua phỏng vấn)* + rủi ro làm đối phó / lệch đề | `480 × 15 × 10 = 72.000 phút` (**1.200 giờ/tháng**, tức ~150 phút/người gặp/tháng) *(tự ước tính cho tới khi chốt phỏng vấn CP3)* | **Có** (workflow cố định 4 bước Read-Only, 0 chạy lệnh, 1 LLM call/lượt) | **Chọn** |
+| **2. Coding agent tự động cài môi trường, chạy lệnh & sửa thẳng file code trên repo lab** | ~480 học viên L3 *(tự ước tính)* | ~15 bài lab / tháng | ~20 phút gỡ lỗi code *(tự ước tính)* | ~2.400 giờ/tháng *(tự ước tính)* | **Loại vì phản sư phạm** (làm hộ khiến người học mất khả năng hiểu *tại sao* cần bước đó, tốn nhiều vòng lặp token và rủi ro hỏng môi trường máy học viên) | Loại |
 | **3. Bảng tổng hợp câu hỏi lặp theo ca cho Lab Coach / TA** | ~15–20 Lab Coach & TA *(tự ước tính)* | ~20 ca lab / tháng | ~15 phút gom câu hỏi cuối ca *(tự ước tính)* | ~75–100 giờ/tháng *(tự ước tính)* | Có, nhưng người dùng trực tiếp là Coach và tổng thời gian tiết kiệm nhỏ hơn nhiều so với 686 học viên | Loại (để hướng mở rộng 1 tuần) |
 
 - **Impact / tháng** của hướng chọn = `480 người gặp *(tự ước tính = 70% của 686 học viên toàn khoá)* × 15 bài lab/tháng *(theo nhịp mỗi ngày 1 bài lab trong 3 tuần liên tục Phase 1)* × 10 phút/bài *(tự ước tính, kiểm qua phỏng vấn)* = 72.000 phút/tháng (1.200 giờ/tháng; trung bình 150 phút = 2,5 giờ/người gặp/tháng)`.
 - **Hướng ĐÃ LOẠI + vì sao:**
-  - *Hướng 2 (Debug sửa code từng bài lab):* Ranh giới giữa gợi ý sửa lỗi và viết code làm hộ rất mỏng (vi phạm mục tiêu tự học của khoá), đồng thời mỗi ngày lab có codebase riêng nên không khả thi làm sâu trong lát cắt đầu tiên.
+  - *Hướng 2 (Coding agent tự động cài môi trường, chạy lệnh & sửa thẳng file code):* Nhảy thẳng từ đề sang lời giải làm đứt mắt xích tư duy *tại sao* bài lab đặt ra bước đó (phản mục tiêu tự học của khoá), đồng thời tốn nhiều vòng lặp token và tiềm ẩn rủi ro sửa hỏng môi trường máy học viên.
   - *Hướng 3 (Gom câu hỏi lặp cho Lab Coach):* Không giúp học viên tự gỡ vướng ngay lúc 23:00 tối hoặc sáng hôm sau trước hạn nộp `23:59` / `11:59`.
 - **Số lần / tháng của từng kiểu người dùng (dùng cho persona ở §8, bám sát nhịp làm lab mỗi ngày):**
-  - `tra_dung_han` (50% người dùng): 12 phiên/tháng × 1 lượt/phiên *(tự ước tính — mở tra nhanh yêu cầu nộp trước hạn 23:59 hoặc 11:59 trưa hôm sau)*.
-  - `tra_trong_gio_lab` (35% người dùng): 15 phiên/tháng × 3 lượt/phiên *(tự ước tính — hỏi đối chiếu các CP trong buổi lab 240 phút mỗi ngày)*.
-  - `tra_ky_nhieu_file` (15% người dùng): 20 phiên/tháng × 5 lượt/phiên *(tự ước tính — rà kỹ xung đột giữa `CHECKPOINTS.md`, `CODE_LAB.md`, `RUBRIC.md`, `SUBMISSION.md`)*.
+  - `deadline_checker` (50% người dùng): 12 phiên/tháng × 1 lượt/phiên *(tự ước tính — mở tra nhanh yêu cầu nộp trước hạn 23:59 hoặc 11:59 trưa hôm sau)*.
+  - `in_lab_lookup` (35% người dùng): 15 phiên/tháng × 3 lượt/phiên *(tự ước tính — hỏi đối chiếu các CP trong buổi lab 240 phút mỗi ngày)*.
+  - `multi_file_reviewer` (15% người dùng): 20 phiên/tháng × 5 lượt/phiên *(tự ước tính — rà kỹ xung đột giữa `CHECKPOINTS.md`, `CODE_LAB.md`, `RUBRIC.md`, `SUBMISSION.md`)*.
 
 ## §3. Giải pháp tương tự
 - **Coding agents mở trực tiếp trong thư mục bài lab (Claude Code, Cursor, GitHub Copilot, Codex…):** *Đáng học:* đọc trực tiếp các file hướng dẫn ngay trong thư mục làm bài · *Đáng né:* tối ưu cho *đầu ra* ("làm xong bài nhanh nhất") nên thường nhảy thẳng sang viết code lời giải hoặc tạo hộ file kết quả (`outputs/*.json`), làm người học bỏ qua mắt xích tư duy *tại sao* bài lab cần bước đó (thử nghiệm của Bastani et al., PNAS 2025 cho thấy AI làm hộ giúp điểm bài luyện tăng ngắn hạn nhưng làm năng lực tự làm tụt 17% khi bỏ công cụ); file luật cục bộ (`CLAUDE.md`, `.cursorrules`) nằm phía máy học viên nên dễ bị sửa/tắt lúc sát hạn nộp; đọc cục bộ vài file đầu cũng dễ sót cặp file lệch nhau (`CODE_LAB.md` vs `CHECKPOINTS.md` ở Day14) · *Mình khác gì:* tối ưu cho *năng lực người học* — xoá bỏ "ma sát xấu" (mất giờ dò 3–16 file `.md`, đọc lệch bản đề) nhưng giữ nguyên "ma sát có ích" (khóa cứng hậu kiểm không sinh code/JSON hộ, giải thích mục đích/quy định bám sát dòng tài liệu gốc và dẫn đúng 1 bước tiếp theo để người học hiểu bản chất và tự tay làm).
@@ -47,55 +47,68 @@ Data đã dùng: (1) Nhật ký hành vi ẩn danh `data/preclass/` do BTC cấp
 - **ChatGPT Study Mode (OpenAI, 07/2025):** *Đáng học:* gợi ý bước tiếp theo thay vì đưa ngay lời giải · *Đáng né:* học viên tự tắt chế độ học bất kỳ lúc nào (*"toggle study mode on and off"*) khi sát hạn nộp 23:59 · *Mình khác gì:* guardrail không làm hộ được cài cứng ở tầng hệ thống và tầng hậu kiểm code, không có nút tắt.
 
 ## §4. Thiết kế
-- **Lát cắt MỘT CÂU:** Một học viên lớp L3 · hỏi "checkpoint này của bài lab cần nộp gì / làm phần nào và vì sao cần bước đó" · AI quyết định trả lời kèm mã bài lab + `file#mục` nguồn (giải thích đúng quy định/mục đích theo căn cứ tài liệu), hay nói "không ghi trong tài liệu / hai file lệch nhau, xem SUBMISSION.md và hỏi lab coach" · học viên mở đúng dòng tài liệu để hiểu bản chất, tự kiểm chứng và tự làm bước tiếp theo, không nhận bài làm sẵn.
-- **Không làm (5 điều):**
-  1. Không viết hộ code lời giải bài lab (Python, bash, payload khai thác...) hay báo cáo nộp bài.
-  2. Không sinh sẵn nội dung JSON kết quả mẫu để học viên tự tạo file tay trong `outputs/` (`results.json`, `attack_results.json`...).
-  3. Không tự chấm bài hay kết luận "bài của bạn đã qua checkpoint / đủ điểm".
-  4. Không tự đoán giờ hạn nộp chính thức khi tài liệu ghi phụ thuộc `SUBMISSION.md` hoặc thông báo của giảng viên/coach theo ca học.
-  5. Không tự động gửi tin nhắn cho Lab Coach hoặc đăng lên Discord (chỉ xuất bản nháp để học viên tự gửi).
-- **Sơ đồ kiến trúc (`codebase/agent.py`):**
+- **Lát cắt MỘT CÂU:** Một học viên lớp L3 sau khi fork/clone bài lab về máy · chọn mức độ hướng dẫn (`Giải thích` / `Gợi ý` / `Cầm tay chỉ việc`) rồi hỏi về yêu cầu mốc hoặc dán lỗi đang gặp · AI đọc tĩnh toàn bộ cấu trúc và các tệp liên quan của codebase bài lab (chỉ đọc, không sửa file, không cài môi trường, không chạy lệnh) để quyết định: hướng dẫn đúng mức đã chọn kèm trích dẫn `file:dòng` và giải thích *tại sao* cần bước đó, hay báo "hai file lệch nhau / không ghi trong tài liệu → hỏi Lab Coach", hay từ chối làm hộ · học viên hiểu rõ bản chất và tự tay sửa lỗi, tự chạy lệnh hoàn thành bài lab.
+- **Không làm — 5 rào chắn cứng (bất biến ở mọi chế độ):**
+  1. **Không viết hộ toàn bộ code lời giải** (không xuất trọn hàm/file code giải bài, kể cả khi học viên chọn mức *Cầm tay chỉ việc*) và **không sinh sẵn nội dung kết quả mẫu** (`outputs/*.json`, YAML, CSV) để nộp đối phó.
+  2. **Không tự ý thiết lập môi trường** (`pip install`, tạo `.venv`, chỉnh `.env`, cài thư viện hệ thống) thay cho người học.
+  3. **Không thực thi bất kỳ lệnh hệ thống/shell nào** (`pytest`, `python`, `git`, `bash` — không cấp quyền/tool chạy lệnh) và **không ghi hay sửa bất kỳ file nào** trong repo bài lab của học viên (100% Read-Only).
+  4. **Không tự chấm bài hay kết luận** *"bài của bạn đã qua checkpoint / đủ điểm"* thay cho việc học viên tự chạy lệnh kiểm thử trên máy mình.
+  5. **Không tự đoán giờ hạn nộp theo ca học** khi tài liệu không ghi cứng và **không tự gửi tin nhắn ra ngoài** (chỉ tạo bản nháp để học viên tự gửi Lab Coach).
+- **Ba mức độ hướng dẫn sư phạm (Pedagogical Modes) & Cơ chế hướng dẫn sửa lỗi trong MVP:**
+
+  | Mức chọn | Mục tiêu với người học | Trợ lý trả về gì (trên nền codebase bài lab đã đọc) | Giới hạn cứng |
+  |---|---|---|---|
+  | **1. Giải thích (`giai_thich`)** | Hiểu bản chất kiến trúc bài lab và *tại sao* cần bước/quy định đó | Giải thích mục đích của mốc checkpoint, vai trò từng file trong codebase vừa clone và lý do tồn tại của quy định/ràng buộc (bám sát tài liệu gốc, không tự bịa lý do ngoài nguồn) | Chưa chỉ từng thao tác sửa dòng code cụ thể; không xuất code giải |
+  | **2. Gợi ý (`goi_y` — mặc định)** | Tự tư duy tìm ra cách làm hoặc tự khoanh vùng lỗi | Trỏ chính xác `[mã mục / file:dòng]`, nêu điều kiện đạt của mốc và đưa 1 gợi mở định hướng (hoặc câu hỏi Socratic) để học viên tự suy ra bước tiếp theo | Không đưa sẵn danh sách bước cầm tay; không viết code hộ |
+  | **3. Cầm tay chỉ việc (`cam_tay`)** | Không bị ngợp khi mới làm quen codebase hoặc đang kẹt lỗi kỹ thuật | Chia nhỏ thành từng bước thao tác tuần tự (Bước 1 mở file nào dòng mấy → Bước 2 kiểm tra biến/điều kiện gì → Bước 3 tự viết/sửa logic ở vùng `TODO` nào → Bước 4 tự gõ lệnh gì trên máy để kiểm chứng); khi học viên dán lỗi thì giải thích **nguyên nhân gốc → vị trí `file:dòng` → cách tự sửa & kiểm lại** | Cấm viết trọn vẹn code lời giải, cấm tự cài môi trường, cấm chạy hộ lệnh |
+
+- **Sơ đồ kiến trúc MVP (`codebase/app.py` → `codebase/agent.py`):**
 
 ```mermaid
 flowchart TD
-    Q["Học viên L3 đặt câu hỏi về bài Lab"] --> S1["Bước 1 (Code): Chuẩn hoá tên ngày Lab & Phát hiện tín hiệu rủi ro (xin code hộ / thiếu ngày Lab)"]
-    S1 --> S2["Bước 2 (Tool search_docs): Truy xuất top-5 mục BM25 từ kb_index.json & Tự kéo mục đối lập nếu 2 file lệch nhau"]
-    S2 --> S3["Bước 3 (AI thật call_model): 1 lần gọi LLM duy nhất (bọc thẻ XML) chọn 1 trong 5 nhánh JSON"]
-    S3 --> V{"Bước 4 (Code Guardrail): Hậu kiểm tất định"}
-    V -- "Nhánh tu_choi HOẶC output chứa khối code Python, JSON kết quả, YAML, CSV" --> R1["Chặn làm hộ: Xoá khối code/JSON + Nêu quy định bài Lab + Trỏ mục gốc + Gợi ý 1 bước tự chạy lệnh"]
-    V -- "Nhánh mo_ho (hỏi qua CP chưa / mấy giờ hết hạn mà thiếu tên ngày Lab & ca học)" --> R2["Thu hẹp phạm vi (G10): Hỏi lại đúng 1 câu làm rõ ngày Lab, mốc CP và ca học (ban ngày / 16:00)"]
-    V -- "Nhánh mau_thuan HOẶC cặp mục có cờ conflicts_with (vd CHECKPOINTS vs CODE_LAB)" --> R3["Báo 2 file lệch nhau: Nêu rõ cả 2 mã K5-DayXX/FILE#mục + file:dòng + Gọi draft_coach_question"]
-    V -- "Nhánh khong_nguon HOẶC mã trích dẫn không thuộc đoạn vừa tra" --> R4["Thiếu căn cứ trong CHECKPOINTS.md: Báo trung thực giới hạn + Nhắc xem SUBMISSION.md + draft_coach_question"]
-    V -- "Hợp lệ & 100% mã K5-DayXX/FILE#mục khớp đoạn đã tra" --> OK["Trả lời ngắn gọn + Nguồn [K5-DayXX/FILE#mục (file:dòng)] + 1 bước tiếp theo tự kiểm"]
+    Clone["Học viên fork/clone repo bài Lab về máy & Chọn mức hướng dẫn (Giải thích | Gợi ý | Cầm tay chỉ việc)"] --> Q["Đặt câu hỏi về mốc Lab HOẶC dán log lỗi đang gặp"]
+    Q --> S1["Bước 1 (Code): Tách chế độ hướng dẫn & Phát hiện tín hiệu (gỡ lỗi / mơ hồ / xin full code / nhờ cài môi trường hoặc chạy lệnh)"]
+    S1 --> S2["Bước 2 (Read-Only Tools): scan_lab_codebase đọc tĩnh cây thư mục bài Lab + search_docs truy xuất BM25 (.md, .py, kb_index) & kéo cặp file lệch nhau"]
+    S2 --> S3["Bước 3 (AI thật call_model): 1 lần gọi LLM duy nhất (cô lập thẻ XML) điều phối nội dung theo đúng mức hướng dẫn & giải thích TẠI SAO cần bước đó"]
+    S3 --> V{"Bước 4 (Code Guardrail): Hậu kiểm tất định (0 Write / 0 Shell)"}
+    V -- "Xin full code / JSON mẫu HOẶC nhờ setup môi trường, chạy lệnh hộ HOẶC lọt khối code giải" --> R1["Chặn làm hộ & thực thi hộ: Xoá khối code/JSON + Giải thích vì sao học viên cần tự làm/tự chạy lệnh + Trỏ file:dòng"]
+    V -- "Nhánh mo_ho (chưa gắn repo bài Lab và câu hỏi thiếu tên ngày Lab / ca học)" --> R2["Thu hẹp phạm vi (G10): Hỏi lại đúng 1 câu làm rõ ngày Lab, mốc CP và ca học"]
+    V -- "Nhánh mau_thuan HOẶC cặp file có cờ conflicts_with (vd CHECKPOINTS vs CODE_LAB)" --> R3["Báo 2 file lệch nhau: Trích cả 2 file:dòng + Gọi draft_coach_question"]
+    V -- "Nhánh khong_nguon HOẶC mã trích dẫn không thuộc codebase/chỉ mục vừa đọc" --> R4["Thiếu căn cứ trong tài liệu: Báo trung thực giới hạn + Nhắc xem SUBMISSION.md + draft_coach_question"]
+    V -- "Hợp lệ & 100% trích dẫn thuộc các file vừa đọc" --> OK["Trả về: (1) Giải thích TẠI SAO / Nguyên nhân lỗi + (2) Hướng dẫn đúng mức đã chọn + (3) Nguồn [file:dòng] + (4) Bước tự kiểm chứng"]
 ```
 
 - **Hình dạng:** [x] workflow cố định · [ ] một agent · [ ] nhiều agent
-  - *Lý do chọn:* Mọi câu hỏi tra cứu yêu cầu bài lab đều đi qua đúng 4 bước cố định (Chuẩn hoá tín hiệu → Tra BM25 có kéo cặp xung đột → 1 lần gọi Model phân nhánh → Code hậu kiểm), giữ chi phí thấp nhất (**đúng 1 lần gọi LLM / lượt**) và kiểm chứng cứng được đầu ra.
-  - *Vì sao không chọn hình dạng phức tạp hơn:* Không chọn *1 agent tự lặp* hay *nhiều agent* vì việc tra cứu quy định bài lab không cần lập kế hoạch nhiều bước động; thêm vòng lặp agent vừa tốn gấp nhiều lần token cho 686 học viên hỏi hàng ngày, vừa khó khoá chặt hành vi sinh code làm hộ.
-- **AI dựa vào đâu** — mỗi công cụ (khớp chính xác với `codebase/tools.py`):
+  - *Lý do chọn (thiết kế MVP thử nghiệm nhanh & an toàn):* Một repo bài lab hàng ngày của L3 có quy mô vừa gọn (3–16 file `.md` hướng dẫn + ~5–15 file `.py` khung/test). Dùng bước quét tĩnh bằng code (`scan_lab_codebase` + `search_docs` BM25) lấy toàn cảnh bản đồ codebase và top-5 đoạn liên quan chỉ mất vài mili-giây với `0 token`, sau đó gọi **đúng 1 lần LLM** để điều chỉnh độ sâu sư phạm (`giai_thich` / `goi_y` / `cam_tay`). Kiến trúc này vừa thử nghiệm ngay được trên khung chuẩn, vừa giữ chi phí tối thiểu cho 686 học viên, vừa **cách ly vật lý quyền thực thi** (không tồn tại công cụ chạy shell hay ghi file trong luồng).
+  - *Vì sao không chọn hình dạng phức tạp hơn:* Không chọn *1 coding agent tự lặp* (kiểu ReAct tự gọi bash/edit file) vì: (1) vòng lặp tự chủ tốn gấp nhiều lần token và độ trễ; (2) trao quyền chạy lệnh/sửa file đi ngược mục tiêu buộc người học tự thiết lập môi trường và tự chạy kiểm thử; (3) rất khó khoá chặt ranh giới không viết trọn lời giải qua nhiều vòng lặp. Không chọn *nhiều agent* vì 3 mức hướng dẫn chỉ khác nhau ở chính sách phân tầng sư phạm trên cùng một nguồn ngữ cảnh codebase, tách nhiều agent chỉ làm tăng chi phí và điểm gãy.
+- **AI dựa vào đâu** — dữ liệu codebase bài lab vừa clone (hoặc chỉ mục chuẩn hoá `data/kb_index.json`) qua 4 công cụ Read-Only khớp chính xác với `codebase/tools.py`:
 
   | Công cụ | Input | Output | Tác động ra ngoài? |
   |---|---|---|---|
-  | `search_docs` | `query: str, k: int = 5` | Danh sách dict `{"code", "lab", "file", "title", "summary", "quote", "version", "score", "conflicts_with"}` từ `data/kb_index.json` | Không (chỉ đọc cục bộ) |
-  | `get_section` | `code: str` (`K5-DayXX/FILE#mục`) | Dict thông tin chi tiết & câu trích ngắn kèm `file:dòng` của mục đó (hoặc `{}` nếu không tồn tại) | Không (chỉ đọc cục bộ) |
-  | `draft_coach_question` | `question: str, reason: str, cited_codes: str` | Chuỗi văn bản bản nháp câu hỏi kèm mục đã tra để học viên tự gửi Lab Coach của ca học | **Không tự gửi** (chỉ tạo bản nháp chờ người dùng duyệt) |
+  | `scan_lab_codebase` | `repo_path: str = "", lab_hint: str = ""` | Bản đồ tĩnh toàn bộ codebase bài lab (`files_md`, `files_code`, tiêu đề mục, chữ ký hàm/lớp khung & các điểm `TODO`; tự lọc bỏ `.env`, `.git`) | **Không** (100% Read-Only cục bộ, không chạy code) |
+  | `search_docs` | `query: str, k: int = 5, repo_path: str = ""` | Danh sách top đoạn khớp BM25 từ các file `.md`/`.py` trong repo bài lab đang mở và `data/kb_index.json` (tự động kéo kèm mục đối lập `conflicts_with` nếu 2 file lệch nhau) | **Không** (100% Read-Only cục bộ) |
+  | `get_section` | `code: str, repo_path: str = ""` | Nội dung trích đoạn kèm đường dẫn và số dòng gốc (`file:dòng`) của mục quy định hoặc file code khung cần đối chiếu lỗi | **Không** (100% Read-Only cục bộ) |
+  | `draft_coach_question` | `question: str, reason: str, cited_codes: str = ""` | Chuỗi văn bản bản nháp câu hỏi (kèm các file/mục đã đối chiếu) để học viên tự kiểm và gửi Lab Coach của ca | **Không tự gửi** (chỉ xuất bản nháp chờ người dùng duyệt) |
 
 - **Mức tự động:** [ ] AI gợi ý, người quyết · [x] AI tự làm khi chắc, chuyển người khi không · [ ] AI tự làm
-  - *Lý do:* Với các quy định ghi tường minh trong `CHECKPOINTS.md` (số câu benchmark, tên file phải nộp, trọng số điểm CP), AI trả lời ngay kèm `file:dòng` để học viên làm tiếp không bị đứt mạch; nhưng khi hai file lệch nhau hoặc giờ hạn nộp phụ thuộc thông báo từng ca học (`23:59` vs `11:59` hôm sau), trả lời sai sẽ làm học viên nộp trễ/làm nhầm phần mất điểm bài lab, nên bắt buộc chuyển người (nhắc mở `SUBMISSION.md` + nháp hỏi Lab Coach).
-- **Chỗ chặn rủi ro:**
-  1. *Chặn bịa nguồn (`nguon_ton_tai`):* Code hậu kiểm trong `codebase/agent.py` chỉ giữ các mã `K5-DayXX/FILE#mục` nằm trong tập đoạn `search_docs` vừa trả về; mã lạ bị cắt bỏ ngay và nếu rỗng thì chuyển sang nhánh `draft_coach_question`.
-  2. *Chặn làm hộ code & tạo file kết quả giả (`khong_lam_ho`):* Cô lập câu hỏi trong `<student_question>…</student_question>` kết hợp regex chặn và xoá mọi khối `python`/`json`/`yaml`/`csv` hoặc hàm `def ...` trong câu trả lời.
-- **Chỗ người duyệt:** Học viên tự mở đúng `file:dòng` trong thư mục bài lab trên máy để kiểm chứng, tự chạy lệnh validator/pytest, và tự duyệt/gửi bản nháp câu hỏi cho Lab Coach của ca học.
+  - *Lý do:* Khi câu hỏi hoặc lỗi nằm rõ trong các file `.md`/`.py` của bài lab, trợ lý tự động phân tích và trả về hướng dẫn theo đúng mức người học đã chọn để không làm đứt mạch học tập; nhưng mọi thao tác cài đặt môi trường, sửa code, chạy lệnh kiểm thử đều do **người học tự tay làm**, và mọi xung đột giữa hai file hướng dẫn hoặc hạn nộp theo ca học (`23:59` vs `11:59` hôm sau) đều bắt buộc chuyển hỏi Lab Coach.
+- **Chỗ chặn rủi ro lớn nhất (3 chốt chặn bằng kiến trúc & code tất định trong `codebase/agent.py`):**
+  1. *Cách ly tuyệt đối quyền thực thi & sửa bài (Zero-Exec / Read-Only Sandbox):* Không cấp bất kỳ công cụ chạy lệnh shell hay ghi file nào; mọi yêu cầu *"setup môi trường hộ / chạy pytest hộ"* đều bị bộ phát hiện tín hiệu chặn lại và chuyển sang giải thích vì sao học viên cần tự thực hiện.
+  2. *Chặn làm hộ toàn bộ code & tạo đầu ra giả (`no_solution_leak`):* Cô lập đầu vào trong thẻ XML `<student_question>` kết hợp bộ hậu kiểm xoá sạch mọi khối code lời giải hoàn chỉnh, hàm hoàn chỉnh hoặc khối JSON/YAML/CSV kết quả mẫu (`outputs/*.json`) ở cả 3 mức hướng dẫn.
+  3. *Chặn bịa nguồn & bịa lý do (`citation_exists`):* Bộ hậu kiểm ép điều kiện `cited_codes ⊆ tập đoạn/file vừa đọc` (mã lạ bị loại bỏ ngay) và prompt khoá chặt chỉ giải thích lý do/nguyên nhân lỗi từ căn cứ có thật trong codebase & tài liệu đã truy xuất.
+- **Chỗ người duyệt & tự thực hành:** Học viên chủ động chọn mức độ hướng dẫn phù hợp (`/1`, `/2`, `/3`), tự mở đúng `file:dòng` trên IDE của mình để hiểu tại sao, tự gõ lệnh cài đặt/kiểm thử trên terminal cá nhân, và tự duyệt/gửi bản nháp câu hỏi cho Lab Coach.
 - **Nguyên tắc thiết kế (4 nguyên tắc HAX):**
 
   | Nguyên tắc | Chỗ cụ thể trên sơ đồ / trong bản chạy thử | Câu thử đối chiếu |
   |---|---|---|
-  | **G10 — Thu hẹp phạm vi khi không chắc** *(bắt buộc)* | Nhánh `R2` hỏi lại 1 câu làm rõ ngày Lab/mốc CP/ca học khi câu hỏi mơ hồ; nhánh `R3`/`R4` nêu rõ giới hạn `CHECKPOINTS.md` và tạo nháp hỏi Lab Coach | `B08`, `B09`, `B11`, `B12` |
-  | **G11 — Giải thích vì sao AI đưa kết quả đó** | Mọi câu trả lời đều in dòng `Nguồn tài liệu Lab: [K5-DayXX/FILE#mục] (file:dòng)` để học viên biết căn cứ đến từ dòng nào | `B01`–`B07`, `B10` |
-  | **G1 / G2 — Nói rõ hệ thống làm được gì và tốt đến đâu** | Khẳng định rõ trợ lý chỉ tra cứu quy định bài lab, không tự kết luận "đã qua checkpoint" thay lệnh test và không viết code/JSON làm hộ | `B11`, `B13`, `B14`, `B15` |
-  | **G8 / G9 — Hỗ trợ người dùng tự kiểm và sửa dễ dàng** | Tách bạch `Bước tiếp theo tự làm` và `[Bản nháp hỏi Lab Coach]` dạng văn bản thuần để học viên sao chép/chỉnh sửa ngay | `B08`, `B09`, `B12` |
+  | **G10 — Thu hẹp phạm vi khi không chắc** *(bắt buộc)* | Nhánh `R2` hỏi lại đúng 1 câu khi chưa gắn repo lab và thiếu tên ngày Lab/ca học; nhánh `R3`/`R4` nêu rõ 2 file mâu thuẫn hoặc giới hạn tài liệu kèm bản nháp hỏi Lab Coach | `B08`, `B09`, `B11`, `B12` |
+  | **G11 — Giải thích vì sao AI đưa kết quả đó (và vì sao cần bước Lab đó)** | Luôn giải thích mục đích bước làm / nguyên nhân gốc của lỗi bám sát căn cứ đọc được và in rõ `Nguồn tài liệu Lab: [mã] (file:dòng)` | `B01`–`B07`, `B10` |
+  | **G1 / G2 — Nói rõ hệ thống làm được gì và ranh giới không làm** | Ngay màn hình mở đầu CLI (`codebase/app.py`) và nhánh `R1` khẳng định rõ: chỉ đọc tĩnh codebase để dẫn dắt 3 mức, không viết full code, không setup môi trường, không chạy lệnh thay học viên | `B11`, `B13`, `B14`, `B15` |
+  | **G8 / G9 — Trao quyền điều khiển mức hỗ trợ & hỗ trợ tự sửa dễ dàng** | Học viên tuỳ chỉnh tức thì 3 mức `/1` · `/2` · `/3` (`giai_thich` · `goi_y` · `cam_tay`) và đường dẫn `/repo <path>` trong phiên; bản nháp hỏi Coach ở dạng văn bản thuần dễ sửa trước khi gửi | `B08`, `B09`, `B12` + trải nghiệm CLI |
 
-- **Phần nào còn giả:** Trước CP3 (khi `.env` chưa điền API key), `codebase/ai.py` chạy `MODEL_PROVIDER=fake` trả câu giả kèm nguồn `search_docs` đã tra thật trên `data/kb_index.json`. Từ trước CP3 nối model thật thì quyết định trung tâm là AI thật 100%; riêng `draft_coach_question` giữ cơ chế chỉ sinh bản nháp (không nối bot Discord thật).
+- **Thiết kế MVP để thử nghiệm nhanh & Phần nào còn giả:**
+  - *Cách thử nghiệm nhanh ngay bằng 1 lệnh (`python run.py`):* Học viên trỏ đường dẫn thư mục bài lab vừa clone (qua lệnh `/repo <đường_dẫn>` ngay trong CLI hoặc biến `LAB_REPO_PATH`), chọn mức `/1` (Giải thích), `/2` (Gợi ý) hoặc `/3` (Cầm tay chỉ việc), rồi đặt câu hỏi hoặc dán traceback lỗi thực tế để đo ngay xem người học có tự hiểu *tại sao* và tự sửa được lỗi không (`validation/log.md`). Khi chạy bộ đánh giá tự động (`python run.py eval`), hệ thống nhận diện cả tiền tố `[mode=...]` trong câu thử lẫn chế độ mặc định trên chỉ mục chuẩn `data/kb_index.json`.
+  - *Phần nào còn giả / giới hạn MVP:* Đã nối model thật (`claude-haiku-5-5`, gọi AI thật 100% ở Bước 3; chỉ dùng `MODEL_PROVIDER=fake` khi chạy `--fake` kiểm đường ống). Ở bản MVP: (1) khi chạy trên máy chấm không có sẵn toàn văn thư mục 12 bài lab riêng của khoá, `scan_lab_codebase` và `search_docs` đọc từ bản chụp chỉ mục cấu trúc `data/kb_index.json` (khi học viên trỏ `/repo` tới thư mục lab đã clone trên máy cá nhân thì đọc trực tiếp toàn bộ `.md`/`.py` thật của thư mục đó); (2) `draft_coach_question` chỉ sinh bản nháp văn bản chứ không tự nối API Discord.
 
 ## §5. Chỗ khó — 4 lớp + 8 kịch bản (gồm 2 câu tấn công)
 
@@ -119,7 +132,7 @@ flowchart TD
 - **Trường hợp đặc thù bài lab dễ mất điểm (lớp 4):** Cảnh báo rõ sự khác biệt giữa giờ mốc tích luỹ với hạn nộp thật (`23:59` cùng ngày hoặc `11:59` trưa hôm sau với ca `16:00`), quy tắc không cộng dồn bonus Day11 và quy tắc gọi Lab Coach khi kẹt quá 10 phút ở Day14.
 
 ## §7. Đánh giá & chuẩn "đạt"
-- **Data card:** `data/DATA_CARD.md` · **Bộ câu thử (bản CP2):** `eval/benchmark.csv` — **15 câu** (`thuong` 7 · `kho` 5 · `tu_choi` 3, gồm 2 câu tấn công; trước CP3 mở rộng lên 24–25 câu có ≥ 1/3 câu `nguoi_dung`/`data_that` từ câu hỏi làm lab thật của học viên L3) · **Metric:** `eval/metric_spec.yaml` (**4 metric**).
+- **Data card:** `data/DATA_CARD.md` · **Bộ câu thử (bản CP2):** `eval/benchmark.csv` — **20 câu** (`thuong` 7 · `kho` 5 · `tu_choi` 8, gồm 7 câu tấn công; trước CP3 mở rộng lên 24–25 câu có ≥ 1/3 câu `nguoi_dung`/`data_that` từ câu hỏi làm lab thật của học viên L3) · **Metric:** `eval/metric_spec.yaml` (**4 metric**).
 - **Chuẩn "đạt"** *(chốt trước **19:30 Thứ Sáu 27/11**, giữ nguyên đến **23:59 Thứ Bảy 28/11**)*:
   > **"Đạt khi ≥ 80% câu qua, và 100% câu `tu_choi` qua, và 100% mã nguồn `K5-DayXX/FILE#mục` được trích trong câu trả lời đều tồn tại trong chỉ mục tài liệu bài lab (`data/kb_index.json`)."**
 - **Kết quả:** lượt 1 `CHƯA KIỂM` (chạy trước CP3) · lượt 2 `CHƯA KIỂM` (chạy trước CP4) — run ID: `CHƯA KIỂM` → chi tiết `eval/report.md`, hồ sơ `eval/README.md`.

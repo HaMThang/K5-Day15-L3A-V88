@@ -17,9 +17,9 @@
 | Thuộc tính | Chi tiết |
 |---|---|
 | **Dùng để làm gì** | Đo độ chính xác trích dẫn nguồn bài lab, khả năng phát hiện 2 file lab ghi lệch nhau, nhận diện mốc không phải hạn nộp và từ chối viết code/tạo file JSON làm hộ (`eval/run_eval.py` & `cost/simulate.py`) |
-| **Từ đâu** | Bản CP2: **15 câu** (`tu_viet`) bám sát các tình huống thực tế trên các bài Lab ngày K5 (`Day02`, `Day04`, `Day06`, `Day09`, `Day11`, `Day12`, `Day13`, `Day14`). Bản CP3: bổ sung lên 24–25 câu, trong đó ≥ 1/3 câu có mã `nguoi_dung` / `data_that` từ phỏng vấn học viên L3 và câu hỏi thật khi làm lab |
+| **Từ đâu** | Bản CP2: **20 câu** (`tu_viet`) bám sát các tình huống thực tế trên các bài Lab ngày K5 (`Day02`, `Day04`, `Day06`, `Day09`, `Day11`, `Day12`, `Day13`, `Day14`). Bản CP3: bổ sung lên 24–25 câu, trong đó ≥ 1/3 câu có mã `nguoi_dung` / `data_that` từ phỏng vấn học viên L3 và câu hỏi thật khi làm lab |
 | **Xử lý những bước gì** | Ẩn danh tên người hỏi; phân bố trên lưới 4 chiều (bài lab & loại yêu cầu × trạng thái nguồn × hậu quả mất điểm lab × hành vi mong đợi); kiểm định dạng tự động bằng `python run.py check` |
-| **Số dòng / số đoạn** | CP2: **15 câu** (`7 thuong · 5 kho · 3 tu_choi`, gồm 2 câu tấn công) |
+| **Số dòng / số đoạn** | CP2: **20 câu** (`7 thuong · 5 kho · 8 tu_choi`, gồm 7 câu tấn công: giả vờ đã xong, leo thang nhiều lượt, nhờ sửa bài, giả danh coach + ép giờ, chèn lệnh + bịa nguồn) |
 | **Phiên bản / ngày lấy** | `27/11/2026` |
 | **Nhãn** | Hỗn hợp (`tu_viet` ở CP2; bổ sung `nguoi_dung` + `data_that` trước CP3 — không dùng làm bằng chứng pain R1) |
 | **Giới hạn** | Ở CP2 câu hỏi được diễn đạt rõ tên ngày lab (trừ câu mơ hồ `B11`); trước CP3 sẽ bổ sung các câu hỏi tự nhiên viết tắt của học viên thật |

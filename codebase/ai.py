@@ -141,7 +141,7 @@ def call_claude(system: str, user: str) -> dict:
     url = API_BASE_URL or "https://api.anthropic.com/v1/messages"
     body = {
         "model": MODEL_NAME,
-        "max_tokens": 1024,
+        "max_tokens": 2048,
         "system": system or "",
         "messages": [{"role": "user", "content": user}],
     }

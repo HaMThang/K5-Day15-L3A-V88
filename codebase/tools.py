@@ -1,8 +1,8 @@
-"""Công cụ của bài toán — Nhóm V88 (Track A · Trợ lý tra cứu yêu cầu bài Lab hàng ngày lớp L3).
+"""Công cụ của bài toán — Nhóm V88 (Track A · Trợ lý hướng dẫn làm bài Lab L3 theo 3 mức sư phạm).
 
-Mỗi công cụ là một hàm Python có @tool. Docstring ghi đúng 4 ý khớp sơ đồ ở spec.md §4:
-    tên · input · output · có tác động ra ngoài không.
-Chỉ dùng thư viện chuẩn của Python 3.10+. Dữ liệu đọc từ `data/kb_index.json` (mô tả ở `data/DATA_CARD.md`).
+Mỗi công cụ là một hàm Python có @tool, 100% Read-Only (không sửa file, không cài môi trường, không chạy lệnh).
+Docstring ghi đúng 4 ý khớp sơ đồ ở spec.md §4: tên · input · output · có tác động ra ngoài không.
+Chỉ dùng thư viện chuẩn của Python 3.10+.
 """
 from __future__ import annotations
 
@@ -26,7 +26,16 @@ _STOPWORDS = {
     "bai", "ngay", "lop",
 }
 
+_SKIP_DIRS = {
+    ".git", ".venv", "venv", "__pycache__", "node_modules", ".pytest_cache",
+    ".mypy_cache", "data-btc", ".idea", ".vscode", ".claude", ".gemini", ".codex",
+}
+_ALLOWED_EXTS = {".md", ".py", ".yaml", ".yml", ".toml", ".txt"}
+_MAX_SCAN_FILES = 60
+_MAX_FILE_BYTES = 48_000
+
 _CACHE: dict[str, Any] | None = None
+_REPO_CACHE: dict[str, dict[str, Any]] = {}
 
 
 def _strip_accents(text: str) -> str:
@@ -58,6 +67,13 @@ def _tokenize(text: str) -> list[str]:
                 continue
             tokens.append(tok)
     return tokens
+
+
+def _is_secret_filename(name: str) -> bool:
+    low = name.lower()
+    if low == ".env" or low.startswith(".env.") and low != ".env.example":
+        return True
+    return low.endswith((".pem", ".key", ".pfx")) or "credentials" in low or "secret" in low
 
 
 def _load_kb() -> dict[str, Any]:
@@ -109,15 +125,187 @@ def _load_kb() -> dict[str, Any]:
     return _CACHE
 
 
+def _index_local_repo(repo_path: str) -> dict[str, Any]:
+    """Đọc tĩnh (Read-Only) toàn bộ file .md/.py/.yaml hợp lệ trong thư mục bài lab học viên vừa clone."""
+    abs_root = os.path.abspath(repo_path)
+    if abs_root in _REPO_CACHE:
+        return _REPO_CACHE[abs_root]
+    if not os.path.isdir(abs_root):
+        return {"exists": False, "repo_name": "", "files_md": [], "files_code": [], "outline": [], "sections": [], "by_code": {}}
+
+    repo_name = os.path.basename(abs_root.rstrip("\\/")) or "LocalLab"
+    files_md: list[str] = []
+    files_code: list[str] = []
+    outline: list[str] = []
+    sections: list[dict[str, Any]] = []
+
+    count = 0
+    for cur_root, dirs, files in os.walk(abs_root):
+        dirs[:] = sorted(d for d in dirs if d not in _SKIP_DIRS and not d.startswith("."))
+        for fname in sorted(files):
+            if count >= _MAX_SCAN_FILES:
+                break
+            if _is_secret_filename(fname):
+                continue
+            ext = os.path.splitext(fname)[1].lower()
+            if ext not in _ALLOWED_EXTS:
+                continue
+            full_path = os.path.join(cur_root, fname)
+            try:
+                if os.path.getsize(full_path) > _MAX_FILE_BYTES:
+                    continue
+                with open(full_path, encoding="utf-8", errors="replace") as f:
+                    lines = f.read().splitlines()
+            except OSError:
+                continue
+
+            count += 1
+            rel_path = os.path.relpath(full_path, abs_root).replace(os.sep, "/")
+            if ext == ".md":
+                files_md.append(rel_path)
+            else:
+                files_code.append(rel_path)
+
+            # Tách đoạn theo tiêu đề Markdown hoặc hàm/lớp Python để định vị file:dòng chính xác
+            if ext == ".md":
+                chunks: list[tuple[str, int, list[str]]] = []
+                cur_title, cur_start, cur_buf = fname, 1, []
+                for idx, ln in enumerate(lines, start=1):
+                    if re.match(r"^#{1,3}\s+\S+", ln):
+                        if cur_buf:
+                            chunks.append((cur_title, cur_start, cur_buf))
+                        cur_title = ln.lstrip("#").strip()[:90]
+                        cur_start = idx
+                        cur_buf = [ln]
+                    else:
+                        cur_buf.append(ln)
+                if cur_buf:
+                    chunks.append((cur_title, cur_start, cur_buf))
+
+                headings = [t for t, _, _ in chunks[:6]]
+                outline.append(f"{rel_path}: " + " | ".join(headings))
+                for c_idx, (title, start_ln, buf) in enumerate(chunks[:12], start=1):
+                    end_ln = start_ln + len(buf) - 1
+                    slug = re.sub(r"[^a-z0-9]+", "-", _strip_accents(title.lower())).strip("-")[:28] or f"sec{c_idx}"
+                    code_id = f"{repo_name}/{rel_path}#{slug}"
+                    body_txt = " ".join(x.strip() for x in buf if x.strip())
+                    sections.append({
+                        "code": code_id,
+                        "lab": repo_name,
+                        "file": f"{rel_path}:{start_ln}-{end_ln}",
+                        "title": f"{rel_path} · {title}",
+                        "keywords": [],
+                        "summary": body_txt[:420],
+                        "quote": body_txt[:220],
+                        "conflicts_with": [],
+                    })
+            else:
+                sigs: list[str] = []
+                todos: list[str] = []
+                for idx, ln in enumerate(lines, start=1):
+                    stripped = ln.strip()
+                    if re.match(r"^(def |async def |class )", stripped):
+                        sigs.append(f"{stripped.split(':')[0]} (L{idx})")
+                    if "TODO" in ln or "FIXME" in ln or "NotImplementedError" in ln:
+                        todos.append(f"L{idx}: {stripped[:70]}")
+                meta = ", ".join(sigs[:6]) if sigs else f"{len(lines)} dòng"
+                if todos:
+                    meta += " · TODO: " + "; ".join(todos[:3])
+                outline.append(f"{rel_path}: {meta}")
+
+                step = 60
+                for start_idx in range(0, min(len(lines), 240), step):
+                    chunk_lines = lines[start_idx:start_idx + step]
+                    s_ln = start_idx + 1
+                    e_ln = start_idx + len(chunk_lines)
+                    code_id = f"{repo_name}/{rel_path}#L{s_ln}-L{e_ln}"
+                    snippet = "\n".join(f"L{s_ln + i}: {l}" for i, l in enumerate(chunk_lines[:18]))
+                    sections.append({
+                        "code": code_id,
+                        "lab": repo_name,
+                        "file": f"{rel_path}:{s_ln}-{e_ln}",
+                        "title": f"{rel_path} (dòng {s_ln}–{e_ln})",
+                        "keywords": [],
+                        "summary": " ".join(x.strip() for x in chunk_lines if x.strip())[:420],
+                        "quote": snippet[:260],
+                        "conflicts_with": [],
+                    })
+
+    by_code = {s["code"].lower(): s for s in sections}
+    info = {
+        "exists": True,
+        "repo_name": repo_name,
+        "files_md": files_md,
+        "files_code": files_code,
+        "outline": outline[:25],
+        "sections": sections,
+        "by_code": by_code,
+    }
+    _REPO_CACHE[abs_root] = info
+    return info
+
+
 @tool
-def search_docs(query: str, k: int = 5) -> list:
-    """Tên: search_docs — Tra cứu các mục hướng dẫn bài Lab L3 K5 theo BM25 và tự kéo kèm mục đối chiếu nếu 2 file lệch nhau.
-    Input: query (str) — câu hỏi của học viên; k (int, mặc định 5) — số đoạn tối đa.
-    Output: danh sách dict {"code", "lab", "file", "title", "summary", "quote", "version", "score", "conflicts_with"}.
-    Tác động ra ngoài: Không (chỉ đọc dữ liệu cục bộ từ data/kb_index.json)."""
+def scan_lab_codebase(repo_path: str = "", lab_hint: str = "") -> dict:
+    """Tên: scan_lab_codebase — Đọc tĩnh toàn bộ cấu trúc codebase bài Lab học viên vừa fork/clone (hoặc bản đồ bài Lab từ chỉ mục K5).
+    Input: repo_path (str, tuỳ chọn) — đường dẫn thư mục bài lab cục bộ; lab_hint (str) — câu hỏi/tên bài lab để lọc nhanh.
+    Output: dict {"mode_source", "lab_name", "files_md", "files_code", "outline"} tóm tắt cây thư mục, các mục hướng dẫn và hàm/TODO.
+    Tác động ra ngoài: Không (100% Read-Only cục bộ, tự lọc bỏ .env/.git, tuyệt đối không chạy code hay sửa file)."""
+    if repo_path and repo_path.strip():
+        local = _index_local_repo(repo_path.strip())
+        if local.get("exists"):
+            return {
+                "mode_source": "local_cloned_repo",
+                "lab_name": local["repo_name"],
+                "files_md": local["files_md"],
+                "files_code": local["files_code"],
+                "outline": local["outline"],
+            }
+
     kb = _load_kb()
-    sections = kb["sections"]
-    if not sections or not query or not query.strip():
+    folded_hint = _normalize_day_mentions(_strip_accents((lab_hint or "").lower()))
+    day_matches = re.findall(r"\bday(\d{2})\b", folded_hint)
+    target_prefix = f"k5-day{day_matches[0]}" if day_matches else ""
+
+    matched_secs = [
+        s for s in kb["sections"]
+        if (not target_prefix) or s["code"].lower().startswith(target_prefix)
+    ]
+    if not matched_secs:
+        matched_secs = kb["sections"][:8]
+
+    files_seen = sorted({s.get("file", "").split(":")[0] for s in matched_secs if s.get("file")})
+    outline = [f"[{s['code']}] ({s.get('file', '')}): {s['title']}" for s in matched_secs[:10]]
+    lab_label = matched_secs[0].get("lab", kb["version"]) if target_prefix and matched_secs else kb["version"]
+    return {
+        "mode_source": "kb_index_snapshot",
+        "lab_name": lab_label,
+        "files_md": files_seen,
+        "files_code": [],
+        "outline": outline,
+    }
+
+
+@tool
+def search_docs(query: str, k: int = 5, repo_path: str = "") -> list:
+    """Tên: search_docs — Tra cứu BM25 trên các file hướng dẫn/mã khung của codebase bài Lab đang mở và chỉ mục chuẩn K5 (tự kéo mục mâu thuẫn).
+    Input: query (str) — câu hỏi hoặc log lỗi của học viên; k (int, mặc định 5); repo_path (str, tuỳ chọn) — thư mục bài lab đã clone.
+    Output: danh sách dict {"code", "lab", "file", "title", "summary", "quote", "version", "score", "conflicts_with"}.
+    Tác động ra ngoài: Không (chỉ đọc dữ liệu cục bộ, không thực thi lệnh)."""
+    kb = _load_kb()
+    all_sections = list(kb["sections"])
+    all_doc_tokens = list(kb["doc_tokens"])
+    by_code = dict(kb["by_code"])
+
+    if repo_path and repo_path.strip():
+        local = _index_local_repo(repo_path.strip())
+        if local.get("exists") and local["sections"]:
+            for s in local["sections"]:
+                all_sections.append(s)
+                all_doc_tokens.append(_tokenize(" ".join([s["code"], s["title"], s["summary"], s["quote"], s["file"]])))
+                by_code[s["code"].lower()] = s
+
+    if not all_sections or not query or not query.strip():
         return []
 
     q_tokens = _tokenize(query)
@@ -126,11 +314,11 @@ def search_docs(query: str, k: int = 5) -> list:
 
     q_folded = _normalize_day_mentions(_strip_accents(query.lower()))
     idf = kb["idf"]
-    avgdl = kb["avgdl"]
+    avgdl = max(sum(len(t) for t in all_doc_tokens) / max(len(all_doc_tokens), 1), 1.0)
     k1, b = 1.5, 0.75
 
     scored: list[tuple[float, dict[str, Any]]] = []
-    for sec, d_toks in zip(sections, kb["doc_tokens"]):
+    for sec, d_toks in zip(all_sections, all_doc_tokens):
         if not d_toks:
             continue
         dl = len(d_toks)
@@ -143,7 +331,7 @@ def search_docs(query: str, k: int = 5) -> list:
             tf = tf_map.get(qt, 0)
             if tf == 0:
                 continue
-            term_idf = idf.get(qt, 0.5)
+            term_idf = idf.get(qt, 1.2)
             score += term_idf * (tf * (k1 + 1.0)) / (tf + k1 * (1.0 - b + b * dl / avgdl))
 
         for kw in sec.get("keywords", []):
@@ -177,8 +365,8 @@ def search_docs(query: str, k: int = 5) -> list:
     for item in list(picked[:2]):
         for conflict_code in item.get("conflicts_with", []):
             c_key = conflict_code.lower()
-            if c_key not in seen_codes and c_key in kb["by_code"]:
-                c_sec = kb["by_code"][c_key]
+            if c_key not in seen_codes and c_key in by_code:
+                c_sec = by_code[c_key]
                 seen_codes.add(c_key)
                 picked.append({
                     "code": c_sec["code"],
@@ -196,15 +384,30 @@ def search_docs(query: str, k: int = 5) -> list:
 
 
 @tool
-def get_section(code: str) -> dict:
-    """Tên: get_section — Đọc thông tin chuẩn hoá và dòng trích gốc của một mục tài liệu bài Lab theo mã K5-DayXX/FILE#mục.
-    Input: code (str) — mã đoạn dạng 'K5-DayXX/FILE#mục' (ví dụ 'K5-Day14/CHECKPOINTS#lo-trinh-240p').
+def get_section(code: str, repo_path: str = "") -> dict:
+    """Tên: get_section — Đọc trích đoạn kèm số dòng gốc (file:dòng) của một mục tài liệu hoặc file code khung bài Lab.
+    Input: code (str) — mã đoạn dạng 'K5-DayXX/FILE#mục' hoặc mã đoạn trong repo vừa clone; repo_path (str, tuỳ chọn).
     Output: dict {"code", "lab", "file", "title", "summary", "quote", "version", "conflicts_with"} hoặc {} nếu không tồn tại.
-    Tác động ra ngoài: Không (chỉ đọc dữ liệu cục bộ)."""
+    Tác động ra ngoài: Không (100% Read-Only cục bộ)."""
     if not code or not isinstance(code, str):
         return {}
+    key = code.strip().lower()
+    if repo_path and repo_path.strip():
+        local = _index_local_repo(repo_path.strip())
+        if key in local.get("by_code", {}):
+            sec = local["by_code"][key]
+            return {
+                "code": sec["code"],
+                "lab": sec.get("lab", ""),
+                "file": sec["file"],
+                "title": sec["title"],
+                "summary": sec["summary"],
+                "quote": sec["quote"],
+                "version": "local_cloned_repo",
+                "conflicts_with": [],
+            }
     kb = _load_kb()
-    sec = kb["by_code"].get(code.strip().lower())
+    sec = kb["by_code"].get(key)
     if not sec:
         return {}
     return {
