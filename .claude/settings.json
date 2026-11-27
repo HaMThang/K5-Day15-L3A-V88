@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.local)",
+      "Read(./.env.production)",
+      "Read(./data-btc/**)",
+      "Bash(git push:*)",
+      "Bash(git commit --no-verify:*)"
+    ]
+  }
+}

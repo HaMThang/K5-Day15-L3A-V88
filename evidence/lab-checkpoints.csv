@@ -1,0 +1,41 @@
+giai_doan,loai,khoa,lab,so_checkpoint,so_cp_co_thoi_luong,thoi_luong_tung_cp_phut,tong_phut_co_ghi,tb_phut_moi_cp,nguon,ghi_chu
+P1,Lab ngày,K3,Day01 LLM API Exploration,5,5,60|40|40|40|40,220,44.0,K3/K3-Day01-LLM-API-Exploration/README.md:68-79,CP0 gồm mở đầu + setup; giải lao 10' giữa CP2-CP3
+P1,Lab ngày,K4,Day01 LLM API Exploration,5,5,60|40|40|40|40,220,44.0,K4/K4-Day01-LLM-API-Exploration/README.md:71-81,"cùng thiết kế K3, khác giờ"
+P1,Lab ngày,K4,Day1 AI-LLM Foundation (L3),5,5,60|40|40|50|40,230,46.0,"K4/K4-L3-Day1-AI-LLM-Foundation/LAB_GUIDE.md:309,425,533,635,732",mốc ghi theo phút 60/100/140/190/230
+P1,Lab ngày,K5,Day01 AI Foundation,3,3,40|50|60,150,50.0,"Lab/K5-L3-Day-01-AI-Foundation-Lab/CHECKPOINTS.md:5,13,21","mốc 'khoảng 0:40', 'khoảng 1:30', '2:30'"
+P1,Lab ngày,K5,Day02 Discovery & Problem Framing,8,8,15|25|35|30|30|45|25|15,220,27.5,Lab/K5-L3A-Day02-.../CHECKPOINTS.md:7-14,"2 lần nghỉ 10' (dòng 58, 111)"
+P1,Lab ngày,K4,Day04 Prompt Eng & Tool Calling (L3B),7,7,10|20|45|25|40|15|35,190,27.1,K4/K4-L3B-Day04-.../CHECKPOINTS.md:3-13,"gồm FINAL và DEMO; T+155 là mốc kiểm tra, không phải deadline"
+P1,Lab ngày,K5,Day04 ReAct Loop Agent,7,7,15|50|25|30|55|25|15,215,30.7,Lab/K5-L3A-DAY04-.../CHECKPOINTS.md:5-14,"3 ca học, cùng thời lượng; nghỉ 10'"
+P1,Lab ngày,K5,Day06 Data Ingestion,6,6,25|35|50|40|50|30,230,38.3,Lab/K5-L3-Day06-DataIngestionEngineering/CHECKPOINTS.md:3-13,bảng mốc tích luỹ; nghỉ 10' (1:50-2:00); mốc không phải hạn nộp
+P1,Lab ngày,K5,Day07 Retrieval & Context,4,4,60|60|90|30,240,60.0,Lab/K5-L3A-DAY07-.../CHECKPOINTS.md:3-10,"'một lịch khởi đầu', tuỳ lớp"
+P1,Lab ngày,K3,Day08 RAG Pipeline,7,7,10|25|25|20|25|30|45,180,25.7,K3/K3-Day08-RAG-Pipeline/README.md:678-688,tổng 180'; có checkpoint_timer.html
+P1,Lab ngày,K4,Day08 RAG Pipeline,7,7,10|25|25|20|25|30|45,180,25.7,K4/K4-Day08-RAG-Pipeline/README.md:678-688,cùng thiết kế K3
+P1,Lab ngày,K5,Day08 From Workflows to Agents,5,5,15|45|60|45|45,210,42.0,Lab/K5-Day8-From-Workflows-to-Agents/CHECKPOINTS.md:3-37,giờ ghi là lúc bắt đầu CP; CP3 chứa nghỉ 15:15-15:30; CP5 kết thúc 17:00
+P1,Lab ngày,K4,Day07 Data Foundations (L3A/L3B),7,7,20|40|45|45|30|25|35,240,34.3,K4/K4-L3A-Data-Foundations/day7-lab-data-foundations.md:32-38,L3A và L3B cùng bảng
+P1,Lab ngày,K3-K4,Day09 in-class activity,5,0,?|?|?|?|?,,,K3-K4-chung/day09-inclass-activity/README.md:74-193,không ghi thời lượng từng CP
+P1,Lab ngày,K5,Day09 Evaluation & Failure Analysis,6,0,?|?|?|?|?|?,,,Lab/K5-Day9-Evaluation-and-Failure-Analysis/CHECKPOINTS.md:3-22,"M0-M4 tại lớp, M5 sau 17:00 hạn 23:59; không ghi thời lượng"
+P1,Lab ngày,K4,Day10 Data Pipeline & Observability (L3A/L3B),7,7,30|35|30|25|45|45|30,240,34.3,K4/K4-L3A-Day10-.../docs/CHECKPOINTS.md:14-20,tổng 240'
+P1,Lab ngày,K5,Day10 PoC to Pilot Gate 1,5,5,15|50|50|60|55,230,46.0,Lab/K5-L3A-DAY10-HTHC-PoCtoPilotGate1/CHECKPOINTS.md:5-37,nghỉ phút 115-125
+P1,Lab ngày,K3,Day11 Guardrails HITL,5,5,30|45|40|30|10,155,31.0,"K3/K3-Day-11-Guardrails-HITL-Responsible-AI/CHECKPOINTS.md:3,70,145,248,405,502",ghi '≈'
+P1,Lab ngày,K4,Day11 Guardrails HITL (L3A/L3B),5,5,30|45|40|30|10,155,31.0,"K4/K4-L3A-Day11-.../CHECKPOINTS.md:3,85,170,274,437,551",cùng khung K3
+P1,Lab ngày,K5,Day11 Guardrails HITL,5,5,30|45|40|30|10,155,31.0,"Lab/K5-L3-LAB-Day11-.../CHECKPOINTS.md:3,94,181,285,448,573",cùng khung K3/K4
+P1,Lab ngày,K3,Day12 Cloud & Deployment,6,6,20|40|45|45|40|30,220,36.7,K3/K3-Day12-Cloud-Services-And-Deployment/README.md:82-93,điểm CP1-5: 15/15/20/20/15
+P1,Lab ngày,K4,Day12 Cloud & Deployment,6,6,20|40|45|45|40|30,220,36.7,K4/K4-Day12-Cloud-Services-And-Deployment/README.md:87-96,cùng thiết kế K3
+P1,Lab ngày,K4,Cloud Service & Deployment (L3A/L3B),6,6,20|40|45|45|40|30,220,36.7,K4/K4-L3A-Cloud-Service-And-Deployment/CHECKPOINTS.md:11-18,cùng thời lượng Day12; thêm wrap-up 10'
+P1,Lab ngày,K5,Day12 AI SDLC,6,6,10|50|60|30|77.5|12.5,240.0,40.0,Lab/K5-L3-LAB-Day12-AI-SDLC/CHECKPOINTS.md:12-17,CP0 nằm trong 60' của CP1; CP5 10-15' nằm trong giờ cuối của CP4 -> tách ra (suy ra)
+P1,Lab ngày,K3,Day13 Observability,5,5,30|60|60|60|30,240,48.0,K3/Day13-K3-Observability/CHECKPOINTS.md:3-37,mốc cuối tên 'Hoàn tất'
+P1,Lab ngày,K4,Day13 Observability,5,5,30|60|60|60|30,240,48.0,K4/Day13-K4-Observability/CHECKPOINTS.md:3-37,cùng thiết kế K3
+P1,Lab ngày,K4,Day13 Monitoring & LLMOps (L3A/L3B),5,5,30|50|80|50|30,240,48.0,K4/K4-L3A-Day13-Monitoring-LLMOps/docs/CHECKPOINTS.md:9-13,tổng 240'
+P1,Lab ngày,K5,Day13 Launch Economics,5,5,53|27|33|28|84,225,45.0,Lab/K5-L3A-DAY13-HC2-LaunchEconomics/CHECKPOINTS.md:3-39,nghỉ 15:20-15:35
+P1,Lab ngày,K5,"Day14 Deployment, Benchmark, Observability",9,8,10|20|30|25|20|60|25|45|?,235,29.4,"Lab/K5-L3-Day14-.../CHECKPOINTS.md:14-22,114",CP8 làm sau giờ lab; nghỉ 5'
+P1,Lab ngày,K4,Day14 AI Evaluation (L3A/L3B),6,6,15|15|35|20|55|25,165,27.5,K4/K4-L3A-AI-Evaluation/CHECKPOINTS.md:11-16,"tổng 165', xong trước 17:00"
+Sau P1,Track 1,K4,CS13 AI Roadmap,5,4,17|13|13|17|?,60,15.0,"Track1-AI-Product/K4/K4-L3-CS13-AI-Roadmap/CHECKPOINTS.md:8,31,70,95,127","CP5 làm ở nhà, hạn 23:59 19/10/2026"
+Sau P1,Track 1,K4,Day23 AI Product Growth,5,5,15|25|30|30|20,120,24.0,"Track1-AI-Product/K4/K4-L3-Day23-AI-Product-Growth/CHECKPOINTS.md:1,17-133",gọi là 'trạm'; tổng 120'
+Sau P1,Track 2,K4,Day17 Data Pipeline Engineering,6,6,20|25|25|25|25|30,150,25.0,Track2-.../K4/K4-Track02-Day17-.../docs/CHECKPOINTS.md:3-67,tổng gợi ý 150'
+Sau P1,Track 2,K4,Day18 Lakehouse,10,0,?|?|?|?|?|?|?|?|?|?,,,Track2-.../K4/K4-Track02-Day18-Lakehouse-Lab/docs/CHECKPOINTS.md:10-114,không ghi thời lượng từng CP; README:15 ghi 3-4 giờ
+Sau P1,Track 2,K4,Day20 Model Serving,9,9,20|20|15|10|15|15|15|30|5,145,16.1,Track2-.../K4/K4-Track02-Day20-ModelServing-Lab/docs/CHECKPOINTS.md:10-180,ghi '~'; có CP-Bonus ngoài giờ
+Sau P1,Track 2,K4,Day22 LLMOps Prompt Versioning,6,5,30|35|25|60|25|?,175,35.0,"Track2-.../K4/K4-L3-Track2-Day22-.../CHECKPOINTS.md:9,80,153,246,326,399","CP1-4 ghi khoảng (25-45, 20-30, 45-75, 20-30) -> lấy trung điểm"
+Sau P1,Track 2,K4,Day24 Data Governance & Security,9,9,8|15|12|10|15|14|8|12|20,114,12.7,Track2-.../K4/K4-Track2-Day24-.../CHECKPOINTS.md:5-17,gọi là 'mốc'; thêm 6' dự phòng; tổng 120'
+Sau P1,Track 3,K4,Day24 Eval-Guard (3A/3B),5,4,15|30|30|30|?,105,26.2,Track3-.../K4/K4-Track-3A-Day24-Eval-Guard/doc/CHECKPOINTS.md:5-70,'15 phút kiểm tra sẵn sàng + ba phase 30 phút'; CP4 không ghi
+Sau P1,Track 4,K4,Day06 3D From Point Clouds,7,6,?|15|35|35|20|15|20,140,23.3,Track4-.../K4/K4-Track4-Day06-3D-From-Point-Clouds/CHECKPOINTS.md:9-173,CP0 làm ở nhà
+Sau P1,Track 4,K4,Day23 Sensor Fusion,7,6,?|25|25|25|20|15|10,120,20.0,Track4-.../K4/K4-Track4-Day23-Sensor-Fusion-Student/CHECKPOINTS.md:15-148,CP0 làm ở nhà; tổng 2 giờ

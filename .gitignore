@@ -35,3 +35,13 @@ evidence/**/raw-*
 # Nguyên file data BTC cấp (data/preclass, data/training-ops… của repo đề): để ở đây, không commit
 data-btc
 data-btc/
+.claude/settings.local.json
+# Tài liệu khoá học gốc (bài Lab, bộ đề): không phát lại nguyên văn
+Lab/
+*.zip
+# Cấu hình / log riêng của từng agent
+*.local.json
+.ai-log/
+.cursor/
+.gemini/
+.codex/
