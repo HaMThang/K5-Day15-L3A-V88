@@ -1,35 +1,8 @@
-> Đây là khung repo nộp bài. Điền mọi chỗ `____`, giữ nguyên tên các mục. **Mục 0 xoá đi sau khi tạo repo xong.**
-> Giờ, mốc, luật, rubric: xem `README.md`, `02-guide.md`, `03-rubric.md` trong repo đề (bộ đề BTC phát).
-
-# [Tên nhóm] — [Tên lát cắt]
+# V88 — Trợ lý tra cứu yêu cầu lab có nguồn
 
 **Thành viên, lớp, track:** xem [TEAMS.md](TEAMS.md). **Điền TEAMS.md đúng format**: khi chấm và đánh giá, BTC quét file này để ghép điểm cho từng người.
 
-*Lát cắt = phần nhỏ nhất làm xong được trong hackathon: một người dùng · một việc · một quyết định AI · một kết quả.*
-
----
-
-## 0. Tạo repo nhóm từ khung này *(guide bước 1.0 — xoá mục này khi xong)*
-
-**Hai luật:** repo **mới, công khai (Public)** · tên `K5-Day15-<lớp>-<tên nhóm>`, vd `K5-Day15-L3A-StudyPulse` (tên nhóm viết liền, không dấu). Chép **nội dung bên trong** `starter-repo/` — `README.md`, `run.py` phải nằm ngay ở trang đầu repo.
-
-**(a) Không cần terminal — làm trên web GitHub**
-1. **New repository** → tên theo mẫu → **Public** → không tick thêm gì → tạo.
-2. Trên máy mở thư mục `starter-repo/`, **bật hiện file ẩn** (Mac Finder: `Cmd + Shift + .` · Windows: View → Show → Hidden items) để thấy `.gitignore`, `.env.example`.
-3. Trên repo vừa tạo: **Add file → Upload files** → **kéo thả** tất cả file và thư mục bên trong `starter-repo/` → **Commit changes**. Kéo thả mới giữ được thư mục con; lỗi vì nhiều file quá thì tải từng thư mục.
-4. Kiểm: có `.gitignore` chưa (hay thiếu nhất). Thiếu thì **Add file → Create new file**, tên `.gitignore`, dán nội dung từ máy.
-5. Từ giờ sửa file ngay trên web (biểu tượng bút chì → Commit). Phần code vẫn cần **một** người chạy được trên máy: trước mỗi lượt chạy tải **Code → Download ZIP** về thư mục mới (mang `.env` sang), chạy xong chỉ upload file kết quả và file vừa sửa; trong lúc đang chạy không ai sửa `eval/benchmark.csv` trên web.
-
-**(b) Dùng git**
-```bash
-git clone https://github.com/<tai-khoan>/K5-Day15-L3A-TenNhom.git
-cd K5-Day15-L3A-TenNhom
-cp -R ../duong-dan-toi/starter-repo/. .      # Windows PowerShell: Copy-Item -Recurse -Force ..\duong-dan-toi\starter-repo\* .
-git status                                   # không được có .env, data-btc/
-git add -A && git commit -m "Khung repo từ starter-repo" && git push
-```
-
-**Xong khi:** mở link repo bằng **cửa sổ ẩn danh** thấy được file (link nộp CP1) · đã mời thành viên (Settings → Collaborators) · đã điền `TEAMS.md` và `python run.py check` không báo gì ở phần "Kiểm TEAMS.md".
+*Lát cắt = một học viên lớp L3 · hỏi "checkpoint này của bài lab cần nộp gì / làm phần nào mới đúng" · AI quyết định trả lời kèm đúng mã bài lab + `file#mục` nguồn, hoặc báo "không ghi trong tài liệu / hai file lệch nhau, xem SUBMISSION.md và hỏi lab coach" · học viên mở đúng mục tự kiểm và biết bước tiếp theo, không nhận code hay bài làm sẵn.*
 
 ---
 
@@ -108,14 +81,16 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 | Thành phần | Thật / Giả | Ghi chú |
 |---|---|---|
-| Lời gọi AI ở quyết định trung tâm | **Thật** (bắt buộc từ CP3) | Model: ____ |
-|  |  |  |
+| Lời gọi AI ở quyết định trung tâm (`codebase/ai.py`) | **Giả ở CP2** (`MODEL_PROVIDER=fake`), **Thật từ CP3** | Hỗ trợ `gemini`, `openai`, `anthropic`, `ollama` qua thư viện chuẩn (`urllib.request`); điền `.env` để gọi model thật |
+| Tra cứu tài liệu bài Lab (`search_docs`, `get_section`) | **Thật** | Đọc chỉ mục `data/kb_index.json` trích từ 12 bài Lab ngày Phase 1 lớp L3 khoá K5 (có nguồn `file:dòng`, BM25 có dấu + bỏ dấu + phát hiện cặp file lệch lộ trình) |
+| Hậu kiểm nguồn & chặn làm hộ (`codebase/agent.py`) | **Thật (Code tất định)** | Đối chiếu mã `K5-DayXX/FILE#mục` với đoạn vừa truy xuất; chặn xuất code giải bài / khối JSON kết quả mẫu |
+| Gửi câu hỏi cho Lab Coach (`draft_coach_question`) | **Bản nháp (không tự gửi)** | Chỉ sinh nháp câu hỏi kèm mã mục đã tra để học viên tự kiểm và tự gửi theo ca học |
 
 ## Dùng AI vào việc gì
 
 2–3 dòng (bắt buộc): nhóm dùng công cụ AI nào để làm gì, người kiểm lại phần nào. Chi tiết: [docs/ai-usage.md](docs/ai-usage.md). Coding agent đọc [AGENTS.md](AGENTS.md).
 
-____
+Nhóm dùng **Claude** và **Antigravity (Gemini)** để tổng hợp tài liệu nghiên cứu (`docs/research/`), dựng khung code tra cứu BM25 + hậu kiểm nguồn (`codebase/`, `data/build_index.py`), viết script đếm dữ liệu (`evidence/count_preclass.py`) và soạn nháp câu thử ban đầu. Các thành viên phụ trách từng mảng trực tiếp đọc kiểm từng dòng code, tự phỏng vấn người dùng thật, tự chốt chuẩn "đạt" (`spec.md` §7) và chấm kiểm chứng đầu ra.
 
 ## File mẫu — điền ở bước nào
 
