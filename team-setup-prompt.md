@@ -8,7 +8,7 @@
 > |---|---|---|
 > | Codex CLI, Cursor, Copilot (VS Code), Jules, Aider… | `AGENTS.md` | không |
 > | Claude Code | `CLAUDE.md` → `@AGENTS.md` | không (đã có `.claude/settings.json`) |
-> | Gemini CLI | `GEMINI.md` → `@AGENTS.md` | không |
+> | Gemini CLI / Antigravity | `GEMINI.md` + `AGENTS.md` | mở trực tiếp thư mục `K5-Day15-L3A-V88` (nếu mở từ thư mục cha thì đặt file trỏ `AGENTS.md` ở thư mục cha) |
 > | Agent khác | — | dán prompt dưới đây, bước 1 bắt nó đọc `AGENTS.md` |
 >
 > **Các bước (PowerShell, Windows):**
@@ -16,7 +16,7 @@
 > 2. `copy .env.example .env`, mở `.env` điền `MODEL_PROVIDER`, `MODEL_NAME`, `API_KEY` của nhóm (hỏi Hoàng). Không gửi key qua kênh công khai, không commit `.env`.
 > 3. Mở agent ở thư mục repo, dán đoạn từ `---BEGIN PROMPT---` đến `---END PROMPT---`.
 > 4. Agent báo `PASS` hết là xong. Có `FAIL` thì gửi bảng báo cáo vào nhóm.
-> 5. Làm việc trên nhánh riêng: `git checkout -b feat/<ten>-<viec>`, commit nhỏ, push nhánh, mở PR vào `main`. Không push thẳng `main`.
+> 5. Làm việc trên nhánh riêng: `git checkout -b feat/<ten>-<viec>`, commit nhỏ, push nhánh, mở PR vào `main`. Không push thẳng `main` (trừ Hưng khi nộp checkpoint).
 
 ---BEGIN PROMPT---
 

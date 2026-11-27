@@ -8,7 +8,7 @@
 > |---|---|---|
 > | Codex CLI, Cursor, Copilot (VS Code), Jules, Aider… | `AGENTS.md` | không |
 > | Claude Code | `CLAUDE.md` → `@AGENTS.md` | không (đã có `.claude/settings.json`) |
-> | Gemini CLI | `GEMINI.md` → `@AGENTS.md` | không |
+> | Gemini CLI / Antigravity | `GEMINI.md` + `AGENTS.md` | mở trực tiếp thư mục `K5-Day15-L3A-V88` (nếu mở từ thư mục cha thì đặt file trỏ `AGENTS.md` ở thư mục cha) |
 > | Agent khác | — | dán prompt dưới đây, bước 1 bắt nó đọc `AGENTS.md` |
 >
 > **Các bước (PowerShell, Windows):**

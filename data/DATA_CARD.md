@@ -1,7 +1,5 @@
 # Data card — dữ liệu bản chạy thử dùng
 
-> Điền ở guide bước 2.4 (bản đầu ở CP2, đủ ở CP3). Chấm ở rubric R4.
-
 ## Dataset 1 · Chỉ mục tài liệu các bài Lab ngày lớp L3 khoá K5 (`data/kb_index.json`)
 
 | Thuộc tính | Chi tiết |

@@ -142,7 +142,6 @@ def call_claude(system: str, user: str) -> dict:
     body = {
         "model": MODEL_NAME,
         "max_tokens": 1024,
-        "temperature": 0.1,
         "system": system or "",
         "messages": [{"role": "user", "content": user}],
     }

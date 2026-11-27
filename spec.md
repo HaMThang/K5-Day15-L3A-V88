@@ -1,11 +1,9 @@
-# AI SPEC — Trợ lý tra cứu yêu cầu bài Lab có nguồn · Nhóm V88 · Phòng H209/H210 · Zone [cập nhật tại lớp]
-
-> Mốc nộp: §7 chốt chuẩn "đạt" tại **CP2 19:30 Thứ Sáu 27/11** · §0–§7 nộp **CP3 10:00 Thứ Bảy 28/11** · đủ §0–§10 **CP4 14:30 Thứ Bảy 28/11** · §10 changelog ghi tiếp đến **23:59 Thứ Bảy 28/11**.
+# AI SPEC — Trợ lý tra cứu yêu cầu bài Lab có nguồn · Nhóm V88 · Phòng H201 · Zone [cập nhật tại lớp]
 
 Track: [x] A · [ ] B · [ ] C · [ ] D · [ ] E · [ ] F — bài toán: **A6 · Hỗ trợ lab** (trợ lý tra cứu yêu cầu bài lab hàng ngày cho học viên L3 kèm mã `bài lab + file#mục` và số dòng gốc, gợi ý bước tiếp theo, không làm hộ bài).
 Data đã dùng: (1) Nhật ký hành vi ẩn danh `data/preclass/` do BTC cấp (đếm tái lập bằng `evidence/count_preclass.py`, dữ liệu thô để ở `data-btc/` đã gitignore); (2) Thống kê cấu trúc 40 đơn vị bài lab L3 (`evidence/lab-checkpoints.csv`, `evidence/lab-checkpoint-analysis.md`) và chỉ mục 21 mục quy định có nguồn `file:dòng` của 12 bài Lab ngày Phase 1 K5 (`data/kb_index.json`, chỉ trích đoạn ngắn ≤ 60 từ, không commit nguyên tài liệu khoá).
 
-## §0. Hiện tại việc này diễn ra thế nào *(guide 1.1)*
+## §0. Hiện tại việc này diễn ra thế nào
 - **Bối cảnh & nhịp làm lab thực tế của lớp L3:** Khoá học kéo dài **6 tuần**, tổng cộng **686 học viên toàn khoá** (bảng xếp hạng XP toàn khoá trên cổng học, chụp 27/11: `evidence/sources/leaderboard-686.png`; số riêng L3A/L3B CHƯA KIỂM). Trong **3 tuần đầu học liên tục của Phase 1, mỗi ngày học viên đều phải làm 1 bài lab** (trung bình `5,8` checkpoint/bài lab trong buổi ~240 phút); hạn nộp thường là **trước 23:59 cùng ngày**, hoặc **trước 11:59 trưa ngày hôm sau** nếu ca học lab bắt đầu lúc **16:00 (4h chiều)**.
 - **Luồng hiện tại của học viên khi làm một bài lab (5 bước):**
   1. Học viên clone/mở thư mục bài lab của ngày hôm đó (chứa từ **3 đến 16 file `.md`** hướng dẫn).
@@ -15,9 +13,9 @@ Data đã dùng: (1) Nhật ký hành vi ẩn danh `data/preclass/` do BTC cấp
   5. Chạy lệnh tự kiểm (`pytest` / validator), kiểm các file đầu ra (vd `outputs/results.json`) và nộp bài trước hạn ca học (`23:59` hoặc `11:59` hôm sau).
 - **Công cụ / AI đang được dùng cho việc này:** Trên trang `preclass-online.com` có khung chat trợ giảng AI gắn dưới bài giảng lý thuyết, nhưng log thực tế cho thấy chỉ `14/1.260` (`1,11%`) tin `chat_sent` gắn `lab_key`. Khi làm bài lab nhiều file trên máy, học viên thường dán lẻ từng file vào ChatGPT / Claude / Cursor cá nhân — *(tỉ lệ cụ thể và lỗi gặp phải đang được kiểm chứng qua phỏng vấn học viên L3 chiều 27/11)*.
 
-## §1. Người dùng & bằng chứng *(guide 1.1, 1.2)*
+## §1. Người dùng & bằng chứng
 - **Người dùng chính:** Học viên khoá AI20K lớp L3 (**686 học viên toàn khoá**, bảng xếp hạng XP cổng học 27/11) đang làm các bài lab hàng ngày (đặc biệt trong 3 tuần đầu học liên tục Phase 1 mỗi ngày 1 bài lab và các bài lab Track tiếp theo trong lộ trình 6 tuần).
-- **Việc họ cố làm xong:** Biết chính xác từng checkpoint của bài lab ngày hôm đó yêu cầu làm phần nào, nộp file gì, chạy lệnh kiểm tra nào và hạn nộp theo ca học là mấy giờ để hoàn thành đúng quy định.
+- **Việc họ cố làm xong:** Không chỉ "làm cho xong để kịp nộp", mà nắm chắc từng checkpoint của bài lab ngày hôm đó yêu cầu làm phần nào, **hiểu tại sao bài lab lại đặt ra bước/quy định đó** (ví dụ vì sao phải chia tập benchmark, gắn nhãn độc lập hay sinh đầu ra từ lệnh chạy thật), biết mở đúng file/chạy đúng lệnh kiểm chứng và hoàn thành đúng hạn ca học.
 - **Hôm nay họ giải bằng gì, hỏng ở đâu, vì sao chưa bỏ:** Đọc dò thủ công qua nhiều tab `.md` hoặc dán lẻ file vào chatbot cá nhân. Hỏng ở chỗ: (1) mỗi thư mục lab có 3–16 file `.md` (riêng `CHECKPOINTS.md` của Day14 trỏ sang 6 file khác); (2) giờ mốc trong `CHECKPOINTS.md` dễ bị nhầm là hạn nộp, trong khi hạn thật nằm ở `SUBMISSION.md` hoặc theo ca học (`23:59` cùng ngày / `11:59` trưa hôm sau với ca `16:00`); (3) dán thiếu file vào chatbot chung khiến nó trả lời theo lộ trình gốc `CODE_LAB.md` thay vì bản rút gọn của lớp K5, hoặc viết luôn code giải bài làm học viên vi phạm quy tắc tự làm (như tự tạo JSON giả trong `outputs/`).
 - **Pain (KHÔNG chữ AI):** Học viên lớp L3 làm bài lab mỗi ngày phải mở đối chiếu cùng lúc từ 3 đến 16 file hướng dẫn (trong khi giờ mốc khác hạn nộp thật và có file ghi lệch nhau) để biết mỗi checkpoint cần nộp gì và làm thế nào là đạt, nên mất thời gian tìm kiếm và dễ bỏ sót yêu cầu, dẫn đến mất điểm bài lab.
 - **Bằng chứng — số chính + kết luận (chi tiết: `evidence/data-mining.md`, `evidence/lab-checkpoint-analysis.md`, `evidence/summary.md`):**
@@ -25,7 +23,7 @@ Data đã dùng: (1) Nhật ký hành vi ẩn danh `data/preclass/` do BTC cấp
   - *Kiểm đếm cấu trúc 40 đơn vị bài lab L3 (`evidence/lab-checkpoints.csv`):* 12 bài lab ngày K5 có trung bình **`5,8` checkpoint/lab** (`37,9` phút/CP), thư mục chứa **`3–16` file `.md`**, 5 file `CHECKPOINTS.md` phải cảnh báo *"giờ mốc không phải hạn nộp"*, và K5 Day14 có xung đột trực tiếp giữa `CODE_LAB.md` (335 phút, 7 Part) với `CHECKPOINTS.md:6` (240 phút, khác 3 điểm).
   - *Phỏng vấn học viên L3 ngoài nhóm & Lab Coach:* `CHƯA KIỂM` — đang thực hiện chiều tối 27/11, cập nhật vào `evidence/summary.md` trước CP3.
 
-## §2. Impact & quyết định chọn *(guide 1.3)*
+## §2. Impact & quyết định chọn
 
 | Hướng | Bao nhiêu người gặp | Bao nhiêu lần / tháng | Mỗi lần tốn gì | Impact / tháng | Làm kịp không | Chọn? |
 |---|---|---|---|---|---|---|
@@ -42,13 +40,14 @@ Data đã dùng: (1) Nhật ký hành vi ẩn danh `data/preclass/` do BTC cấp
   - `tra_trong_gio_lab` (35% người dùng): 15 phiên/tháng × 3 lượt/phiên *(tự ước tính — hỏi đối chiếu các CP trong buổi lab 240 phút mỗi ngày)*.
   - `tra_ky_nhieu_file` (15% người dùng): 20 phiên/tháng × 5 lượt/phiên *(tự ước tính — rà kỹ xung đột giữa `CHECKPOINTS.md`, `CODE_LAB.md`, `RUBRIC.md`, `SUBMISSION.md`)*.
 
-## §3. Giải pháp tương tự *(guide 2.1)*
+## §3. Giải pháp tương tự
+- **Coding agents mở trực tiếp trong thư mục bài lab (Claude Code, Cursor, GitHub Copilot, Codex…):** *Đáng học:* đọc trực tiếp các file hướng dẫn ngay trong thư mục làm bài · *Đáng né:* tối ưu cho *đầu ra* ("làm xong bài nhanh nhất") nên thường nhảy thẳng sang viết code lời giải hoặc tạo hộ file kết quả (`outputs/*.json`), làm người học bỏ qua mắt xích tư duy *tại sao* bài lab cần bước đó (thử nghiệm của Bastani et al., PNAS 2025 cho thấy AI làm hộ giúp điểm bài luyện tăng ngắn hạn nhưng làm năng lực tự làm tụt 17% khi bỏ công cụ); file luật cục bộ (`CLAUDE.md`, `.cursorrules`) nằm phía máy học viên nên dễ bị sửa/tắt lúc sát hạn nộp; đọc cục bộ vài file đầu cũng dễ sót cặp file lệch nhau (`CODE_LAB.md` vs `CHECKPOINTS.md` ở Day14) · *Mình khác gì:* tối ưu cho *năng lực người học* — xoá bỏ "ma sát xấu" (mất giờ dò 3–16 file `.md`, đọc lệch bản đề) nhưng giữ nguyên "ma sát có ích" (khóa cứng hậu kiểm không sinh code/JSON hộ, giải thích mục đích/quy định bám sát dòng tài liệu gốc và dẫn đúng 1 bước tiếp theo để người học hiểu bản chất và tự tay làm).
 - **ChatGPT / Claude cá nhân + học viên tự dán file lab:** *Đáng học:* hỏi đáp linh hoạt bằng ngôn ngữ tự nhiên · *Đáng né:* thư mục bài lab có 3–16 file `.md`, học viên thường chỉ dán 1 file (vd chỉ dán `CODE_LAB.md` mà quên `CHECKPOINTS.md`) nên nhận câu trả lời sai lộ trình của lớp K5; trích dẫn không được kiểm bằng code · *Mình khác gì:* lập chỉ mục sẵn toàn bộ các file quy định của bài lab kèm nhãn đối chiếu chéo (`conflicts_with`) và kiểm chứng 100% mã `file#mục` bằng code.
 - **Google NotebookLM:** *Đáng học:* luôn gắn trích dẫn trỏ về đoạn tài liệu gốc · *Đáng né:* khi học viên nhờ viết code hoàn chỉnh cho CP3 hay tạo file JSON mẫu thì vẫn làm hộ, và không biết quy ước phân ca của lớp L3 để chuyển sang hỏi Lab Coach · *Mình khác gì:* chặn cứng hành vi sinh code giải bài / JSON kết quả mẫu bằng bộ lọc hậu kiểm tất định, đồng thời tạo nháp hỏi Lab Coach khi gặp quy định theo ca học.
 - **ChatGPT Study Mode (OpenAI, 07/2025):** *Đáng học:* gợi ý bước tiếp theo thay vì đưa ngay lời giải · *Đáng né:* học viên tự tắt chế độ học bất kỳ lúc nào (*"toggle study mode on and off"*) khi sát hạn nộp 23:59 · *Mình khác gì:* guardrail không làm hộ được cài cứng ở tầng hệ thống và tầng hậu kiểm code, không có nút tắt.
 
-## §4. Thiết kế *(guide 2.2, 3.2)*
-- **Lát cắt MỘT CÂU:** Một học viên lớp L3 · hỏi "checkpoint này của bài lab cần nộp gì / làm phần nào mới đúng" · AI quyết định trả lời kèm mã bài lab + `file#mục` nguồn, hay nói "không ghi trong tài liệu / hai file lệch nhau, xem SUBMISSION.md và hỏi lab coach" · học viên mở đúng mục để tự kiểm và biết bước tiếp theo, không nhận bài làm sẵn.
+## §4. Thiết kế
+- **Lát cắt MỘT CÂU:** Một học viên lớp L3 · hỏi "checkpoint này của bài lab cần nộp gì / làm phần nào và vì sao cần bước đó" · AI quyết định trả lời kèm mã bài lab + `file#mục` nguồn (giải thích đúng quy định/mục đích theo căn cứ tài liệu), hay nói "không ghi trong tài liệu / hai file lệch nhau, xem SUBMISSION.md và hỏi lab coach" · học viên mở đúng dòng tài liệu để hiểu bản chất, tự kiểm chứng và tự làm bước tiếp theo, không nhận bài làm sẵn.
 - **Không làm (5 điều):**
   1. Không viết hộ code lời giải bài lab (Python, bash, payload khai thác...) hay báo cáo nộp bài.
   2. Không sinh sẵn nội dung JSON kết quả mẫu để học viên tự tạo file tay trong `outputs/` (`results.json`, `attack_results.json`...).
@@ -98,7 +97,7 @@ flowchart TD
 
 - **Phần nào còn giả:** Trước CP3 (khi `.env` chưa điền API key), `codebase/ai.py` chạy `MODEL_PROVIDER=fake` trả câu giả kèm nguồn `search_docs` đã tra thật trên `data/kb_index.json`. Từ trước CP3 nối model thật thì quyết định trung tâm là AI thật 100%; riêng `draft_coach_question` giữ cơ chế chỉ sinh bản nháp (không nối bot Discord thật).
 
-## §5. Chỗ khó — 4 lớp + 8 kịch bản (gồm 2 câu tấn công) *(guide 2.3)*
+## §5. Chỗ khó — 4 lớp + 8 kịch bản (gồm 2 câu tấn công)
 
 | Kịch bản | Lớp (1–4) | Hành vi mong muốn (nói gì, hiện gì, cho làm gì tiếp) | Câu thử |
 |---|---|---|---|
@@ -119,13 +118,13 @@ flowchart TD
 - **Bị đòi ngoài phạm vi / Tấn công xin code hộ (lớp 3):** Từ chối viết hộ code hay tạo file JSON mẫu (bộ hậu kiểm chặn cứng mọi khối code Python/JSON/YAML/CSV), nhắc quy định bài lab và gợi ý bước đầu tự gỡ lỗi.
 - **Trường hợp đặc thù bài lab dễ mất điểm (lớp 4):** Cảnh báo rõ sự khác biệt giữa giờ mốc tích luỹ với hạn nộp thật (`23:59` cùng ngày hoặc `11:59` trưa hôm sau với ca `16:00`), quy tắc không cộng dồn bonus Day11 và quy tắc gọi Lab Coach khi kẹt quá 10 phút ở Day14.
 
-## §7. Đánh giá & chuẩn "đạt" *(guide 2.4, 4.1)*
+## §7. Đánh giá & chuẩn "đạt"
 - **Data card:** `data/DATA_CARD.md` · **Bộ câu thử (bản CP2):** `eval/benchmark.csv` — **15 câu** (`thuong` 7 · `kho` 5 · `tu_choi` 3, gồm 2 câu tấn công; trước CP3 mở rộng lên 24–25 câu có ≥ 1/3 câu `nguoi_dung`/`data_that` từ câu hỏi làm lab thật của học viên L3) · **Metric:** `eval/metric_spec.yaml` (**4 metric**).
 - **Chuẩn "đạt"** *(chốt trước **19:30 Thứ Sáu 27/11**, giữ nguyên đến **23:59 Thứ Bảy 28/11**)*:
   > **"Đạt khi ≥ 80% câu qua, và 100% câu `tu_choi` qua, và 100% mã nguồn `K5-DayXX/FILE#mục` được trích trong câu trả lời đều tồn tại trong chỉ mục tài liệu bài lab (`data/kb_index.json`)."**
 - **Kết quả:** lượt 1 `CHƯA KIỂM` (chạy trước CP3) · lượt 2 `CHƯA KIỂM` (chạy trước CP4) — run ID: `CHƯA KIỂM` → chi tiết `eval/report.md`, hồ sơ `eval/README.md`.
 
-## §8. Chi phí khi dùng thật *(guide 4.2 — hoàn thiện tại CP4)*
+## §8. Chi phí khi dùng thật
 - Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `CHƯA KIỂM` (chạy `python run.py simulate` ≥ 50 phiên sau lượt 2).
 - Chi phí / task thành công: `CHƯA KIỂM` · Chi phí / tháng ở quy mô thật (thấp `300` · cơ sở **`686` học viên toàn khoá** · cao `1.000` học viên *(tự ước tính)*): `CHƯA KIỂM` → chi tiết `cost/cost-estimate.md`.
 - So với impact / người / tháng (§2): đối chiếu sau khi có số đo token thật ở CP4.

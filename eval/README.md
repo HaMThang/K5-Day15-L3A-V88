@@ -1,7 +1,5 @@
 # Hồ sơ đánh giá — một trang
 
-> Điền ở guide bước 2.4 (mục 1–4, trước CP2) và 4.1 (mục 5–6, trước CP4). Chấm ở rubric R4, R5.
-
 ## 1. Dataset → xử lý
 
 Từ thống kê kiểm đếm **40 đơn vị bài lab lớp L3** ([evidence/lab-checkpoints.csv](../evidence/lab-checkpoints.csv), đã loại bỏ hoàn toàn các bài lab L2 và các kỳ hackathon), nhóm trích xuất các quy định có nguồn `file:dòng` xác thực của **12 bài Lab ngày Phase 1 khoá K5** (`Day01`–`Day14`) bằng `data/build_index.py` thành **21 mục (`K5-DayXX/FILE#mục`)** trong `data/kb_index.json` (chỉ lưu tóm tắt + câu trích ngắn ≤ 60 từ + cờ đối chiếu `conflicts_with`). Chi tiết tại [data/DATA_CARD.md](../data/DATA_CARD.md).

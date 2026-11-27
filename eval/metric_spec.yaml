@@ -1,6 +1,3 @@
-# Metric spec — "thế nào là tốt", đo bằng gì. Điền ở guide bước 2.4.
-# CHỐT TRƯỚC 19:30 Thứ Sáu 27/11 (CP2), KHÔNG SỬA SAU. Sửa sau CP2 -> khối R4 0 điểm (03-rubric).
-
 metrics:
   - name: "nguon_ton_tai"
     definition: "Mọi mã nguồn dạng K5-DayXX/FILE#mục xuất hiện trong câu trả lời đều tồn tại trong chỉ mục tài liệu bài lab (data/kb_index.json) VÀ nằm trong danh sách đoạn search_docs hoặc get_section vừa trả về ở trace của câu đó; với câu thuong hoặc kho có trả lời nội dung quy định bài lab thì bắt buộc trích ít nhất 1 mã hợp lệ (thiếu mã nguồn hoặc có 1 mã bịa = trượt)."
