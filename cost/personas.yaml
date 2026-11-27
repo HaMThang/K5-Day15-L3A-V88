@@ -1,0 +1,45 @@
+# Mô phỏng chi phí khi dùng thật — điền ở guide bước 4.2.
+# Mọi số phải có nguồn (data / phỏng vấn / khảo sát / quy mô khoá có nguồn) hoặc ghi rõ "(tự ước tính)".
+# Chạy: python run.py simulate --try   (10 phiên, kiểm khung — làm trước CP3)
+#       python run.py simulate         (đủ số phiên dưới đây — bản nộp CP4)
+
+sessions: 50        # số phiên mô phỏng — bản nộp >=50
+seed: 42            # giữ cố định để chạy lại ra cùng chuỗi phiên
+
+users:
+  low: 300
+  base: 686
+  high: 1000
+  source: "Kịch bản cơ sở 686 học viên lấy theo tổng sĩ số thực tế lớp L3 khoá K5; cao 1000 học viên theo quy mô toàn khoá K5 (tracks/track-a-edtech.md: 'hơn 1.000 học viên'); thấp 300 học viên là (tự ước tính) số học viên tra cứu thường xuyên mỗi đợt."
+
+personas:
+  - name: tra_dung_han
+    share: 0.5
+    uses_per_month: 12
+    turns_per_session: 1
+    source: "(tự ước tính) bám sát nhịp mỗi ngày làm 1 bài lab trong 3 tuần đầu Phase 1: học viên mở tra nhanh 1 câu yêu cầu file nộp trước hạn 23:59 hoặc 11:59 trưa hôm sau — cập nhật từ phỏng vấn ở CP3"
+  - name: tra_trong_gio_lab
+    share: 0.35
+    uses_per_month: 15
+    turns_per_session: 3
+    source: "(tự ước tính) học viên tra cứu đối chiếu các mốc checkpoint (trung bình 5,8 CP/lab) ngay trong buổi lab 240 phút mỗi ngày — cập nhật từ phỏng vấn ở CP3"
+  - name: tra_ky_nhieu_file
+    share: 0.15
+    uses_per_month: 20
+    turns_per_session: 5
+    types: [thuong, kho, tu_choi]
+    source: "(tự ước tính) học viên / nhóm trưởng rà kỹ các file CHECKPOINTS.md, CODE_LAB.md, RUBRIC.md, SUBMISSION.md cho cả nhóm — cập nhật từ phỏng vấn ở CP3"
+
+prices:             # USD / 1 triệu token — chép từ further-reading/model-prices.md (xem 25/11/2026). >=2 mức model
+  - model: gemini-3.1-flash-lite
+    input: 0.25
+    output: 1.50
+    source: "https://ai.google.dev/gemini-api/docs/pricing (qua further-reading/model-prices.md · xem 25/11/2026)"
+  - model: gemini-4-hydrogen
+    input: 1.50
+    output: 7.50
+    source: "https://ai.google.dev/gemini-api/docs/pricing (qua further-reading/model-prices.md · xem 25/11/2026)"
+
+usd_to_vnd:
+  rate: 25400
+  source: "(tự ước tính) tỷ giá tham khảo USD/VND tháng 11/2026 để quy đổi minh hoạ sang tiền Việt"
