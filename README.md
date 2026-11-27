@@ -1,8 +1,8 @@
-# V88 — Trợ lý tra cứu yêu cầu lab có nguồn
+# V88 — Trợ lý đọc tĩnh Codebase & hướng dẫn làm bài Lab 3 mức sư phạm
 
 **Thành viên, lớp, track:** xem [TEAMS.md](TEAMS.md). **Điền TEAMS.md đúng format**: khi chấm và đánh giá, BTC quét file này để ghép điểm cho từng người.
 
-*Lát cắt = một học viên lớp L3 · hỏi "checkpoint này của bài lab cần nộp gì / làm phần nào mới đúng" · AI quyết định trả lời kèm đúng mã bài lab + `file#mục` nguồn, hoặc báo "không ghi trong tài liệu / hai file lệch nhau, xem SUBMISSION.md và hỏi lab coach" · học viên mở đúng mục tự kiểm và biết bước tiếp theo, không nhận code hay bài làm sẵn.*
+*Lát cắt = một học viên lớp L3 sau khi fork/clone bài lab về máy · chọn mức hướng dẫn (`Giải thích` / `Gợi ý` / `Cầm tay chỉ việc`) rồi hỏi về yêu cầu mốc hoặc dán lỗi đang gặp · AI đọc tĩnh toàn bộ cấu trúc & tệp liên quan của codebase bài lab (Read-Only: không viết full code, không tự setup môi trường, không chạy lệnh) để hướng dẫn đúng mức kèm `file:dòng` và giải thích tại sao cần bước đó, hoặc báo lệch file/thiếu nguồn chuyển Lab Coach · học viên hiểu bản chất và tự tay sửa lỗi, tự chạy lệnh hoàn thành bài lab.*
 
 ---
 
@@ -69,9 +69,10 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 | File | Viết gì | Bước guide |
 |---|---|---|
-| `codebase/agent.py` | `answer(text)` — luồng chính, đúng hình dạng ở `spec.md` §4. Khung có sẵn một workflow 2 bước *ví dụ* | 3.2 |
-| `codebase/tools.py` | Công cụ của bài toán, mỗi công cụ một hàm có `@tool` | 2.2, 3.2 |
-| `codebase/ai.py` | `call_model(system, user)` — chỗ duy nhất gọi model. Chưa điền `.env` thì chạy **chế độ giả** | 3.3 |
+| `codebase/app.py` | Giao diện CLI tương tác: gắn thư mục bài lab vừa clone (`/repo <path>`) và chuyển nhanh 3 mức `/1` Giải thích · `/2` Gợi ý · `/3` Cầm tay chỉ việc | 3.2 |
+| `codebase/agent.py` | `answer(text)` — workflow cố định 4 bước khớp sơ đồ `spec.md` §4 (điều phối 3 mức sư phạm + hậu kiểm Read-Only) | 3.2 |
+| `codebase/tools.py` | 4 công cụ Read-Only có `@tool`: `scan_lab_codebase`, `search_docs`, `get_section`, `draft_coach_question` | 2.2, 3.2 |
+| `codebase/ai.py` | `call_model(system, user)` — chỗ duy nhất gọi model (`anthropic` / `gemini` / `openai` / `ollama` / `fake`) | 3.3 |
 
 - **Trước CP2:** để chế độ giả, công cụ trả dữ liệu giả — `python run.py` đi hết luồng là đủ.
 - **Trước CP3:** nối model thật theo [docs/connect-model.md](docs/connect-model.md), `eval --try` thấy token > 0 rồi mới `eval`.
@@ -81,9 +82,9 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 | Thành phần | Thật / Giả | Ghi chú |
 |---|---|---|
-| Lời gọi AI ở quyết định trung tâm (`codebase/ai.py`) | **Giả ở CP2** (`MODEL_PROVIDER=fake`), **Thật từ CP3** | Hỗ trợ `gemini`, `openai`, `anthropic`, `ollama` qua thư viện chuẩn (`urllib.request`); điền `.env` để gọi model thật |
-| Tra cứu tài liệu bài Lab (`search_docs`, `get_section`) | **Thật** | Đọc chỉ mục `data/kb_index.json` trích từ 12 bài Lab ngày Phase 1 lớp L3 khoá K5 (có nguồn `file:dòng`, BM25 có dấu + bỏ dấu + phát hiện cặp file lệch lộ trình) |
-| Hậu kiểm nguồn & chặn làm hộ (`codebase/agent.py`) | **Thật (Code tất định)** | Đối chiếu mã `K5-DayXX/FILE#mục` với đoạn vừa truy xuất; chặn xuất code giải bài / khối JSON kết quả mẫu |
+| Lời gọi AI ở quyết định trung tâm (`codebase/ai.py`) | **Thật** (`claude-haiku-5-5` qua Anthropic Messages API) | Đếm `tokens_in`/`tokens_out` thật từ trường `usage`; chỉ về `fake` khi chưa cấu hình `.env` hoặc chạy `--fake` |
+| Quét tĩnh Codebase & Tra cứu BM25 (`scan_lab_codebase`, `search_docs`, `get_section`) | **Thật (100% Read-Only)** | Đọc trực tiếp cây thư mục `.md`/`.py` của bài lab học viên vừa clone (`/repo <path>`) kết hợp chỉ mục 21 mục của 12 bài Lab K5 (`data/kb_index.json`, tự phát hiện cặp file lệch lộ trình) |
+| Hậu kiểm nguồn & Rào chắn không làm hộ / không thực thi (`codebase/agent.py`) | **Thật (Code tất định)** | Cách ly 0 tool ghi file/chạy shell; đối chiếu mã trích dẫn với đoạn vừa đọc; xoá sạch khối code giải hoàn chỉnh hoặc JSON kết quả mẫu |
 | Gửi câu hỏi cho Lab Coach (`draft_coach_question`) | **Bản nháp (không tự gửi)** | Chỉ sinh nháp câu hỏi kèm mã mục đã tra để học viên tự kiểm và tự gửi theo ca học |
 
 ## Dùng AI vào việc gì

@@ -7,13 +7,13 @@ Từ thống kê kiểm đếm **40 đơn vị bài lab lớp L3** ([evidence/la
 ## 2. Bộ câu thử dựng ra sao
 
 - `eval/benchmark.csv` (bản CP2): **20 câu** về các bài Lab hàng ngày của lớp L3 K5 (`thuong` **7** · `kho` **5** · `tu_choi` **8**, trong đó **7 câu tấn công** `B14`–`B20` cộng 1 câu đòi tạo file JSON giả `B13`). Trước CP3 mở rộng lên **24–25 câu** mà không xoá hay sửa đáp án các câu đã có.
-- Nguồn tại CP2 (`python run.py check` kiểm tự động): `nguoi_dung` 0 · `data_that` 0 · `tu_viet` 15 · `sinh_seed` 0 → trước CP3 bổ sung ≥ 9 câu nguyên văn từ phỏng vấn học viên L3 và câu hỏi làm lab thật để đạt chuẩn **≥ 1/3 câu từ `nguoi_dung` / `data_that`**.
+- Nguồn tại CP2 (`python run.py check` kiểm tự động): `nguoi_dung` 0 · `data_that` 0 · `tu_viet` 20 · `sinh_seed` 0 → trước CP3 bổ sung thêm các câu nguyên văn từ khảo sát/phỏng vấn học viên L3 và câu hỏi làm lab thật để đạt chuẩn **≥ 1/3 câu từ `nguoi_dung` / `data_that`**.
 - **Độ phủ — lưới input 4 chiều:**
   1. *Bài lab & Loại yêu cầu:* xử lý khi kẹt mốc & điểm CP (`B01`, `B02` — Day14) · file kết quả bắt buộc nộp & quy tắc bonus (`B03`, `B10`, `B13` — Day11) · cấu trúc benchmark & giờ mốc vs hạn nộp (`B04`, `B09` — Day06) · quy cách nộp demo, mốc sau giờ học, gắn nhãn độc lập, đọc bài mẫu (`B05` Day12, `B06` Day09, `B07` Day13, `B12` Day02).
   2. *Trạng thái nguồn sự thật:* đủ rõ trong 1 mục (`B01`–`B07`, `B10`) · hai file cùng bài lab lệch lộ trình (`B08` — `CODE_LAB.md` vs `CHECKPOINTS.md`) · giờ hạn nộp không ghi cứng trong `CHECKPOINTS.md` hoặc câu nửa có nửa không (`B09`, `B12`) · câu mơ hồ thiếu tên ngày lab & ca học (`B11`).
   3. *Hậu quả nếu AI sai:* mất thời gian làm thừa phần (`B08`) · hiểu nhầm mốc tích luỹ thành hạn nộp hoặc trễ hạn ca học `23:59` / `11:59` (`B09`, `B11`) · vi phạm quy chế tạo file kết quả giả / chép code làm hộ (`B13`, `B14`, `B15`).
   4. *Hành vi mong đợi:* trả lời kèm `[K5-DayXX/FILE#mục] (file:dòng)` · nêu đủ 2 file lệch nhau + nháp hỏi Lab Coach · hỏi lại 1 câu làm rõ ngày lab/ca học · từ chối sinh code/JSON hộ + gợi ý bước đầu.
-- **Câu `kho` & `tu_choi` trỏ về 4 lớp chỗ khó (`spec.md` §5):** lớp 1 (nguồn sự thật): `B08`, `B09`, `B12` · lớp 2 (mơ hồ thiếu ngữ cảnh): `B11` · lớp 3 (ngoài thẩm quyền / tấn công xin làm hộ): `B13`, `B14`, `B15` · lớp 4 (đặc thù tính điểm & quy chế bài lab): `B09`, `B10`, `B13`.
+- **Câu `kho` & `tu_choi` trỏ về 4 lớp chỗ khó (`spec.md` §5):** lớp 1 (nguồn sự thật & chống bịa nguồn): `B08`, `B09`, `B12`, `B20` · lớp 2 (mơ hồ thiếu ngữ cảnh): `B11` · lớp 3 (ngoài thẩm quyền / tấn công xin làm hộ, sửa hàm hộ, leo thang, mạo danh): `B13`–`B20` · lớp 4 (đặc thù tính điểm & quy chế bài lab): `B09`, `B10`, `B13`, `B19`.
 
 ## 3. Metric và cách chấm
 

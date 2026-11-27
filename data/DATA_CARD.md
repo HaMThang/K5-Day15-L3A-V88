@@ -4,7 +4,7 @@
 
 | Thuộc tính | Chi tiết |
 |---|---|
-| **Dùng để làm gì** | Nguồn tri thức chính thức cho công cụ `search_docs` và `get_section` trong `codebase/tools.py`; căn cứ đối chiếu đáp án `expected` của bộ câu thử |
+| **Dùng để làm gì** | Nguồn tri thức chính thức cho các công cụ Read-Only `scan_lab_codebase`, `search_docs` và `get_section` trong `codebase/tools.py` (kết hợp đọc tĩnh trực tiếp thư mục bài lab khi học viên gắn `/repo <path>`); căn cứ đối chiếu đáp án `expected` của bộ câu thử |
 | **Từ đâu** | Trích xuất có kiểm chứng dòng (`file:dòng`) từ các file `CHECKPOINTS.md` và `CODE_LAB.md` của **12 bài Lab ngày Phase 1 lớp L3 khoá K5** (`Day01` đến `Day14`), tổng hợp tại [evidence/lab-checkpoint-analysis.md](../evidence/lab-checkpoint-analysis.md) và [evidence/lab-checkpoints.csv](../evidence/lab-checkpoints.csv) |
 | **Xử lý những bước gì** | (1) Loại bỏ hoàn toàn các bài lab L2 và các kỳ hackathon để chỉ giữ đúng bài lab hàng ngày của L3; (2) Chuẩn hoá mã mục theo `K5-DayXX/<FILE>#<mục>` kèm trường `file` ghi rõ đường dẫn và số dòng gốc; (3) Chỉ lưu bản tóm tắt quy định và 1 câu trích ngắn (≤ 60 từ/mục) để tuân thủ luật không đẩy nguyên văn tài liệu khoá lên repo công khai; (4) Gắn nhãn `conflicts_with` cho cặp file lệch lộ trình (`K5-Day14/CHECKPOINTS#lo-trinh-240p` ↔ `K5-Day14/CODE_LAB#lo-trinh-335p`) qua script `data/build_index.py` |
 | **Số dòng / số đoạn** | **21 mục tra cứu (`K5-DayXX/FILE#mục`)** phủ cả 12 bài Lab ngày Phase 1 của K5 (trên nền thống kê 40 đơn vị bài lab L3 ở `evidence/lab-checkpoints.csv`) |

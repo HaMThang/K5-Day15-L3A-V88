@@ -3,7 +3,7 @@
 > TL;DR: AI20K hackathon, Day15, class L3A, team V88, Track A (EdTech). 4 checkpoints (15 pts total, late = 0) submitted via Form 2 by the lead; repo locks Sat 28/11 23:59 (UTC+7).
 > For agents: this file is context, not a task list. Repo files (`README.md`, `AGENTS.md`, `spec.md`) win over this file when they differ; report the `file:line` conflict instead of guessing.
 
-Last updated: 2026-11-27 12:50 UTC+7 · Owner: Lê Gia Hưng · All times are UTC+7.
+Last updated: 2026-11-27 19:35 UTC+7 · Owner: Lê Gia Hưng · All times are UTC+7.
 
 ## 1. Team
 
@@ -33,10 +33,18 @@ Last updated: 2026-11-27 12:50 UTC+7 · Owner: Lê Gia Hưng · All times are UT
 
 | CP | Deadline | Pts | Form label | Status |
 |---|---|---|---|---|
-| CP1 | Fri 27/11 17:00 | 3 | TEAMS, 6 Track, Canvas & Repo mới | repo moved to root and pushed (commit `1592568`); form submission: CHƯA KIỂM |
-| CP2 | Fri 27/11 19:30 | 4 | Spec, Benchmark ≥10 & CHỐT chuẩn đạt | open |
-| CP3 | Sat 28/11 10:00 | 4 | Evidence, Video 30s AI thật & Lượt 1 | open |
+| CP1 | Fri 27/11 17:00 | 3 | TEAMS, 6 Track, Canvas & Repo mới | submitted |
+| CP2 | Fri 27/11 19:30 | 4 | Spec, Benchmark ≥10 & CHỐT chuẩn đạt | submitted, locked at commit `41ff190` (20 cases, 4 metrics). §7 + `metric_spec.yaml` frozen |
+| CP3 | Sat 28/11 10:00 | 4 | Evidence, Video 30s AI thật & Lượt 1 | **next** — see §4a |
 | CP4 | Sat 28/11 14:30 | 4 | Lượt 2, Chi phí, Slide PDF & 4 ĐK xét giải | open |
+
+### 4a. CP3 → CP4 parallel branch plan (4 branches from synced `main`, zero file overlap)
+| Member | Branch | Exclusive file ownership (ONLY edit these) | Concrete tasks (CP3 10:00 → CP4 14:30) |
+|---|---|---|---|
+| **Hưng** (Lead) | `feat/hung-spec-slides` | `spec.md` (§0–§6, §8–§10 — **never §7**), `canvas.md`, `README.md`, `slides/*` → `demo-slides.pdf`, `reflection/le-gia-hung.md` | Sync real survey/interview numbers into `spec.md` §1–§2 + log every post-19:30 edit in §10 changelog; build `demo-slides.pdf`; submit Form 2 CP3 & CP4 |
+| **Hoàng** (Codebase) | `feat/hoang-codebase-demo` | `codebase/*` (except `tracing.py`), `data/build_index.py`, `data/kb_index.json`, `reflection/nguyen-the-hoang.md` | Optional: integrate Web UI (`git checkout origin/hathang -- codebase/web`), pin doc version/hash in `kb_index.json`, record **30s unlisted real-AI video** before CP3, implement 1 targeted fix for Run 2 (CP4) |
+| **Cương** (Eval & Cost) | `feat/cuong-eval-cost` | `eval/benchmark.csv` (append `B21`–`B30` only), `eval/run-*.csv`, `traces/*`, `eval/report.md`, `eval/README.md`, `cost/personas.yaml`, `cost/simulate-*.csv`, `cost/cost-estimate.md`, `data/DATA_CARD.md`, `reflection/dang-duc-cuong.md` | Add ≥ 10 real student questions (`nguoi_dung`/`data_that`, ≥ 1/3 total; **never edit `metric_spec.yaml` or `B01`–`B20`**) so `run.py check` has 0 warnings; run & grade `eval/run-1.csv` (CP3) → `eval/run-2.csv` + `simulate` ≥ 50 sessions (CP4) |
+| **Thắng** (Evidence) | `feat/thang-evidence` | `evidence/*`, `validation/log.md` (bonus), `reflection/ha-minh-thang.md` | Verify outside-team count on the 52-response survey (`evidence/survey/results.csv`) + add ≥ 3 interviews `evidence/interviews/P1..P3.md` & finalize `evidence/summary.md` (CP3); blind cross-grade 5 rows of `run-1.csv`; run ≥ 2 real user tests in `validation/log.md` (+5 bonus CP4) |
 
 ### CP1 — Fri 17:00 (3 pts)
 - Public repo named `K5-Day15-L3A-V88`, starter files at root (`README.md`, `run.py` on the front page); link opens in an incognito window.

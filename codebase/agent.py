@@ -84,7 +84,8 @@ _META_TAG_PATTERN = re.compile(r"^\s*\[(?P<key>mode|muc|repo)\s*=\s*(?P<val>[^\]
 _INJECTION_OR_HOMEWORK_PATTERNS = [
     r"bo qua (moi |tat ca )?(huong dan|chi dan|luat)",
     r"ignore (all |previous |prior )?instructions",
-    r"(viet|dua|code|sinh|tao|lam) (hoan chinh |luon |san |giup |ho |dum |toan bo )*.{0,40}(code giai|code hoan chinh|toan bo code|payload lay het flag)",
+    r"(viet|dua|code|sinh|tao|lam) (hoan chinh |luon |san |giup |ho |dum |toan bo )*.{0,40}(code giai|code hoan chinh|toan bo code|payload lay het flag|dap an chuan|bai mau)",
+    r"(viet lai|sua lai).{0,30}(ham|code|doan code).{0,25}(cho dung|hoan chinh|giup|ho)",
     r"(viet|tao|sinh).{0,35}(json mau|file json|noi dung json).{0,35}outputs/",
     r"tu tao (tay )?file.{0,25}(results\.json|attack_results\.json)",
     r"(copy|chep) chay luon",

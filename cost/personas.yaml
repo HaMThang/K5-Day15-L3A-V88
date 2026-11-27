@@ -31,14 +31,14 @@ personas:
     source: "(tự ước tính) học viên / nhóm trưởng rà kỹ các file CHECKPOINTS.md, CODE_LAB.md, RUBRIC.md, SUBMISSION.md cho cả nhóm — cập nhật từ phỏng vấn ở CP3"
 
 prices:             # USD / 1 triệu token — chép từ further-reading/model-prices.md (xem 25/11/2026). >=2 mức model
-  - model: gemini-3.1-flash-lite
-    input: 0.25
-    output: 1.50
-    source: "https://ai.google.dev/gemini-api/docs/pricing (qua further-reading/model-prices.md · xem 25/11/2026)"
-  - model: gemini-4-hydrogen
-    input: 1.50
-    output: 7.50
-    source: "https://ai.google.dev/gemini-api/docs/pricing (qua further-reading/model-prices.md · xem 25/11/2026)"
+  - model: claude-haiku-5-5
+    input: 0.10
+    output: 0.50
+    source: "https://platform.claude.com/docs/en/about-claude/pricing (qua further-reading/model-prices.md · xem 25/11/2026)"
+  - model: claude-sonnet-5-5
+    input: 2.00
+    output: 10.00
+    source: "https://platform.claude.com/docs/en/about-claude/pricing (qua further-reading/model-prices.md · xem 25/11/2026)"
 
 usd_to_vnd:
   rate: 25400
