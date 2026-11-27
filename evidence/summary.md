@@ -2,10 +2,10 @@
 
 ## Nguồn và phạm vi
 
-- **Khảo sát:** file Excel “Khảo sát trải nghiệm tra cứu tài liệu & yêu cầu Lab / Hackathon (AI20K L3)” do nhóm cung cấp, trang dữ liệu đầu tiên, dòng 2–53. Có **52 phản hồi**, cả 52 chọn vai trò “Học viên”. Các thời điểm hoàn tất trong file nằm từ 27/11/2026 14:42 đến 18:53; múi giờ của bản xuất **chưa được xác nhận**.
+- **Khảo sát:** file Excel “Khảo sát trải nghiệm tra cứu tài liệu & yêu cầu Lab / Hackathon (AI20K L3)” do nhóm cung cấp, trang dữ liệu đầu tiên, dòng 2–53. Có **52 phản hồi**, cả 52 chọn vai trò “Học viên”; theo xác minh của Thắng, **52/52 người trả lời ở ngoài nhóm V88**. Khảo sát được phát qua Discord, Zalo và trực tiếp. Theo thông tin Thắng cung cấp, form mở 16:00 và đóng 19:10; ngày và múi giờ chưa được ghi nhận. Metadata thời điểm hoàn tất trong bản xuất nằm từ 27/11/2026 14:42 đến 18:53, múi giờ chưa xác nhận; các mốc này chưa khớp rõ với giờ mở/đóng form và cần đối chiếu trước khi chốt.
 - Bản đối chiếu đã loại các cột thời gian, email, tên và mã sinh viên: [survey/results.csv](survey/results.csv). Cột `dong_excel` là số dòng trong bảng gốc, giúp tìm lại câu trả lời. File Excel gốc chứa thông tin nhận diện và được giữ cục bộ, không commit.
-- Cách tuyển người, kênh phát, số người được mời, danh sách thành viên nhóm và lớp L3A/L3B của từng người: **CHƯA KIỂM**. Vì vậy chưa thể xác nhận đủ ngưỡng **20 người ngoài nhóm, đúng người dùng** theo [mẫu khảo sát](survey/TEMPLATE.md), cũng như chưa thể xem 52 người là mẫu đại diện cho toàn khóa. Các tỷ lệ dưới đây chỉ mô tả những người trả lời.
-- Các nguồn khác: [đào dữ liệu hành vi](data-mining.md) và [phân tích cấu trúc lab](lab-checkpoint-analysis.md). Chưa tổng hợp được bằng chứng phỏng vấn người dùng ngoài nhóm.
+- Cách tuyển người và thành phần mẫu: theo xác minh của Thắng, toàn bộ **52/52 người trả lời ngoài nhóm V88**; cả 52 tự chọn vai trò “Học viên”. Kênh phát được xác nhận là Discord, Zalo và trực tiếp. Chưa có số người được mời hoặc phân loại lớp L3A/L3B của từng người, nên không xem đây là mẫu đại diện cho toàn khóa. Các tỷ lệ dưới đây chỉ mô tả những người trả lời.
+- Các nguồn khác: [đào dữ liệu hành vi](data-mining.md) và [phân tích cấu trúc lab](lab-checkpoint-analysis.md). `P1.md`–`P3.md` hiện là trích xuất phản hồi khảo sát đã chọn ngẫu nhiên, **không phải biên bản phỏng vấn**; chưa có phỏng vấn người dùng ngoài nhóm.
 
 ## Kết quả khảo sát
 
@@ -34,8 +34,13 @@ Số dòng dưới đây tương ứng `dong_excel` trong bản CSV; trích nguy
 7. “Các yêu cầu nộp bài bị chia rải rác ở các file (readme, rubric, rules, submission....)” — dòng 49.
 8. “Tôi cứ phải đảo quanh các file rule, submission, guide, readme để tìm kiếm thông tin, các bước tiếp theo, rất là mất thời gian.” — dòng 51.
 
-## Đối chiếu và kết luận
+## Đối chiếu các nguồn và kết luận
 
-Các câu trả lời về nhiều nguồn cần đối chiếu và những trích dẫn trên **phù hợp với giả thuyết** rằng việc tìm yêu cầu rải rác gây khó khăn. Phân tích cấu trúc lab cũng ghi nhận nhiều file hướng dẫn; hai nguồn đo khác nhau: khảo sát là tự báo, còn phân tích lab là kiểm đếm tài liệu. Dữ liệu hành vi về lượt mở, hoàn thành và bỏ qua lab không chứng minh trực tiếp việc khó tìm yêu cầu là nguyên nhân.
+- **Khảo sát (tự báo):** 42/52 người (80,8%) cho biết thường mất ít nhất 15 phút tra yêu cầu mỗi mốc; 35/52 (67,3%) từng bỏ sót yêu cầu, nộp thiếu hoặc hiểu nhầm tiêu chí trong câu hỏi gộp; 43/52 (82,7%) chọn ít nhất ba loại tài liệu thường phải đối chiếu. Các trích dẫn ở trên cho thấy một số người mô tả việc phải dò nhiều file, yêu cầu chồng chéo hoặc khó biết nên đọc file nào trước. Theo xác minh của Thắng, cả 52 người trả lời ngoài nhóm V88 và thuộc nhóm người dùng mục tiêu; cả 52 tự chọn vai trò “Học viên”. Chưa có số người được mời và phân loại lớp L3A/L3B, nên chưa kết luận mẫu đại diện toàn khóa.
+- **Cấu trúc tài liệu (kiểm đếm):** phân tích 40 đơn vị lab ghi nhận trung bình khoảng 6 checkpoint/lab; lab Phase 1 thường có 5,8 checkpoint và 30–40 phút thiết kế mỗi checkpoint. Các ví dụ trong [phân tích cấu trúc lab](lab-checkpoint-analysis.md) cho thấy một bài có thể dẫn qua nhiều file, có hướng dẫn khác nhau giữa các file hoặc phải phân biệt mốc làm bài với hạn nộp. Nguồn này xác nhận độ phân mảnh trong thiết kế tài liệu, nhưng tự nó không chứng minh học viên đã gặp khó khăn hay mất bao nhiêu thời gian.
+- **Nhật ký hành vi (dữ liệu khóa học):** theo [đào dữ liệu hành vi](data-mining.md), 102/453 lượt hoàn thành lab có `skipped=true` (22,5%), 63/123 học viên có log hoàn thành từng bỏ qua ít nhất một lượt (51,2%), và 14/1.260 tin nhắn chat gắn `lab_key` (1,11%). Đây là tín hiệu về hành vi lab và mức sử dụng chat trong ngữ cảnh lab; không chứng minh việc khó tìm yêu cầu là nguyên nhân của việc bỏ qua, cũng không đại diện cho toàn bộ học viên.
+- **P1–P3:** các file hiện chứa câu trả lời từ form của ba phản hồi được chọn ngẫu nhiên. Chúng giúp xem một số câu trả lời cá nhân bên cạnh thống kê tổng hợp, nhưng không thay thế phỏng vấn Mom Test. Những chi tiết như sự việc gần nhất, tần suất trong tháng, thời gian xử lý một sự việc cụ thể và phản hồi về trải nghiệm MVP chưa được hỏi.
 
-Mẫu hiện tại cung cấp tín hiệu cho giả thuyết trong [hypothesis.md](hypothesis.md), nhưng chưa đủ để khẳng định mức phổ biến toàn khóa hoặc mức tiết kiệm thời gian của sản phẩm. Cần xác nhận người trả lời thuộc nhóm người dùng và ngoài đội, kiểm tra cách lấy mẫu, sau đó quan sát người dùng thực sự thử MVP; không suy diễn đánh giá ý tưởng thành kết quả sử dụng.
+**Kết luận:** khảo sát và phân tích cấu trúc tài liệu cùng hỗ trợ giả thuyết rằng học viên phải tra cứu nhiều nguồn và có thể bị rối bởi yêu cầu phân tán. Nhật ký hành vi cho biết có lượt bỏ qua lab và ít câu hỏi gắn ngữ cảnh lab, nhưng chưa xác lập quan hệ nhân quả với pain này. Bằng chứng hiện tại chưa đủ để khẳng định mức phổ biến toàn khóa hoặc mức tiết kiệm thời gian của sản phẩm; cần hoàn thành phỏng vấn thật và quan sát người dùng thử MVP.
+
+**Điểm cần xác minh:** Thắng báo form mở 16:00–19:10, nhưng metadata trong bản xuất ghi thời điểm hoàn tất 27/11/2026 14:42–18:53, múi giờ chưa xác nhận. Cần đối chiếu ngày/múi giờ hoặc nguồn giờ trước khi chốt mốc thời gian khảo sát.
