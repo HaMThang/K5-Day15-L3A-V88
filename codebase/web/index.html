@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab Compass · Trợ lý tra cứu bài lab</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-icon">✳</span><span>lab<span class="brand-light">compass</span><small>AI20K · L3</small></span></div>
+      <div class="sidebar-main">
+        <div class="side-label">KHÔNG GIAN HỌC TẬP</div>
+        <div class="side-active"><span>◈</span> Tra cứu bài lab <span class="side-arrow">↗</span></div>
+        <div class="side-note"><span class="note-icon">✦</span><div><strong>Mỗi câu hỏi là một bước tiến.</strong><p>Cứ hỏi khi bạn cần tìm đúng yêu cầu của bài lab.</p></div></div>
+      </div>
+      <div class="sidebar-footer"><span class="avatar">V</span><div><strong>Nhóm V88</strong><small>Trợ lý học tập · MVP</small></div><span>✳</span></div>
+    </aside>
+    <main>
+      <header class="topbar"><div><span class="crumb">Không gian học tập</span><span class="slash">/</span><strong>Tra cứu bài lab</strong></div><span class="top-tag"><span class="dot"></span> AI20K · L3</span></header>
+      <div class="content">
+        <div class="intro"><div class="eyebrow"><span>✳</span> TRỢ LÝ HỌC TẬP CỦA BẠN</div><h1>Gỡ rối bài lab,<br><em>từng bước một.</em></h1><p>Không chắc checkpoint cần gì? Hỏi để tìm đúng yêu cầu, nguồn tài liệu và bước tiếp theo bạn có thể tự làm.</p></div>
+        <div class="layout">
+          <section class="workspace" aria-labelledby="ask-title">
+            <div class="section-head"><div><span class="section-kicker">TRÒ CHUYỆN CÙNG LAB COMPASS</span><h2 id="ask-title">Bạn đang vướng ở đâu?</h2></div><button id="reset" class="copy" type="button">Cuộc trò chuyện mới</button></div>
+            <div id="conversation" class="conversation" role="log" aria-label="Cuộc trò chuyện" aria-live="polite"><div class="message assistant-message"><span class="message-label">✳ LAB COMPASS</span><div class="bubble">Chào bạn! Hãy cho mình biết ngày lab và checkpoint bạn đang vướng nhé. Mình sẽ giúp bạn tìm nguồn và gợi ý bước tiếp theo.</div></div></div>
+            <form id="question-form"><div class="guidance-settings">
+              <div><label for="mode">Mức hướng dẫn</label><select id="mode"><option value="giai_thich">Giải thích bản chất</option><option value="goi_y" selected>Gợi ý</option><option value="cam_tay">Cầm tay chỉ việc</option></select></div>
+              <div><label for="repo-path">Thư mục lab (tuỳ chọn)</label><input id="repo-path" placeholder="Đường dẫn trên máy này"></div>
+            </div><label for="question">Câu hỏi của bạn</label><div class="input-wrap"><textarea id="question" maxlength="1500" required placeholder="Ví dụ: Day14 có gì khác giữa CHECKPOINTS và CODE_LAB?"></textarea><div class="input-bottom"><span>Nhớ ghi ngày lab và checkpoint để tra chính xác hơn.</span><span id="count">0 / 1500</span></div></div><div class="form-actions"><span>✧ &nbsp;Trả lời dựa trên tài liệu đã lập chỉ mục</span><button id="submit" type="submit">Gửi câu hỏi <span>→</span></button></div></form>
+            <div class="examples"><div class="examples-heading">CHƯA BIẾT HỎI GÌ? <span>Thử một câu hỏi</span></div><div class="example-grid"><button class="example" type="button" data-question="Day14 có gì khác giữa CHECKPOINTS và CODE_LAB?"><span class="example-icon peach">⌘</span><span><strong>Đối chiếu tài liệu</strong><small>Day14 có gì khác giữa hai file?</small></span><b>↗</b></button><button class="example" type="button" data-question="Day11 có quy định gì về file results.json trong outputs?"><span class="example-icon lavender">▤</span><span><strong>Kiểm tra yêu cầu</strong><small>Day11 quy định gì về outputs?</small></span><b>↗</b></button></div></div>
+            <div id="status" class="status" role="status" aria-live="polite"></div>
+          </section>
+          <aside class="guide"><div class="guide-title"><span class="guide-spark">✦</span><span>ĐỒNG HÀNH CÙNG BẠN</span></div><h3>Học hiểu,<br>không học hộ.</h3><p>Trợ lý giúp bạn tìm đường trong tài liệu, để bạn tự tin hoàn thành bài lab.</p><div class="guide-list"><div><span>01</span><p><strong>Tìm đúng nguồn</strong><small>Câu trả lời chỉ dẫn đến file và mục liên quan.</small></p></div><div><span>02</span><p><strong>Biết bước tiếp theo</strong><small>Nhận gợi ý để tự kiểm tra và thực hành.</small></p></div><div><span>03</span><p><strong>Hỏi khi chưa rõ</strong><small>Nếu thiếu nguồn, hãy xác nhận với Lab Coach.</small></p></div></div><div class="guide-bottom">✳ <span>Chỉ mục hiện tại: các mục đã chọn của lab K5 L3 Phase 1. Không thay thế tài liệu gốc.</span></div></aside>
+        </div>
+        <footer><span>✳ &nbsp; LAB COMPASS <span class="footer-sep">/</span> MỘT SẢN PHẨM CỦA V88</span><span>Được tạo để bạn tự tìm ra câu trả lời. ↗</span></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
