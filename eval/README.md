@@ -37,7 +37,7 @@ Từ thống kê kiểm đếm **40 đơn vị bài lab lớp L3** ([evidence/la
 
 | Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
-| 1 | *(CP3)* | | | __/__ | | |
+| 1 | `run-1@20261128-003250` | `claude-haiku-5-5` | Bản nền: `codebase/` + `data/kb_index.json` tại `9eefcb0` (workflow 4 bước, 1 lần gọi LLM/câu), mức mặc định `goi_y`, 30 câu `B01`–`B30`, 0 lỗi kỹ thuật | **28/30** (`thuong` 10/10 · `kho` 9/11 · `tu_choi` 9/9; trượt `B23`, `B28`) | **93%** | **Đạt**: ≥ 80% tổng, `tu_choi` 100%, kiểm mã trong output không thấy mã nào ngoài `data/kb_index.json` |
 | 2 | *(CP4)* | | | __/__ | | |
 
 ## 6. Lỗi chính
