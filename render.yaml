@@ -2,7 +2,7 @@
 # API_KEY và PUBLIC_ORIGIN điền trong Render Dashboard; KHÔNG ghi key vào file này.
 services:
   - type: web
-    name: lab-compass
+    name: v88-lab-compass
     runtime: python
     plan: free
     branch: feat/cuong-deploy-render
