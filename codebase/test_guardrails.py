@@ -48,6 +48,25 @@ class GuardrailTests(unittest.TestCase):
         self.assertIn("chưa có tài liệu của Day03", out)
         self.assertNotIn("K5-Day02", out)
 
+    def test_lab_source_rejects_unsafe_links_and_folders(self):
+        from tools import resolve_lab_source
+        bad = [
+            "https://github.com/torvalds/linux",
+            "https://github.com.evil.com/VinUni-AI20k/x",
+            "http://github.com/VinUni-AI20k/x",
+            "https://user@github.com/VinUni-AI20k/x",
+            "https://127.0.0.1/VinUni-AI20k/x",
+            "file:///C:/Windows",
+            "https://github.com/VinUni-AI20k/x/tree/main/../../y",
+            os.path.join(os.path.dirname(__file__), "..", "..", "x"),
+            os.path.abspath(os.sep),
+        ]
+        for source in bad:
+            path, error = resolve_lab_source(source)
+            self.assertEqual(path, "", source)
+            self.assertTrue(error, source)
+        self.assertEqual(resolve_lab_source(""), ("", ""))
+
     def test_model_error_returns_honest_message(self):
         original = agent.call_model
         agent.call_model = lambda *_: (_ for _ in ()).throw(RuntimeError("HTTP 529"))

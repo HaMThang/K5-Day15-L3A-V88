@@ -5,7 +5,14 @@ import json
 import math
 import os
 import re
+import shutil
+import tarfile
+import tempfile
+import time
 import unicodedata
+import urllib.error
+import urllib.parse
+import urllib.request
 from collections import Counter
 from typing import Any
 
@@ -25,7 +32,7 @@ _SKIP_DIRS = {
     ".git", ".venv", "venv", "__pycache__", "node_modules", ".pytest_cache",
     ".mypy_cache", "data-btc", ".idea", ".vscode", ".claude", ".gemini", ".codex",
 }
-_ALLOWED_EXTS = {".md", ".py", ".yaml", ".yml", ".toml", ".txt"}
+_ALLOWED_EXTS = {".md", ".py", ".yaml", ".yml", ".toml", ".txt", ".csv", ".json"}
 _MAX_SCAN_FILES = 60
 _MAX_FILE_BYTES = 48_000
 
@@ -219,6 +226,7 @@ def _index_local_repo(repo_path: str) -> dict[str, Any]:
     sections: list[dict[str, Any]] = []
 
     count = 0
+    total_bytes = 0
     for cur_root, dirs, files in os.walk(abs_root):
         dirs[:] = sorted(d for d in dirs if d not in _SKIP_DIRS and not d.startswith("."))
         for fname in sorted(files):
@@ -230,13 +238,20 @@ def _index_local_repo(repo_path: str) -> dict[str, Any]:
             if ext not in _ALLOWED_EXTS:
                 continue
             full_path = os.path.join(cur_root, fname)
+            if os.path.islink(full_path) or not os.path.realpath(full_path).startswith(os.path.realpath(abs_root) + os.sep):
+                continue  # không theo symlink ra ngoài thư mục bài lab
             try:
-                if os.path.getsize(full_path) > _MAX_FILE_BYTES:
+                size = os.path.getsize(full_path)
+                is_data = ext in (".csv", ".json")
+                if (size > _MAX_FILE_BYTES and not is_data) or total_bytes + min(size, _MAX_FILE_BYTES) > _MAX_TOTAL_BYTES:
                     continue
                 with open(full_path, encoding="utf-8", errors="replace") as f:
-                    lines = f.read().splitlines()
+                    lines = f.read(_MAX_FILE_BYTES).splitlines()
             except OSError:
                 continue
+            if is_data:
+                lines = lines[:_DATA_PREVIEW_LINES]
+            total_bytes += min(size, _MAX_FILE_BYTES)
 
             count += 1
             rel_path = os.path.relpath(full_path, abs_root).replace(os.sep, "/")
@@ -269,6 +284,168 @@ def _index_local_repo(repo_path: str) -> dict[str, Any]:
     }
     _REPO_CACHE[abs_root] = info
     return info
+
+
+
+# --- Nguồn bài lab do học viên đưa vào: thư mục trên máy hoặc link GitHub công khai ---------------
+_GITHUB_URL_RE = re.compile(
+    r"^https://github\.com/(?P<owner>[A-Za-z0-9][A-Za-z0-9-]{0,38})/(?P<repo>[A-Za-z0-9._-]{1,100}?)(?:\.git)?"
+    r"(?:/tree/(?P<branch>[A-Za-z0-9._-]{1,100})(?P<path>(?:/[A-Za-z0-9._ -]{1,100}){0,12}))?/?$"
+)
+_GITHUB_HOSTS = {"codeload.github.com"}
+_ALLOWED_GITHUB_OWNER = "VinUni-AI20k"  # chỉ nhận repo bài lab của khoá
+_MAX_DOWNLOAD_BYTES = 40_000_000
+_MAX_TOTAL_BYTES = 600_000
+_DATA_PREVIEW_LINES = 20  # .csv/.json chỉ đọc phần đầu (tên cột, cấu trúc), không đọc hết dữ liệu có thể chứa thông tin cá nhân
+_GITHUB_CACHE_DIR = os.path.join(tempfile.gettempdir(), "lab_compass_github")
+_GITHUB_CACHE_SECONDS = 3600
+
+
+class _GithubOnlyRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: ANN001
+        if not newurl.startswith("https://") or urllib.parse.urlparse(newurl).hostname not in _GITHUB_HOSTS:
+            raise urllib.error.HTTPError(newurl, 403, "redirect ra ngoài GitHub bị chặn", headers, fp)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_OPENER = urllib.request.build_opener(_GithubOnlyRedirect)
+
+
+def _allowed_roots() -> list[str]:
+    raw = os.environ.get("LAB_ROOTS", "")
+    roots = [r.strip() for r in raw.split(os.pathsep) if r.strip()] or [
+        os.path.expanduser("~"),
+        os.path.dirname(os.path.dirname(ROOT)),  # thư mục chứa repo nhóm và các bài lab đã clone
+    ]
+    return [os.path.normcase(os.path.realpath(r)) for r in roots]
+
+
+def _resolve_folder(raw: str) -> tuple[str, str]:
+    if ".." in re.split(r"[\\/]", raw):
+        return "", "Đường dẫn không được chứa `..`. Bạn dán đường dẫn đầy đủ tới thư mục bài lab."
+    if raw.startswith(("\\\\", "//")):
+        return "", "Mình không đọc thư mục qua mạng nội bộ. Bạn chép bài lab về máy rồi dán đường dẫn."
+    real = os.path.realpath(os.path.expanduser(raw))
+    if not os.path.isdir(real):
+        return "", "Không tìm thấy thư mục này trên máy. Bạn kiểm tra lại đường dẫn nhé."
+    norm = os.path.normcase(real)
+    if os.path.dirname(norm) == norm:
+        return "", "Mình không quét cả ổ đĩa. Bạn chọn đúng thư mục của bài lab."
+    if not any(norm == r or norm.startswith(r.rstrip("\\/") + os.sep) for r in _allowed_roots()):
+        return "", "Thư mục này nằm ngoài vùng mình được phép đọc. Bạn để bài lab trong thư mục người dùng, hoặc thêm đường dẫn vào `LAB_ROOTS` trong `.env`."
+    return real, ""
+
+
+def _fetch_github(url: str) -> tuple[str, str]:
+    parsed = urllib.parse.urlparse(url)
+    m = _GITHUB_URL_RE.match(url)
+    if parsed.scheme != "https" or parsed.hostname != "github.com" or parsed.port or parsed.username or not m:
+        return "", "Link phải là trang GitHub dạng `https://github.com/VinUni-AI20k/<repo>` hoặc `.../tree/<nhánh>/<thư mục>`. Mình không mở link ở trang khác."
+    owner, repo, branch = m.group("owner"), m.group("repo"), m.group("branch")
+    if owner.lower() != _ALLOWED_GITHUB_OWNER.lower():
+        return "", "Mình chỉ nhận link bài lab trên GitHub của VinUni-AI20k (`https://github.com/VinUni-AI20k/...`)."
+    sub = (m.group("path") or "").strip("/")
+    if ".." in sub.split("/"):
+        return "", "Link không được chứa `..`. Bạn dán đúng link thư mục bài lab trên GitHub."
+    slug = re.sub(r"[^A-Za-z0-9._-]+", "-", f"{repo}__{sub}__{branch or 'default'}").strip("-.")[:150]
+    dest = os.path.join(_GITHUB_CACHE_DIR, slug)
+    if os.path.isdir(dest) and time.time() - os.path.getmtime(dest) < _GITHUB_CACHE_SECONDS:
+        return dest, ""
+    # Tải bản nén của repo công khai qua codeload (không tốn lượt API, không gửi token),
+    # đọc dạng luồng và chỉ giữ file chữ nằm trong thư mục được trỏ tới.
+    branches = [branch] if branch else ["main", "master"]
+    last_code = 0
+    for br in branches:
+        tar_url = f"https://codeload.github.com/{owner}/{repo}/tar.gz/{urllib.parse.quote(br)}"
+        tmp = dest + ".part"
+        shutil.rmtree(tmp, ignore_errors=True)
+        os.makedirs(tmp)
+        tmp_real = os.path.realpath(tmp)
+        try:
+            req = urllib.request.Request(tar_url, headers={"User-Agent": "lab-compass-readonly"})
+            with _OPENER.open(req, timeout=20) as resp, tarfile.open(fileobj=_CappedReader(resp, _MAX_DOWNLOAD_BYTES), mode="r|gz") as tar:
+                kept, total = 0, 0
+                for member in tar:
+                    if not member.isfile():
+                        continue  # bỏ symlink, hardlink, thư mục, thiết bị
+                    parts = member.name.split("/")[1:]  # bỏ thư mục gốc "<repo>-<nhánh>/"
+                    rel = "/".join(parts)
+                    if sub and not rel.startswith(sub + "/"):
+                        continue
+                    rel = rel[len(sub) + 1:] if sub else rel
+                    ext = os.path.splitext(rel)[1].lower()
+                    if (ext not in _ALLOWED_EXTS or _is_secret_filename(os.path.basename(rel))
+                            or any(p in _SKIP_DIRS for p in rel.split("/"))
+                            or (member.size > _MAX_FILE_BYTES and ext not in (".csv", ".json"))):
+                        continue
+                    target = os.path.realpath(os.path.join(tmp, *rel.split("/")))
+                    if not target.startswith(tmp_real + os.sep):
+                        continue  # tên file cố thoát khỏi thư mục tạm
+                    data = tar.extractfile(member).read(_MAX_FILE_BYTES)
+                    if ext in (".csv", ".json"):
+                        data = b"\n".join(data.splitlines()[:_DATA_PREVIEW_LINES])
+                    total += len(data)
+                    if total > _MAX_TOTAL_BYTES or kept >= _MAX_SCAN_FILES:
+                        break
+                    os.makedirs(os.path.dirname(target), exist_ok=True)
+                    with open(target, "wb") as f:
+                        f.write(data)
+                    kept += 1
+        except urllib.error.HTTPError as e:
+            last_code = e.code
+            shutil.rmtree(tmp, ignore_errors=True)
+            if e.code == 404:
+                continue
+            if e.code in (403, 429):
+                return "", "GitHub đang giới hạn lượt tải. Bạn thử lại sau ít phút, hoặc clone bài về máy rồi dán đường dẫn thư mục."
+            return "", f"GitHub trả lỗi {e.code}, mình chưa tải được tài liệu."
+        except ValueError:
+            shutil.rmtree(tmp, ignore_errors=True)
+            return "", "Repo trong link quá lớn để mình đọc nhanh. Bạn clone bài về máy rồi dán đường dẫn thư mục."
+        except (urllib.error.URLError, TimeoutError, OSError, tarfile.TarError):
+            shutil.rmtree(tmp, ignore_errors=True)
+            return "", "Không kết nối hoặc không đọc được repo trên GitHub. Bạn kiểm tra mạng, hoặc clone bài về máy rồi dán đường dẫn thư mục."
+        if not kept:
+            shutil.rmtree(tmp, ignore_errors=True)
+            return "", "Thư mục trong link này không có file tài liệu nào mình đọc được (.md, .txt, .py, .csv, .json, .yaml), hoặc sai tên thư mục."
+        shutil.rmtree(dest, ignore_errors=True)
+        os.replace(tmp, dest)
+        _REPO_CACHE.pop(os.path.abspath(dest), None)
+        return dest, ""
+    return "", ("Không mở được repo này: repo private, không tồn tại, hoặc sai tên nhánh. Mình chỉ đọc repo công khai."
+                if last_code in (0, 404) else f"GitHub trả lỗi {last_code}.")
+
+
+class _CappedReader:
+    """Bọc luồng tải về, báo lỗi khi vượt trần dung lượng để không tải cả repo khổng lồ."""
+
+    def __init__(self, raw: Any, cap: int) -> None:
+        self.raw, self.cap, self.seen = raw, cap, 0
+
+    def read(self, n: int = -1) -> bytes:
+        chunk = self.raw.read(n if n and n > 0 else 65536)
+        self.seen += len(chunk)
+        if self.seen > self.cap:
+            raise ValueError("quá lớn")
+        return chunk
+
+
+def resolve_lab_source(source: str) -> tuple[str, str]:
+    """Đổi thứ học viên dán vào (thư mục trên máy hoặc link GitHub công khai) thành thư mục cục bộ chỉ để đọc.
+    Trả về (đường_dẫn, "") khi được, hoặc ("", lời báo lỗi tiếng Việt). Không ghi gì vào thư mục của học viên."""
+    raw = (source or "").strip().strip('"').strip("'")
+    if not raw:
+        return "", ""
+    if len(raw) > 400:
+        return "", "Đường dẫn hoặc link quá dài."
+    if re.match(r"^[a-z][a-z0-9+.-]*:(//|\\\\)", raw, re.IGNORECASE) or raw.lower().startswith(("github.com", "www.")):
+        return _fetch_github(raw if "://" in raw else "https://" + raw)
+    path, err = _resolve_folder(raw)
+    if err:
+        return "", err
+    if not _index_local_repo(path).get("sections"):
+        return "", "Thư mục này không có tài liệu nào mình đọc được (.md, .txt, .py, .csv, .json, .yaml)."
+    return path, ""
 
 
 @tool

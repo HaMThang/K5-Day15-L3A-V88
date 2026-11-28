@@ -257,7 +257,7 @@ def _build_user_prompt(
     has_conflict: bool,
     question: str,
 ) -> str:
-    outline_lines = "\n".join(f"  - {item}" for item in codebase_map.get("outline", [])[:12]) or "  (chưa có outline)"
+    outline_lines = _defang("\n".join(f"  - {item}" for item in codebase_map.get("outline", [])[:12])) or "  (chưa có outline)"
     map_block = (
         f'<lab_codebase_map source="{codebase_map.get("mode_source", "")}" lab="{codebase_map.get("lab_name", "")}">\n'
         f'  <doc_files>{", ".join(codebase_map.get("files_md", [])) or "kb_index"}</doc_files>\n'
@@ -334,7 +334,7 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
         return {"output": _compose(
             f"Mình **chưa có tài liệu của Day{asked_day}** trong chỉ mục, nên không trả lời bằng tài liệu của ngày khác để tránh chỉ sai.",
             next_step=(
-                f"Dán đường dẫn thư mục bài lab Day{asked_day} đã clone vào ô **Thư mục lab trên máy** rồi hỏi lại. "
+                f"Dán đường dẫn thư mục bài lab Day{asked_day} trên máy, hoặc link GitHub của bài, vào ô **Thư mục lab hoặc link GitHub** rồi hỏi lại. "
                 "Mình sẽ đọc thẳng `README.md`, các checklist và file `.md` khác của bài đó. "
                 "Nếu chưa clone bài, bạn hỏi Lab Coach của ca mình."
             ),

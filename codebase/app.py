@@ -40,6 +40,7 @@ def main() -> int:
     try:
         import tracing
         from agent import MODE_LABELS, answer
+        from tools import resolve_lab_source
     except Exception as e:
         print(f"Không nạp được codebase/ — lỗi ở {_where(e)}: {type(e).__name__}: {e}")
         print("Xem cách nối model tại docs/connect-model.md")
@@ -52,7 +53,7 @@ def main() -> int:
 
     print("=== Lab Compass · Trợ lý bài Lab L3 (Nhóm V88) ===")
     print("Chỉ đọc tài liệu & mã nguồn để hướng dẫn; không viết code hộ, không cài môi trường, không chạy lệnh.")
-    print("Lệnh nhanh: `/1` Giải thích · `/2` Gợi ý · `/3` Cầm tay chỉ việc · `/repo <đường_dẫn>` gắn thư mục lab.")
+    print("Lệnh nhanh: `/1` Giải thích · `/2` Gợi ý · `/3` Cầm tay chỉ việc · `/repo <thư mục hoặc link GitHub>` gắn bài lab.")
     print("Thoát: Ctrl+C hoặc nhấn Enter 2 lần.\n")
 
     blank = 0
@@ -80,11 +81,13 @@ def main() -> int:
             if not arg:
                 repo_path = ""
                 print("-> Đã quay về dùng chỉ mục `data/kb_index.json`.")
-            elif os.path.isdir(arg):
-                repo_path = os.path.abspath(arg)
-                print(f"-> Đã gắn thư mục bài lab: {repo_path}")
             else:
-                print(f"[!] Không tìm thấy thư mục: {arg}")
+                resolved, error = resolve_lab_source(arg)
+                if error:
+                    print(f"[!] {error}")
+                else:
+                    repo_path = resolved
+                    print(f"-> Đã gắn bài lab: {arg}")
             continue
 
         tracing.begin("app")
@@ -107,6 +110,7 @@ def main() -> int:
 def serve_web() -> int:
     import tracing
     from agent import MODE_LABELS, answer
+    from tools import resolve_lab_source
 
     address = "127.0.0.1:8000"
     assets = {
@@ -162,9 +166,9 @@ def serve_web() -> int:
                 self.send_json(400, {"error": "Câu hỏi hoặc mức hướng dẫn không hợp lệ."})
                 return
 
-            repo = repo.strip()
-            if repo and (repo.startswith(("\\\\", "//")) or not os.path.isdir(repo)):
-                self.send_json(400, {"error": "Không tìm thấy thư mục lab trên máy này."})
+            repo, error = resolve_lab_source(repo)
+            if error:
+                self.send_json(400, {"error": error})
                 return
 
             tracing.begin("web")
