@@ -1,13 +1,6 @@
-"""Script tái lập kết quả đào dữ liệu hành vi học viên từ bộ `data/preclass/` của BTC (Rubric R1).
+"""Đếm tái lập hành vi học viên từ bộ `data/preclass/` của BTC (dữ liệu thô đặt ở `data-btc/preclass/`, git-ignored).
 
-Tuân thủ tuyệt đối luật dữ liệu (01-challenge-brief#data):
-- Dữ liệu gốc `events.csv`, `learners.csv` chỉ lưu cục bộ trong `data-btc/preclass/` (đã gitignore, KHÔNG commit).
-- Không cố đoán danh tính ai là ai, không xếp hạng học viên, không in nội dung tin nhắn cá nhân.
-- Chỉ xuất ra các con số tổng hợp `x/N (%)` có mẫu số rõ ràng và 5 dòng sự kiện mẫu đã che bớt mã ẩn danh
-  để người chấm chạy lại kiểm chứng ra đúng kết quả trong `evidence/data-mining.md`.
-
-Chạy:
-    python evidence/count_preclass.py
+Chạy: python evidence/count_preclass.py
 """
 from __future__ import annotations
 
@@ -89,7 +82,7 @@ def main() -> int:
     with open(events_path, encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         columns = reader.fieldnames or []
-        for idx, row in enumerate(reader, start=2):  # dòng 1 là header CSV
+        for idx, row in enumerate(reader, start=2):
             etype = (row.get("type") or row.get("event_type") or "").strip()
             lid = (row.get("hv") or row.get("learner_id") or "").strip()
             ts = (row.get("occurred_at") or row.get("received_at") or "").strip()

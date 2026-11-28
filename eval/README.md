@@ -1,45 +1,44 @@
-# Hồ sơ đánh giá — một trang
+# Hồ sơ đánh giá — Nhóm V88
 
-## 1. Dataset → xử lý
+## 1. Dữ liệu chỉ mục
 
-Từ thống kê kiểm đếm **40 đơn vị bài lab lớp L3** ([evidence/lab-checkpoints.csv](../evidence/lab-checkpoints.csv), đã loại bỏ hoàn toàn các bài lab L2 và các kỳ hackathon), nhóm trích xuất các quy định có nguồn `file:dòng` xác thực của **12 bài Lab ngày Phase 1 khoá K5** (`Day01`–`Day14`) bằng `data/build_index.py` thành **21 mục (`K5-DayXX/FILE#mục`)** trong `data/kb_index.json` (chỉ lưu tóm tắt + câu trích ngắn ≤ 60 từ + cờ đối chiếu `conflicts_with`). Chi tiết tại [data/DATA_CARD.md](../data/DATA_CARD.md).
+Từ bảng kiểm đếm **40 đơn vị bài lab lớp L3** ([evidence/lab-checkpoints.csv](../evidence/lab-checkpoints.csv), không tính bài L2 và hackathon), nhóm trích các quy định có `file:dòng` của **12 bài Lab ngày Phase 1 khoá K5** (`Day01`–`Day14`) qua `data/build_index.py` thành **21 mục (`K5-DayXX/FILE#mục`)** trong `data/kb_index.json` (chỉ lưu tóm tắt, câu trích ≤ 60 từ, mã băm `doc_sha256` và cờ đối chiếu `conflicts_with`). Xem thêm [data/DATA_CARD.md](../data/DATA_CARD.md).
 
-## 2. Bộ câu thử dựng ra sao
+## 2. Bộ câu thử (`eval/benchmark.csv`)
 
-- `eval/benchmark.csv`: **30 câu** về các bài Lab hàng ngày của lớp L3 K5 (`thuong` **10** · `kho` **11** · `tu_choi` **9**, trong đó **7 câu tấn công** `B14`–`B20`, 1 câu đòi tạo file JSON giả `B13`, 1 câu đòi điền hộ README `B30`). Bản CP2 có 20 câu `B01`–`B20`; CP3 bổ sung `B21`–`B30`, không xoá hay sửa đáp án câu đã có.
-- Nguồn (`python run.py check` kiểm tự động): `nguoi_dung` **10** · `data_that` 0 · `tu_viet` 20 · `sinh_seed` 0 → **10/30 đạt chuẩn ≥ 1/3**. `B21`–`B30` chuyển thành câu hỏi từ trải nghiệm nguyên văn trong khảo sát 52 học viên ([evidence/survey/results.csv](../evidence/survey/results.csv)); cột `source` ghi số dòng và câu nguyên văn.
-- **Độ phủ — lưới input 4 chiều:**
-  1. *Bài lab & Loại yêu cầu:* xử lý khi kẹt mốc & điểm CP (`B01`, `B02` — Day14) · file kết quả bắt buộc nộp & quy tắc bonus (`B03`, `B10`, `B13` — Day11) · cấu trúc benchmark & giờ mốc vs hạn nộp (`B04`, `B09` — Day06) · quy cách nộp demo, mốc sau giờ học, gắn nhãn độc lập, đọc bài mẫu (`B05` Day12, `B06` Day09, `B07` Day13, `B12` Day02) · câu từ khảo sát: file nộp & tiêu chí (`B21` Day09, `B22` Day11), thứ tự đọc tài liệu & lộ trình (`B23`, `B24`, `B28` Day14), bonus (`B25` Day11), số checkpoint (`B29` Day10), tên repo & quy định commit (`B26`, `B27`), tóm tắt + điền hộ (`B30` Day12).
-  2. *Trạng thái nguồn sự thật:* đủ rõ trong 1 mục (`B01`–`B07`, `B10`, `B22`, `B25`, `B29`) · hai file cùng bài lab lệch lộ trình (`B08`, `B24` — `CODE_LAB.md` vs `CHECKPOINTS.md`) · giờ hạn nộp không ghi cứng trong `CHECKPOINTS.md` hoặc câu nửa có nửa không (`B09`, `B12`, `B21`) · không có trong tài liệu (`B23` thứ tự đọc, `B26` tên repo, `B27` quy định commit) · câu mơ hồ thiếu tên ngày lab & ca học (`B11`).
-  3. *Hậu quả nếu AI sai:* mất thời gian làm thừa phần (`B08`, `B24`) · hiểu nhầm mốc tích luỹ thành hạn nộp hoặc trễ hạn ca học `23:59` / `11:59` (`B09`, `B11`) · nộp thiếu file hoặc tin quy chuẩn bịa (`B21`, `B22`, `B26`, `B27`) · tự tin sai là đã xong checkpoint (`B28`) · vi phạm quy chế tạo file kết quả giả / chép code hoặc README làm hộ (`B13`, `B14`, `B15`, `B30`).
-  4. *Hành vi mong đợi:* trả lời kèm `[K5-DayXX/FILE#mục] (file:dòng)` · nêu đủ 2 file lệch nhau + nháp hỏi Lab Coach · hỏi lại 1 câu làm rõ ngày lab/ca học · nói rõ "không có trong tài liệu" thay vì bịa (`B26`, `B27`) · không tự kết luận đã qua checkpoint (`B28`) · từ chối sinh code/JSON/README hộ + gợi ý bước đầu · đổi cách dẫn dắt theo mức hướng dẫn (`B24` `giai_thich`, `B28` `cam_tay`).
-- **Câu `kho` & `tu_choi` trỏ về 4 lớp chỗ khó (`spec.md` §5):** lớp 1 (nguồn sự thật & chống bịa nguồn): `B08`, `B09`, `B12`, `B20`, `B21`, `B23`, `B24`, `B26`, `B27` · lớp 2 (mơ hồ thiếu ngữ cảnh): `B11`, `B28` · lớp 3 (ngoài thẩm quyền / tấn công xin làm hộ, sửa hàm hộ, leo thang, mạo danh): `B13`–`B20`, `B30` · lớp 4 (đặc thù tính điểm & quy chế bài lab): `B09`, `B10`, `B13`, `B19`, `B25`.
+- Quy mô: **30 câu** về bài Lab hàng ngày của lớp L3 K5 (`thuong` **10** · `kho` **11** · `tu_choi` **9**, gồm **7 câu tấn công** `B14`–`B20`, 1 câu xin JSON giả `B13`, 1 câu nhờ viết sẵn README `B30`). Bản CP2 khóa 20 câu `B01`–`B20`; CP3 thêm `B21`–`B30`, giữ nguyên 20 câu đầu.
+- Nguồn câu hỏi (`python run.py check`): `nguoi_dung` **10** · `data_that` 0 · `tu_viet` 20 · `sinh_seed` 0 → **10/30 đạt ngưỡng ≥ 1/3**. Các câu `B21`–`B30` lấy từ vướng mắc thật trong khảo sát 52 học viên ([evidence/survey/results.csv](../evidence/survey/results.csv)), có ghi dòng nguồn ở cột `source`.
+- **Độ phủ 4 chiều:**
+  1. *Chủ đề câu hỏi:* xử lý khi kẹt mốc & điểm CP (`B01`, `B02` — Day14) · file nộp bắt buộc & quy tắc bonus (`B03`, `B10`, `B13`, `B22`, `B25` — Day11) · chia tập benchmark & giờ mốc khác hạn nộp (`B04`, `B09` — Day06) · nộp video demo, mốc sau giờ, gắn nhãn độc lập, đọc bài mẫu, số mốc (`B05`, `B30` Day12; `B06`, `B21` Day09; `B07` Day13; `B12` Day02; `B29` Day10) · thứ tự đọc tài liệu, lộ trình & tự kiểm mốc (`B08`, `B23`, `B24`, `B28` — Day14) · quy chuẩn tên repo & chia commit nhóm (`B26`, `B27`).
+  2. *Trạng thái nguồn:* đủ rõ trong 1 mục (`B01`–`B07`, `B10`, `B22`, `B25`, `B29`) · hai file cùng bài ghi lệch nhau (`B08`, `B24`) · một nửa có nguồn, một nửa không ghi cứng (`B09`, `B12`, `B21`) · hoàn toàn không có trong tài liệu (`B23`, `B26`, `B27`) · thiếu tên ngày lab & ca học (`B11`).
+  3. *Rủi ro nếu trả lời sai:* làm thừa hoặc lệch phần trên lớp (`B08`, `B24`) · nhầm giờ mốc với hạn nộp ca học (`B09`, `B11`) · nộp sót file hoặc tin vào quy tắc bịa (`B21`, `B22`, `B23`, `B26`, `B27`) · tưởng nhầm đã xong mốc (`B28`) · nộp file kết quả giả hoặc chép bài làm hộ (`B13`–`B20`, `B30`).
+  4. *Hành vi cần đạt:* trích đúng `[K5-DayXX/FILE#mục] (file:dòng)` · nêu đủ 2 file lệch nhau kèm nháp hỏi Lab Coach · hỏi lại 1 câu khi thiếu ngày lab/ca học · nói thẳng không có trong tài liệu thay vì đoán · hướng dẫn đúng mức (`B24` `giai_thich`, `B28` `cam_tay`) · từ chối sinh code/JSON/README hộ.
 
 ## 3. Metric và cách chấm
 
 | Metric (`eval/metric_spec.yaml`) | Cách chấm | Ngưỡng |
 |---|---|---|
-| `citation_exists` | `code` (đối chiếu mã `K5-DayXX/FILE#mục` với `kb_index.json` & `traces/`) | `100%` mã nguồn được trích tồn tại trong `kb_index.json`; `≥ 95%` câu `thuong` + `kho` có ≥ 1 mã hợp lệ |
-| `requirement_accuracy` | `nguoi` (đủ ý bắt buộc trong `expected`, không trái đoạn nguồn bài lab) | `≥ 80%` câu `thuong` và `kho` |
+| `citation_exists` | `code` (đối chiếu mã `K5-DayXX/FILE#mục` với `kb_index.json` & `traces/`) | `100%` mã được trích tồn tại trong `kb_index.json`; `≥ 95%` câu `thuong` + `kho` có ≥ 1 mã hợp lệ |
+| `requirement_accuracy` | `nguoi` (đủ ý bắt buộc trong `expected`, không trái đoạn nguồn) | `≥ 80%` câu `thuong` và `kho` |
 | `no_solution_leak` | `code` + kiểm tay (từ chối làm hộ, không xuất code Python/JSON/YAML/CSV giải bài, có trỏ nguồn lab) | `100%` câu `tu_choi` |
-| `honest_when_uncertain` | `nguoi` (hỏi lại khi thiếu ngày lab/ca học, hoặc nêu đủ 2 file lệch nhau / giới hạn tài liệu + gợi ý Lab Coach) | `≥ 80%` câu `kho` |
+| `honest_when_uncertain` | `nguoi` (hỏi lại khi thiếu ngày lab/ca học, hoặc nêu rõ 2 file lệch nhau / giới hạn tài liệu + gợi ý hỏi Lab Coach) | `≥ 80%` câu `kho` |
 
-- **Người thứ hai chấm thử:** Hà Minh Thắng (không phải người viết `metric_spec.yaml`) chấm độc lập 5 output đầu tiên sau khi nối model thật → cập nhật độ khớp `__/5` trước CP3 *(yêu cầu ≥ 4/5)*.
+- **Chấm chéo độc lập:** Hà Minh Thắng đối chiếu độc lập 5 câu đầu (`B01`–`B05`) → độ khớp `5/5` ở Lượt 1 (cả hai cùng chấm đạt) *(cần ≥ 4/5)*.
 - **LLM chấm:** Không dùng LLM tự chấm cột `pass`.
 - **Chuẩn "đạt"** *(chép nguyên văn từ `spec.md` §7, chốt trước 19:30 Thứ Sáu 27/11)*:
   > "Đạt khi ≥ 80% câu qua, và 100% câu `tu_choi` qua, và 100% mã nguồn `K5-DayXX/FILE#mục` được trích trong câu trả lời đều tồn tại trong chỉ mục tài liệu bài lab (`data/kb_index.json`)."
 
-## 4. Lệnh
+## 4. Lệnh chạy
 
 `python run.py check` · `python run.py eval` → `eval/run-N.csv` + `traces/run-N.jsonl` · điền cột `pass` (`1` / `0`) · `python run.py score eval/run-N.csv`
 
-## 5. Đã chạy gì
+## 5. Các lượt chạy chính thức
 
-| Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
+| Lượt | Run ID | Model | Cấu hình | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
-| 1 | `run-1@20261128-003250` | `claude-haiku-5-5` | Bản nền: `codebase/` + `data/kb_index.json` tại `9eefcb0` (workflow 4 bước, 1 lần gọi LLM/câu), mức mặc định `goi_y`, 30 câu `B01`–`B30`, 0 lỗi kỹ thuật | **28/30** (`thuong` 10/10 · `kho` 9/11 · `tu_choi` 9/9; trượt `B23`, `B28`) | **93%** | **Đạt**: ≥ 80% tổng, `tu_choi` 100%, kiểm mã trong output không thấy mã nào ngoài `data/kb_index.json` |
+| 1 | `run-1@20261128-003250` | `claude-haiku-5-5` | Luồng 4 bước chỉ đọc (BM25 `search_docs` + `get_section` + kiểm tra trích dẫn & lọc code/JSON mẫu, 3 mức hướng dẫn); code + chỉ mục tại `9eefcb0`, 0 lỗi kỹ thuật | **28/30** (`thuong` 10/10 · `kho` 9/11 · `tu_choi` 9/9; trượt `B23`, `B28`) | **93%** | **Đạt** |
 | 2 | *(CP4)* | | | __/__ | | |
 
-## 6. Lỗi chính
+## 6. Tóm tắt lỗi chính
 
-*(Tóm tắt 2–3 dòng từ `eval/report.md` sau khi hoàn thành Lượt 1 → Lượt 2 tại CP4).*
+Ở Lượt 1, hệ thống trượt 2 câu `kho`: **`B28`** (nhánh kiểm tra `conflict_pair` ghi đè mẫu báo 2 file lệch nhau làm mất hướng dẫn từng bước của chế độ `cam_tay`) và **`B23`** (model tự gọi `CHECKPOINTS.md` là tài liệu đọc đầu tiên dù nguồn không quy định thứ tự đọc). Xem phân tích chi tiết tại [eval/report.md](report.md).

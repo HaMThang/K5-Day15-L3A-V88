@@ -1,7 +1,6 @@
-# Đào data — cách đếm và kết quả
+# Đào dữ liệu hành vi (`data/preclass/`) — Cách đếm và kết quả
 
-> Điền ở guide bước 1.2 · Chấm ở rubric R1.
-> Script tái lập có sẵn trong repo: `python evidence/count_preclass.py` (đọc dữ liệu gốc từ `data-btc/preclass/` đã gitignore, người ngoài chạy lại ra đúng 100% các con số dưới đây).
+Script kiểm chứng: `python evidence/count_preclass.py` (đọc dữ liệu gốc tại `data-btc/preclass/` đã git-ignored).
 
 ## 1. Cách đếm — viết TRƯỚC khi chạy
 
@@ -44,4 +43,4 @@
 
 - Nhật ký `data/preclass/` chỉ ghi nhận hành vi trên nền tảng pre-class (mini-lab trực tuyến), **chưa phản ánh hết quá trình làm các bài lab hàng ngày kéo dài 240 phút trên máy tính** (trong 3 tuần đầu học liên tục Phase 1 mỗi ngày đều làm lab, mỗi bài có trung bình `5,8` checkpoint và `3–16` file `.md` hướng dẫn — xem thêm thống kê 40 đơn vị bài lab tại [lab-checkpoint-analysis.md](lab-checkpoint-analysis.md)).
 - Dữ liệu cho thấy **hành vi** (`22,5%` lượt hoàn thành lab bị skip trên `51,2%` học viên hoàn thành lab, và `98,89%` lượt chat không gắn với `lab_key`), nhưng không cho biết **vì sao** học viên bỏ qua hoặc mất bao nhiêu phút đối chiếu giữa `CHECKPOINTS.md`, `CODE_LAB.md`, `RUBRIC.md`, `SUBMISSION.md` trước hạn nộp (`23:59` cùng ngày hoặc `11:59` trưa hôm sau với ca `16:00`).
-- **Kiểm lại bằng phỏng vấn trực tiếp:** Phỏng vấn ≥ 5 học viên lớp L3 (trong tổng 686 học viên toàn khoá) ngoài nhóm và 1 Lab Coach chiều tối 27/11 theo bộ 5 câu hỏi Mom Test (`evidence/interviews/P1..P5.md`, tổng hợp tại `evidence/summary.md`).
+- **Đối chiếu thêm:** Kết hợp khảo sát 52 học viên L3 ngoài nhóm và ghi nhận `P1–P3` tại [summary.md](summary.md) để kiểm tra trải nghiệm tra cứu thực tế trên các buổi lab nhiều file.
