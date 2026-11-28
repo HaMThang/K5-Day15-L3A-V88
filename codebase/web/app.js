@@ -22,63 +22,65 @@ function addMessage(label, text, role = 'assistant') {
   conversation.append(message);
 }
 
-function splitResponse(text) {
-  const lines = text.split(/\n+/).map(line => line.trim()).filter(Boolean);
-  const parts = [];
-  for (const line of lines) {
-    if (line.length > 300 && !line.startsWith('- Nguồn') && !line.startsWith('[')) {
-      const sentences = line.split(/(?<=[.!?])\s+(?=[A-ZÀ-Ỹ])/u);
-      if (sentences && sentences.length > 1) {
-        let chunk = '';
-        for (const sentence of sentences) {
-          const next = sentence.trim();
-          if (chunk && chunk.length + next.length > 260) {
-            parts.push(chunk);
-            chunk = '';
-          }
-          chunk += (chunk ? ' ' : '') + next;
-        }
-        if (chunk) parts.push(chunk);
-        continue;
-      }
+// Markdown tối giản và an toàn: escape HTML trước, chỉ hỗ trợ đoạn văn, danh sách, trích dẫn, `code`, **đậm**.
+const CODE_RE = /\[?\b([A-Za-z0-9_.-]+\/[A-Za-z0-9_./-]+#[A-Za-z0-9_-]+)\b\]?/g;
+const FILE_LINE_RE = /\b([A-Za-z0-9_./-]+\.(?:md|py|json|yaml|yml|csv|txt)(?::\d+(?:[-,]\d+)*)?)/g;
+
+function escapeHtml(text) {
+  return text.replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[ch]));
+}
+
+function inline(text) {
+  return text.split(/(`[^`\n]+`)/).map(piece => {
+    if (/^`[^`]+`$/.test(piece)) return '<code>' + escapeHtml(piece.slice(1, -1)) + '</code>';
+    return escapeHtml(piece)
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(CODE_RE, '<code>$1</code>')
+      .replace(FILE_LINE_RE, (m, f, off, all) => /<code>[^<]*$/.test(all.slice(0, off)) ? m : '<code>' + f + '</code>');
+  }).join('');
+}
+
+function renderMarkdown(text) {
+  const html = [];
+  let list = null;
+  let para = [];
+  let quote = [];
+  const flushPara = () => { if (para.length) { html.push('<p>' + para.map(inline).join('<br>') + '</p>'); para = []; } };
+  const flushList = () => { if (list) { html.push(`<${list.tag}>` + list.items.map(i => '<li>' + inline(i) + '</li>').join('') + `</${list.tag}>`); list = null; } };
+  const flushQuote = () => { if (quote.length) { html.push('<blockquote>' + renderMarkdown(quote.join('\n')) + '</blockquote>'); quote = []; } };
+  for (const raw of text.replace(/\r/g, '').split('\n')) {
+    const line = raw.trim();
+    const q = /^>\s?(.*)$/.exec(line);
+    if (q) { flushPara(); flushList(); quote.push(q[1]); continue; }
+    flushQuote();
+    const li = /^([-*•]|\d+[.)])\s+(.*)$/.exec(line);
+    if (li) {
+      flushPara();
+      const tag = /\d/.test(li[1]) ? 'ol' : 'ul';
+      if (!list || list.tag !== tag) { flushList(); list = {tag, items: []}; }
+      list.items.push(li[2]);
+      continue;
     }
-    parts.push(line);
+    if (!line) { flushPara(); flushList(); continue; }
+    if (list && /^\s{2,}/.test(raw)) { list.items[list.items.length - 1] += ' ' + line; continue; }
+    flushList();
+    para.push(line.replace(/^#{1,6}\s+/, ''));
   }
-  return parts;
+  flushPara(); flushList(); flushQuote();
+  return html.join('');
 }
 
 function addResponse(text) {
-  const parts = splitResponse(text);
-  const isSource = part => /^-\s*Nguồn(?:\s|:)/iu.test(part);
-  const sources = parts.filter(isSource);
-  const answers = parts.filter(part => !isSource(part));
-  if (!answers.length && sources.length) answers.push('Nguồn tài liệu:');
-  answers.forEach((part, index) => {
-    const message = document.createElement('div');
-    message.className = 'assistant-message message';
-    if (index === 0) {
-      const heading = document.createElement('span');
-      heading.className = 'message-label';
-      heading.textContent = '✳ LAB COMPASS';
-      message.append(heading);
-    }
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble response-bubble';
-    const section = document.createElement('div');
-    section.className = 'response-part';
-    section.textContent = part;
-    bubble.append(section);
-    if (index === 0) {
-      sources.forEach(source => {
-        const reference = document.createElement('div');
-        reference.className = 'response-part response-source';
-        reference.textContent = source;
-        bubble.append(reference);
-      });
-    }
-    message.append(bubble);
-    conversation.append(message);
-  });
+  const message = document.createElement('div');
+  message.className = 'assistant-message message';
+  const heading = document.createElement('span');
+  heading.className = 'message-label';
+  heading.textContent = '✳ LAB COMPASS';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble response-bubble markdown';
+  bubble.innerHTML = renderMarkdown(text);
+  message.append(heading, bubble);
+  conversation.append(message);
 }
 
 question.addEventListener('input', () => { count.textContent = question.value.length + ' / 1500'; });
@@ -114,7 +116,12 @@ form.addEventListener('submit', async event => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({question: current, mode: mode.value, repo_path: repoPath.value}),
     });
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
+    if (response.status === 429) {
+      const wait = Number(response.headers.get('Retry-After') || data.retry_after || 0);
+      const when = wait ? ` Bạn thử lại sau khoảng ${wait >= 60 ? Math.ceil(wait / 60) + ' phút' : wait + ' giây'} nhé.` : ' Bạn đợi một lát rồi thử lại nhé.';
+      throw new Error((data.error || 'Bản demo đang giới hạn số lượt hỏi.') + when);
+    }
     if (!response.ok) throw new Error(data.error || 'Không thể tra cứu lúc này.');
     addResponse(data.output);
     const details = document.createElement('div');

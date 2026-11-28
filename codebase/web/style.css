@@ -48,3 +48,12 @@ button:focus-visible,textarea:focus-visible{outline:2px solid #8be1ff;outline-of
 .guidance-settings label{display:block;margin-bottom:5px}
 .guidance-settings input,.guidance-settings select{box-sizing:border-box;width:100%;font:inherit;padding:9px;border-radius:8px;border:1px solid #315174;background:#152e50;color:#edf5ff}
 .guidance-settings input:focus-visible,.guidance-settings select:focus-visible{outline:2px solid #8be1ff;outline-offset:2px}
+
+/* Câu trả lời Markdown trong một khung duy nhất. */
+.markdown{white-space:normal;max-width:100%}
+.markdown p{margin:0 0 10px}.markdown p:last-child{margin-bottom:0}
+.markdown ul,.markdown ol{margin:0 0 10px;padding-left:22px}.markdown li{margin:3px 0}
+.markdown strong{color:#ffffff}
+.markdown code{font-family:Consolas,'Cascadia Code',monospace;font-size:12px;background:#0b2141;border:1px solid #2f5584;border-radius:4px;padding:1px 5px;color:#9fe0ff;overflow-wrap:anywhere}
+.markdown blockquote{margin:12px 0 0;padding:10px 12px;border-left:3px solid #58c8ff;background:#0f2747;border-radius:0 8px 8px 0;color:#d6e8fb}
+.markdown blockquote p{margin:0 0 6px}

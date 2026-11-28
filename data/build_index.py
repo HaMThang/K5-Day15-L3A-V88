@@ -273,7 +273,7 @@ SECTIONS: list[dict[str, Any]] = [
     {
         "code": "K5-Day14/CODE_LAB#lo-trinh-335p",
         "lab": "K5 Day14 — Deployment, Benchmark & Observability",
-        "file": "Lab/K5-L3-Day14/CODE_LAB.md (đối chiếu tại CHECKPOINTS.md:6)",
+        "file": "Lab/K5-L3-Day14/CODE_LAB.md:35-45",
         "title": "K5 Day14 · Lộ trình gốc 7 Part (335 phút) trong CODE_LAB.md",
         "keywords": ["day14", "day 14", "code_lab", "7 part", "part 1-7", "335 phút", "lộ trình"],
         "summary": (
