@@ -72,3 +72,4 @@ button:focus-visible,textarea:focus-visible{outline:2px solid #8be1ff;outline-of
 .v88-avatar{background:#0f1f4b;font-size:11px;letter-spacing:-.04em}.v88-avatar b{color:#fff}.v88-avatar i{color:#f0b429;font-style:normal}
 .dot{background:#f0b429;box-shadow:0 0 9px #f0b429}.eyebrow,.guide-title,.guide-spark{color:#f0b429}
 @media(max-width:760px){.top-logo{display:inline-flex}}
+.saved-tag{display:inline-block;background:#f0b42922;border:1px solid #f0b42966;color:#f6cf6b;border-radius:20px;padding:2px 9px;font-weight:600}

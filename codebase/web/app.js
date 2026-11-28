@@ -126,10 +126,11 @@ reset.addEventListener('click', () => {
   examples.hidden = false;
   question.focus();
 });
+let forceLive = false;
 form.addEventListener('submit', async event => {
   event.preventDefault();
   const current = question.value.trim();
-  if (!current || submit.disabled) return;
+  if (!current || submit.disabled) { forceLive = false; return; }
   addMessage('BẠN', current, 'user');
   question.value = '';
   question.dispatchEvent(new Event('input'));
@@ -142,7 +143,7 @@ form.addEventListener('submit', async event => {
     const response = await fetch('/api/answer', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({question: current, mode: mode.value, repo_path: repoPath.value}),
+      body: JSON.stringify({question: current, mode: mode.value, repo_path: repoPath.value, live: forceLive}),
     });
     const data = await response.json().catch(() => ({}));
     if (response.status === 429) {
@@ -167,6 +168,23 @@ form.addEventListener('submit', async event => {
       } catch (_) { copy.textContent = 'Không sao chép được'; }
     });
     details.append(' ', copy);
+    if (data.saved) {
+      // Kết quả đã lưu là lần chạy model thật gần nhất; luôn ghi rõ và cho chạy lại trực tiếp.
+      const tag = document.createElement('span');
+      tag.className = 'saved-tag';
+      tag.textContent = `Kết quả đã lưu · chạy thật lúc ${data.saved_at || '—'}`;
+      const rerun = document.createElement('button');
+      rerun.type = 'button';
+      rerun.className = 'copy';
+      rerun.textContent = 'Chạy lại trực tiếp';
+      rerun.addEventListener('click', () => {
+        question.value = current;
+        forceLive = true;
+        form.requestSubmit();
+      });
+      details.prepend(tag, ' ');
+      details.append(' ', rerun);
+    }
     conversation.append(details);
     status.textContent = '';
   } catch (error) {
@@ -176,6 +194,7 @@ form.addEventListener('submit', async event => {
     question.dispatchEvent(new Event('input'));
     status.textContent = 'Bạn có thể sửa hoặc gửi lại câu hỏi.';
   } finally {
+    forceLive = false;
     submit.disabled = false;
     reset.disabled = false;
     submit.innerHTML = 'Gửi câu hỏi <span>→</span>';

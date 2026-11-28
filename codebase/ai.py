@@ -120,7 +120,8 @@ def call_claude(system: str, user: str) -> dict:
     url = API_BASE_URL or "https://api.anthropic.com/v1/messages"
     body = {
         "model": MODEL_NAME,
-        "max_tokens": 3072,
+        "max_tokens": 4096,
+        "thinking": {"type": "disabled"},  # Haiku tự bật thinking và tiêu hết max_tokens -> câu trả lời bị cắt (B28)
         "system": system or "",
         "messages": [{"role": "user", "content": user}],
     }

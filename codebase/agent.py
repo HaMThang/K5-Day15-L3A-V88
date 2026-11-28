@@ -202,6 +202,7 @@ def _salvage_json(s: str) -> dict[str, Any] | None:
     return out if out.get("answer") else None
 
 
+_INTERNALS_RE = re.compile(r"(các |những )?(đoạn |phần )?(tài liệu|nguồn|đoạn nguồn)( mình)? (đã đọc|đã truy xuất|mình truy xuất|truy xuất được)", re.IGNORECASE)
 _INLINE_SOURCE_RE = re.compile(r"https?://\S+|\b[A-Za-z]:[\\/][^\s\"'<>|?*]+")
 _UNKNOWN_CODE = "mã bạn đưa ra"
 
@@ -310,6 +311,7 @@ def _compose(body: str, sources: str = "", next_step: str = "", draft: str = "",
              source_label: str = "Nguồn tài liệu Lab") -> str:
     """Ghép 1 câu trả lời Markdown: nội dung -> nguồn -> bước tự làm -> nháp hỏi Lab Coach."""
     body, next_step = _drop_inline_citations(body), _drop_inline_citations(next_step)
+    body = _INTERNALS_RE.sub(lambda m: "Tài liệu bài lab" if m.group(0)[0].isupper() else "tài liệu bài lab", body)  # không lộ chuyện "đoạn mình truy xuất" với học viên
     # Model đôi khi viết "Các bước: 1. ... 2. ..." trên một dòng: tách mỗi bước xuống dòng riêng.
     body = re.sub(r"(?<=[.:!?)])[ \t]+(?=[1-9]\.\s)", "\n", body)
     parts = [body.strip()]
@@ -524,14 +526,16 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
     if decision == "khong_nguon" or not passages or top_score < 1.2 or not verified:
         note("guardrail: thiếu thông tin trong tài liệu -> nhắc xem SUBMISSION.md + nháp hỏi Lab Coach")
         checked_codes = ", ".join(verified)  # chỉ kể mục thật sự dùng làm căn cứ, không kể mục khớp yếu
-        if not ans_text or not verified:
-            if passages and top_score >= 1.2:
-                p0 = passages[0]
-                verified = [p0["code"]]
-                checked_codes = p0["code"]
+        if not verified and passages and top_score >= 1.2:
+            # Model quên ghi mã nguồn: vẫn giữ câu trả lời của model, chỉ gắn mục khớp nhất làm nguồn.
+            verified = [passages[0]["code"]]
+            checked_codes = verified[0]
+        if not ans_text:
+            if verified:
+                p0 = get_section(verified[0], repo_path=repo_path) or passages[0]
                 ans_text = (
-                    f"Theo mục `{p0['code']}` ({p0.get('file', '')}): \"{p0['quote']}\" "
-                    "Phần còn lại không ghi trong `CHECKPOINTS.md`, bạn xem `SUBMISSION.md` hoặc hỏi Lab Coach của ca mình."
+                    f"Tài liệu ghi: \"{p0.get('quote', '')}\" "
+                    "Phần còn lại không ghi trong tài liệu bài lab, bạn xem `SUBMISSION.md` hoặc hỏi Lab Coach của ca mình."
                 )
             else:
                 ans_text = "Tài liệu của 12 bài Lab K5 L3 mà mình đã lập chỉ mục chưa có thông tin cho câu hỏi này, nên mình không đoán."

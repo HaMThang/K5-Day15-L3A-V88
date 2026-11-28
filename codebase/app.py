@@ -2,6 +2,8 @@
 import json
 import os
 import sys
+import tempfile
+import time
 import traceback
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -107,6 +109,25 @@ def main() -> int:
         print(f"   (model: {models} · gọi model {s['model_calls']} · công cụ {s['tool_calls']} · token vào {s['tokens_in']} / ra {s['tokens_out']})")
 
 
+_SAVED_PATH = os.path.join(tempfile.gettempdir(), "lab_compass_saved_answers.json")
+
+
+def _load_saved() -> dict:
+    try:
+        with open(_SAVED_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def _save_result(key: str, value: dict) -> None:
+    data = _load_saved()
+    data[key] = value
+    with open(_SAVED_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
+
+
 def serve_web() -> int:
     import tracing
     from agent import MODE_LABELS, answer
@@ -166,9 +187,18 @@ def serve_web() -> int:
                 self.send_json(400, {"error": "Câu hỏi hoặc mức hướng dẫn không hợp lệ."})
                 return
 
+            source_text = repo
             repo, error = resolve_lab_source(repo)
             if error:
                 self.send_json(400, {"error": error})
+                return
+
+            # Kết quả đã lưu: chỉ là lần chạy model THẬT gần nhất cho đúng câu/mức/nguồn này,
+            # trả kèm nhãn và giờ chạy; nút "Chạy lại trực tiếp" (live=true) luôn gọi model mới.
+            key = "|".join((mode, source_text.strip().lower(), " ".join(question.lower().split())))
+            saved = _load_saved().get(key)
+            if saved and data.get("live") is not True:
+                self.send_json(200, {**saved, "saved": True})
                 return
 
             tracing.begin("web")
@@ -183,11 +213,14 @@ def serve_web() -> int:
             if result is None:
                 self.send_json(500, {"error": "Không thể tra cứu lúc này. Xem chi tiết lỗi ở terminal."})
                 return
-            self.send_json(200, {
+            reply = {
                 "output": result["output"],
                 "model": ", ".join(summary["models"]),
                 **{k: summary[k] for k in ("model_calls", "tool_calls", "tokens_in", "tokens_out")},
-            })
+            }
+            if summary["model_calls"] and summary["tokens_out"]:  # chỉ lưu câu trả lời do model thật sinh ra
+                _save_result(key, {**reply, "saved_at": time.strftime("%H:%M %d/%m")})
+            self.send_json(200, {**reply, "saved": False})
 
     try:
         with HTTPServer(("127.0.0.1", 8000), Handler) as server:
