@@ -29,13 +29,14 @@ class GuardrailTests(unittest.TestCase):
         self.assertNotIn("`mã bạn", text)
         self.assertEqual(agent._sanitize_inline_codes("vì mã `X/Y#z` lạ", {})[0], "vì mã bạn đưa ra lạ")
         self.assertEqual(used, ["A/B#c"])
+        self.assertIn("evidence/x.md#1", agent._sanitize_inline_codes("xem evidence/x.md#1,3", {})[0])
 
     def test_coach_draft_has_no_double_punctuation(self):
         draft = draft_coach_question("Hạn nộp Day06 là mấy giờ?", "Tài liệu không ghi hạn nộp.", "K5-Day06/X#y")
         self.assertNotIn("., ", draft)
-        self.assertIn("Do tài liệu không ghi hạn nộp, nhờ", draft)
+        self.assertIn("Vì tài liệu không ghi hạn nộp, anh/chị", draft)
         twice = draft_coach_question("Q", "hai file lệch nhau; cần Lab Coach xác nhận phạm vi", "")
-        self.assertIn("Do hai file lệch nhau, nhờ", twice)
+        self.assertIn("Vì hai file lệch nhau, anh/chị", twice)
 
     def test_compose_is_one_markdown_block(self):
         out = agent._compose("Trả lời.", "- `A/B#c` · B.md:3", "Mở `B.md`.", "[Bản nháp]\n\"Chào coach\"")

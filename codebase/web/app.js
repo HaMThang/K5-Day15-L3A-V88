@@ -142,7 +142,8 @@ form.addEventListener('submit', async event => {
     conversation.append(details);
     status.textContent = '';
   } catch (error) {
-    addMessage('✳ LAB COMPASS', error.message || 'Không thể kết nối. Hãy thử lại.');
+    const offline = error instanceof TypeError; // fetch() ném TypeError khi mất kết nối tới server
+    addMessage('✳ LAB COMPASS', offline || !error.message ? 'Mình chưa kết nối được tới máy chủ. Bạn kiểm tra mạng rồi gửi lại nhé, câu hỏi vẫn còn trong ô nhập.' : error.message);
     question.value = current;
     question.dispatchEvent(new Event('input'));
     status.textContent = 'Bạn có thể sửa hoặc gửi lại câu hỏi.';

@@ -203,6 +203,8 @@ def _sanitize_inline_codes(text: str, valid_map: dict[str, str]) -> tuple[str, l
             if canonical not in used:
                 used.append(canonical)
             return canonical
+        if re.search(r"\.(md|py|json|csv|ya?ml|txt)#", match.group(1)):
+            return match.group(1)  # đường dẫn file#dòng (vd evidence/x.md#1), không phải mã mục
         return _UNKNOWN_CODE
 
     out = _CODE_PATTERN.sub(_repl, text or "")
@@ -385,18 +387,18 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
         if len(ans_text) < 20:
             if signals["env_or_exec"]:
                 ans_text = (
-                    "Mình chỉ đọc tài liệu và mã nguồn để hướng dẫn, không tự cài đặt môi trường hay chạy lệnh terminal thay bạn. "
-                    "Tự dựng môi trường và chạy kiểm thử giúp bạn nắm rõ cách vận hành thực tế của bài lab."
+                    "Mình chỉ đọc tài liệu và mã nguồn để hướng dẫn, không cài môi trường hay chạy lệnh terminal thay bạn. "
+                    "Bạn tự dựng môi trường và tự chạy kiểm thử thì mới nắm được bài lab chạy thế nào."
                 )
             else:
                 ans_text = (
-                    "Mình không viết sẵn code lời giải hoàn chỉnh hay tạo nội dung file kết quả mẫu thay bạn. "
-                    "Các file đầu ra như trong `outputs/` cần được sinh ra từ lệnh chạy thật trên máy bạn để phản ánh đúng kết quả làm bài."
+                    "Mình không viết sẵn code lời giải hay nội dung file kết quả mẫu. "
+                    "File trong `outputs/` phải do lệnh chạy thật trên máy bạn sinh ra thì mới đúng là kết quả bài làm của bạn."
                 )
         if not next_step:
             next_step = (
-                f"Mở mục `{verified[0]}` trong thư mục bài lab trên máy, đọc điều kiện của mốc hiện tại "
-                "rồi tự chạy lệnh kiểm tra trên terminal; nếu kẹt quá 10 phút hãy gọi Lab Coach."
+                f"Mở mục `{verified[0]}` trong thư mục bài lab trên máy, đọc điều kiện của mốc đang làm "
+                "rồi tự chạy lệnh kiểm tra. Kẹt quá 10 phút thì gọi Lab Coach."
             )
         else:
             next_step, _ = _sanitize_inline_codes(_strip_forbidden_blocks(next_step), valid_map)
@@ -407,9 +409,9 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
         note("g10: hỏi lại 1 câu làm rõ ngày lab và ca học")
         if not ans_text or "đã qua" in ans_text.lower() or "đã đạt" in ans_text.lower():
             ans_text = (
-                "Câu hỏi chưa nêu rõ bài Lab ngày mấy nên mình chưa đối chiếu đúng tài liệu được "
-                "(mình cũng không kết luận 'đã qua checkpoint' thay lệnh tự kiểm trên máy bạn). "
-                "Bạn đang làm Lab ngày nào (ví dụ Day06, Day11, Day14), ở mốc CP mấy và học ca ban ngày hay ca 16:00 chiều?"
+                "Bạn chưa nói đang làm Lab ngày nào nên mình chưa biết phải đối chiếu tài liệu nào. "
+                "Mình cũng không kết luận thay bạn là đã qua checkpoint, phần đó bạn tự kiểm trên máy. "
+                "Bạn đang làm Day mấy (ví dụ Day06, Day11, Day14), đến CP mấy, và học ca ngày hay ca 16:00 chiều?"
             )
         return {"output": _sanitize_inline_codes(ans_text, valid_map)[0]}
 
@@ -438,7 +440,7 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
                     f"Hai tài liệu trong cùng bài Lab ghi lộ trình khác nhau:\n"
                     f"1. `{c1}` ({s1.get('file', '')}): \"{s1.get('quote', s1.get('summary', ''))}\"\n"
                     f"2. `{c2}` ({s2.get('file', '')}): \"{s2.get('quote', s2.get('summary', ''))}\"\n\n"
-                    "Lớp K5 làm theo điều chỉnh ở `CHECKPOINTS.md`; bạn nên đối chiếu cả hai file và hỏi lại Lab Coach nếu còn vướng."
+                    "Lớp K5 làm theo phần điều chỉnh trong `CHECKPOINTS.md`. Bạn mở cả hai file để đối chiếu, còn vướng thì hỏi Lab Coach."
                 )
             elif not _mentions(ans_text, c2):
                 s2 = get_section(c2, repo_path=repo_path)
@@ -450,7 +452,7 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
             _sanitize_inline_codes(coach_reason, valid_map)[0] or f"hai mục {codes_str} trong tài liệu bài lab ghi lộ trình khác nhau",
             codes_str,
         )
-        step_out = next_step or "Mở cả hai file hướng dẫn theo dòng đã trích để đối chiếu và xác nhận với Lab Coach tại lớp."
+        step_out = next_step or "Mở cả hai file ở đúng dòng đã trích để đối chiếu, rồi hỏi lại Lab Coach tại lớp."
         return {"output": _compose(ans_text, _format_sources(verified), step_out, draft, "Nguồn đối chiếu")}
 
     top_score = passages[0]["score"] if passages else 0.0
@@ -464,7 +466,7 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
                 checked_codes = p0["code"]
                 ans_text = (
                     f"Theo mục `{p0['code']}` ({p0.get('file', '')}): \"{p0['quote']}\" "
-                    "Phần thông tin còn lại không ghi cứng trong `CHECKPOINTS.md`, cần xem `SUBMISSION.md` hoặc hỏi theo ca học."
+                    "Phần còn lại không ghi trong `CHECKPOINTS.md`, bạn xem `SUBMISSION.md` hoặc hỏi Lab Coach của ca mình."
                 )
             else:
                 ans_text = "Tài liệu bài Lab K5 L3 đã lập chỉ mục hiện không ghi quy định cho câu hỏi này."

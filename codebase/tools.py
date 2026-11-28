@@ -400,11 +400,11 @@ def draft_coach_question(question: str, reason: str, cited_codes: str = "") -> s
         q_clean = q_clean[:157] + "..."
     reason = re.sub(r"[;,]\s*(cần|nhờ)\s.*(xác nhận|hỏi).*$", "", (reason or "").strip(), flags=re.IGNORECASE)
     reason = reason.strip().rstrip(".;:, ")
-    if reason[1:2].islower():  # "Tài liệu..." -> "tài liệu..." sau chữ "Do"; giữ nguyên "CHECKPOINTS.md..."
+    if reason[1:2].islower():  # "Tài liệu..." -> "tài liệu..." sau chữ "Vì"; giữ nguyên "CHECKPOINTS.md..."
         reason = reason[0].lower() + reason[1:]
     checked = f" (em đã tra mục {cited_codes})" if cited_codes else " (em đã kiểm tra các file hướng dẫn của bài lab)"
     return (
-        f"[Bản nháp hỏi Lab Coach — học viên tự kiểm và tự gửi]\n"
-        f"\"Chào anh/chị Lab Coach, ở ca học của lớp mình em đang vướng câu hỏi: '{q_clean}'{checked}. "
-        f"Do {reason}, nhờ anh/chị xác nhận giúp em quy định chính xác của bài lab này ạ. Em cảm ơn!\""
+        f"[Bản nháp hỏi Lab Coach, bạn xem lại rồi tự gửi]\n"
+        f"\"Chào anh/chị Lab Coach, em đang vướng câu hỏi: '{q_clean}'{checked}. "
+        f"Vì {reason}, anh/chị xác nhận giúp em quy định của bài lab này với ạ. Em cảm ơn!\""
     )
