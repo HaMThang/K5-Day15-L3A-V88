@@ -22,7 +22,6 @@ function addMessage(label, text, role = 'assistant') {
   conversation.append(message);
 }
 
-// Tách các dòng và đoạn dài, không tự tạo thêm nội dung hoặc số bước.
 function splitResponse(text) {
   const lines = text.split(/\n+/).map(line => line.trim()).filter(Boolean);
   const parts = [];

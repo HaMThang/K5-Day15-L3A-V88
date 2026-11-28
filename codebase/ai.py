@@ -1,21 +1,7 @@
-"""Nối model — chỗ DUY NHẤT trong bản chạy thử gọi model AI.
+"""Kết nối API mô hình ngôn ngữ (chỉ dùng thư viện chuẩn Python).
 
-Hợp đồng (giữ nguyên để khung đo được token):
-    call_model(system: str, user: str) -> dict với 4 khoá
-        "text":       str   chữ model trả về
-        "model":      str   tên model đã gọi (để tra giá ở bảng giá model)
-        "tokens_in":  int   số token vào, lấy từ trường usage trong phản hồi API — KHÔNG ước lượng
-        "tokens_out": int   số token ra, gồm cả token suy luận / suy nghĩ nếu API tính riêng
-    @model_call (từ tracing.py) tự ghi mỗi lần gọi vào trace; agent.py gọi call_model bao nhiêu lần
-    cũng được, khung tự cộng token.
-    Lỗi gọi model (hết lượt, sai key, mất mạng): cứ để exception bay ra — khung ghi lỗi vào cột error.
-
-Chỉ dùng thư viện chuẩn Python (`urllib.request`, `json`). Hỗ trợ:
-    - fake       (mặc định trước CP3 khi chưa điền .env)
-    - gemini     (Google AI Studio REST API)
-    - openai     (OpenAI Chat Completions hoặc API tương thích qua API_BASE_URL: DeepSeek, Groq, OpenRouter)
-    - anthropic  (Claude Messages API)
-    - ollama     (Local Ollama server)
+Hợp đồng: call_model(system, user) -> {"text", "model", "tokens_in", "tokens_out"}.
+Token lấy trực tiếp từ trường usage của API.
 """
 from __future__ import annotations
 
@@ -33,7 +19,6 @@ SHOW_RAW = False
 
 
 def load_env(path: str = os.path.join(ROOT, ".env")) -> None:
-    """Đọc file .env (KEY=VALUE mỗi dòng) vào biến môi trường, không ghi đè biến đã có. Khung — không cần sửa."""
     if not os.path.exists(path):
         return
     with open(path, encoding="utf-8-sig") as f:
@@ -51,7 +36,7 @@ MODEL_NAME = (os.environ.get("MODEL_NAME") or "").strip()
 API_KEY = (os.environ.get("API_KEY") or "").strip()
 API_BASE_URL = (os.environ.get("API_BASE_URL") or "").strip()
 
-_PROVIDER_DEFAULT_URLS = {
+_OPENAI_URLS = {
     "openai": "https://api.openai.com/v1/chat/completions",
     "deepseek": "https://api.deepseek.com/chat/completions",
     "groq": "https://api.groq.com/openai/v1/chat/completions",
@@ -59,10 +44,16 @@ _PROVIDER_DEFAULT_URLS = {
 }
 
 
+def _require_config(*, need_key: bool = True) -> None:
+    if need_key and not API_KEY:
+        raise RuntimeError(f"Thiếu API_KEY trong .env cho MODEL_PROVIDER={MODEL_PROVIDER}.")
+    if not MODEL_NAME:
+        raise RuntimeError(f"Thiếu MODEL_NAME trong .env cho MODEL_PROVIDER={MODEL_PROVIDER}.")
+
+
 def post_json(url: str, headers: dict[str, str], body: dict, timeout: int = 60, max_retries: int = 2) -> dict:
-    """Gửi POST JSON bằng thư viện chuẩn urllib, có thử lại nhẹ khi gặp lỗi tạm thời (429 / 5xx)."""
     payload = json.dumps(body).encode("utf-8")
-    req_headers = dict({"Content-Type": "application/json"}, **headers)
+    req_headers = {"Content-Type": "application/json", **headers}
     last_err: Exception | None = None
 
     for attempt in range(max_retries + 1):
@@ -75,13 +66,13 @@ def post_json(url: str, headers: dict[str, str], body: dict, timeout: int = 60, 
             return data
         except urllib.error.HTTPError as e:
             err_body = e.read().decode("utf-8", "replace")[:350]
-            last_err = RuntimeError("HTTP %d: %s" % (e.code, err_body))
+            last_err = RuntimeError(f"HTTP {e.code}: {err_body}")
             if e.code in (429, 500, 502, 503, 504) and attempt < max_retries:
                 time.sleep(2.0 * (attempt + 1))
                 continue
             raise last_err
         except urllib.error.URLError as e:
-            last_err = RuntimeError("URLError: %s" % e.reason)
+            last_err = RuntimeError(f"URLError: {e.reason}")
             if attempt < max_retries:
                 time.sleep(1.5 * (attempt + 1))
                 continue
@@ -91,32 +82,22 @@ def post_json(url: str, headers: dict[str, str], body: dict, timeout: int = 60, 
 
 
 def call_openai_compatible(system: str, user: str, url: str) -> dict:
-    if not API_KEY:
-        raise RuntimeError("Thiếu API_KEY trong .env cho nhà cung cấp %s." % MODEL_PROVIDER)
-    if not MODEL_NAME:
-        raise RuntimeError("Thiếu MODEL_NAME trong .env cho nhà cung cấp %s." % MODEL_PROVIDER)
+    _require_config()
     messages = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": user}]
-    body = {
-        "model": MODEL_NAME,
-        "messages": messages,
-        "temperature": 0.1,
-    }
-    data = post_json(url, {"Authorization": "Bearer " + API_KEY}, body)
+    data = post_json(url, {"Authorization": f"Bearer {API_KEY}"}, {"model": MODEL_NAME, "messages": messages, "temperature": 0.1})
     usage = data.get("usage") or {}
     msg = (data.get("choices") or [{}])[0].get("message") or {}
-    content = msg.get("content") or ""
-    tokens_in = int(usage.get("prompt_tokens") or usage.get("input_tokens") or 0)
-    tokens_out = int(usage.get("completion_tokens") or usage.get("output_tokens") or 0)
-    return {"text": content, "tokens_in": tokens_in, "tokens_out": tokens_out}
+    return {
+        "text": msg.get("content") or "",
+        "tokens_in": int(usage.get("prompt_tokens") or usage.get("input_tokens") or 0),
+        "tokens_out": int(usage.get("completion_tokens") or usage.get("output_tokens") or 0),
+    }
 
 
 def call_gemini(system: str, user: str) -> dict:
-    if not API_KEY:
-        raise RuntimeError("Thiếu API_KEY trong .env cho MODEL_PROVIDER=gemini.")
-    if not MODEL_NAME:
-        raise RuntimeError("Thiếu MODEL_NAME trong .env cho MODEL_PROVIDER=gemini (vd: gemini-2.5-flash hoặc gemini-3.1-flash-lite).")
-    model_slug = urllib.parse.quote(MODEL_NAME, safe="-._")
-    url = API_BASE_URL or f"https://generativelanguage.googleapis.com/v1beta/models/{model_slug}:generateContent"
+    _require_config()
+    slug = urllib.parse.quote(MODEL_NAME, safe="-._")
+    url = API_BASE_URL or f"https://generativelanguage.googleapis.com/v1beta/models/{slug}:generateContent"
     body: dict = {
         "contents": [{"role": "user", "parts": [{"text": user}]}],
         "generationConfig": {"temperature": 0.1},
@@ -126,18 +107,16 @@ def call_gemini(system: str, user: str) -> dict:
     data = post_json(url, {"x-goog-api-key": API_KEY}, body)
     candidates = data.get("candidates") or []
     parts = ((candidates[0].get("content") or {}).get("parts") or []) if candidates else []
-    text = "".join(p.get("text", "") for p in parts if isinstance(p, dict) and not p.get("thought"))
     usage = data.get("usageMetadata") or {}
-    tokens_in = int(usage.get("promptTokenCount") or 0)
-    tokens_out = int(usage.get("candidatesTokenCount") or 0) + int(usage.get("thoughtsTokenCount") or 0)
-    return {"text": text, "tokens_in": tokens_in, "tokens_out": tokens_out}
+    return {
+        "text": "".join(p.get("text", "") for p in parts if isinstance(p, dict) and not p.get("thought")),
+        "tokens_in": int(usage.get("promptTokenCount") or 0),
+        "tokens_out": int(usage.get("candidatesTokenCount") or 0) + int(usage.get("thoughtsTokenCount") or 0),
+    }
 
 
 def call_claude(system: str, user: str) -> dict:
-    if not API_KEY:
-        raise RuntimeError("Thiếu API_KEY trong .env cho MODEL_PROVIDER=anthropic.")
-    if not MODEL_NAME:
-        raise RuntimeError("Thiếu MODEL_NAME trong .env cho MODEL_PROVIDER=anthropic.")
+    _require_config()
     url = API_BASE_URL or "https://api.anthropic.com/v1/messages"
     body = {
         "model": MODEL_NAME,
@@ -146,18 +125,16 @@ def call_claude(system: str, user: str) -> dict:
         "messages": [{"role": "user", "content": user}],
     }
     data = post_json(url, {"x-api-key": API_KEY, "anthropic-version": "2023-06-01"}, body)
-    text = "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
     usage = data.get("usage") or {}
     return {
-        "text": text,
+        "text": "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text"),
         "tokens_in": int(usage.get("input_tokens") or 0),
         "tokens_out": int(usage.get("output_tokens") or 0),
     }
 
 
 def call_ollama(system: str, user: str) -> dict:
-    if not MODEL_NAME:
-        raise RuntimeError("Thiếu MODEL_NAME trong .env cho MODEL_PROVIDER=ollama.")
+    _require_config(need_key=False)
     url = API_BASE_URL or "http://localhost:11434/api/chat"
     messages = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": user}]
     data = post_json(url, {}, {"model": MODEL_NAME, "messages": messages, "stream": False}, timeout=300)
@@ -179,9 +156,8 @@ def call_model(system: str, user: str) -> dict:
             "tokens_out": 0,
         }
 
-    if MODEL_PROVIDER in _PROVIDER_DEFAULT_URLS:
-        url = API_BASE_URL or _PROVIDER_DEFAULT_URLS[MODEL_PROVIDER]
-        r = call_openai_compatible(system, user, url)
+    if MODEL_PROVIDER in _OPENAI_URLS:
+        r = call_openai_compatible(system, user, API_BASE_URL or _OPENAI_URLS[MODEL_PROVIDER])
     elif MODEL_PROVIDER in ("gemini", "google"):
         r = call_gemini(system, user)
     elif MODEL_PROVIDER in ("anthropic", "claude"):
@@ -190,8 +166,7 @@ def call_model(system: str, user: str) -> dict:
         r = call_ollama(system, user)
     else:
         raise NotImplementedError(
-            "Chưa hỗ trợ MODEL_PROVIDER=%r trong codebase/ai.py (chọn fake, gemini, openai, deepseek, groq, openrouter, anthropic, hoặc ollama)."
-            % MODEL_PROVIDER
+            f"Chưa hỗ trợ MODEL_PROVIDER={MODEL_PROVIDER!r} (chọn fake, gemini, openai, deepseek, groq, openrouter, anthropic, ollama)."
         )
 
     return {

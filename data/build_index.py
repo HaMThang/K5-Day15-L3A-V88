@@ -31,7 +31,6 @@ CORPUS_VERSION = "K5-L3-Phase1-Labs (2026-11-27)"
 
 
 SECTIONS: list[dict[str, Any]] = [
-    # ==================== K5 Day01 ====================
     {
         "code": "K5-Day01/CHECKPOINTS#lich-3-moc",
         "lab": "K5 Day01 — AI Foundation",
@@ -46,7 +45,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day02 ====================
     {
         "code": "K5-Day02/CHECKPOINTS#lich-8-moc",
         "lab": "K5 Day02 — Discovery & Problem Framing",
@@ -74,7 +72,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day04 ====================
     {
         "code": "K5-Day04/CHECKPOINTS#react-loop",
         "lab": "K5 Day04 — ReAct Loop Agent",
@@ -89,7 +86,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day06 ====================
     {
         "code": "K5-Day06/CHECKPOINTS#benchmark-20",
         "lab": "K5 Day06 — Data Ingestion Engineering",
@@ -118,7 +114,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day07 ====================
     {
         "code": "K5-Day07/CHECKPOINTS#lich-4-moc",
         "lab": "K5 Day07 — Retrieval & Context",
@@ -133,7 +128,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day08 ====================
     {
         "code": "K5-Day08/CHECKPOINTS#lich-va-deadline",
         "lab": "K5 Day08 — From Workflows to Agents",
@@ -149,7 +143,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day09 ====================
     {
         "code": "K5-Day09/CHECKPOINTS#moc-m0-m5",
         "lab": "K5 Day09 — Evaluation & Failure Analysis",
@@ -164,7 +157,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day10 ====================
     {
         "code": "K5-Day10/CHECKPOINTS#poc-to-pilot",
         "lab": "K5 Day10 — PoC to Pilot Gate 1",
@@ -179,7 +171,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day11 ====================
     {
         "code": "K5-Day11/CHECKPOINTS#outputs-rule",
         "lab": "K5 Day11 — Guardrails, HITL & Responsible AI",
@@ -222,7 +213,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day12 ====================
     {
         "code": "K5-Day12/CHECKPOINTS#lich-cp0-cp5",
         "lab": "K5 Day12 — AI SDLC",
@@ -251,7 +241,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day13 ====================
     {
         "code": "K5-Day13/CHECKPOINTS#gan-nhan-doc-lap",
         "lab": "K5 Day13 — Launch Economics",
@@ -267,7 +256,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day14 (có cặp mâu thuẫn / lệch giữa CHECKPOINTS.md và CODE_LAB.md) ====================
     {
         "code": "K5-Day14/CHECKPOINTS#lo-trinh-240p",
         "lab": "K5 Day14 — Deployment, Benchmark & Observability",
@@ -324,7 +312,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== Quy ước chung của chuỗi Lab L3 K5 ====================
     {
         "code": "K5-L3-General/QUY-UOC#nhip-lab-va-han-nop",
         "lab": "Quy ước chung các bài Lab ngày lớp L3 K5",

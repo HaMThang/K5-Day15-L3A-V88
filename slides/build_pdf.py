@@ -1,9 +1,4 @@
-"""Xuất `slides/slides.html` thành `demo-slides.pdf` ở thư mục gốc repo bằng trình duyệt Edge/Chrome headless có sẵn trên máy.
-
-Chạy bằng:
-    python slides/build_pdf.py
-Chỉ dùng thư viện chuẩn của Python 3.10+.
-"""
+"""Xuất `slides/slides.html` thành `demo-slides.pdf` bằng Edge/Chrome headless (`python slides/build_pdf.py`)."""
 from __future__ import annotations
 
 import os
