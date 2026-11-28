@@ -10,16 +10,16 @@
 /* VOICE  work: 5-minute Demo Zone pitch, read from across a room
    IDEA   an engineering datasheet: cobalt title strip, exact panels, every number tagged with its repo file
    PICTURE one per slide: file stack with the Day14 conflict, the 4-station route, run 1 vs run 2 dumbbells, cost bars
-   COLOUR white ground, ink #0b0f1a, cobalt #1240e0 lead, pale #eef2ff zones, signal orange #ff5a1f for conflicts and failures
+   COLOUR white ground, ink #0b0f1a, navy #0f1f4b strips, navy-blue #1d3f9a lead, pale #eef2ff zones, gold #f0b429 for conflicts and failures (ink text on gold)
    TYPE   Space Grotesk (titles, figures) + Inter (text), Segoe UI fallback
    LAYOUT 1280x720 per slide; screen = one slide scaled to fit with arrow-key nav; print = 4 pages for demo-slides.pdf */
 @page{size:1280px 720px;margin:0}
-:root{--bg:#fff;--ink:#0b0f1a;--mute:#4a5368;--line:#d5dbea;--zone:#eef2ff;--co:#1240e0;--co2:#0a2a9e;--hot:#ff5a1f;--ok:#0f9d58;--d:'Space Grotesk','Segoe UI',system-ui,sans-serif;--t:'Inter','Segoe UI',system-ui,sans-serif}
+:root{--bg:#fff;--ink:#0b0f1a;--mute:#4a5368;--line:#d5dbea;--zone:#eef2ff;--co:#1d3f9a;--co2:#0f1f4b;--hot:#f0b429;--ok:#0f1f4b;--navy:#0f1f4b;--d:'Space Grotesk','Segoe UI',system-ui,sans-serif;--t:'Inter','Segoe UI',system-ui,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0;min-width:0}
 html,body{background:#0a0d18}
 body{font:17px/1.45 var(--t);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .slide{width:1280px;height:720px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column}
-.strip{height:44px;flex-shrink:0;background:var(--co);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 48px;font:600 15px var(--d);letter-spacing:.01em}
+.strip{height:44px;flex-shrink:0;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 48px;font:600 15px var(--d);letter-spacing:.01em}
 .strip b{font-weight:700}
 .body{flex:1;padding:26px 48px 22px;display:flex;flex-direction:column;gap:18px}
 h1{font:700 38px/1.08 var(--d);letter-spacing:-.02em;max-width:1120px}
@@ -33,6 +33,22 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 .num{font:700 30px/1 var(--d);letter-spacing:-.02em;white-space:nowrap}
 .big{font:700 76px/.9 var(--d);letter-spacing:-.04em;color:var(--co)}
 .hot{color:var(--hot)}.co{color:var(--co)}
+/* slide 0: team intro */
+.intro{background:radial-gradient(120% 140% at 85% 10%,#1d3f9a 0%,#0f1f4b 55%,#0a1533 100%);color:#fff}
+.intro .body{padding:56px 64px 44px;display:grid;grid-template-columns:420px 1fr;gap:56px;align-items:center}
+.logo{width:420px;height:420px;border-radius:72px;background:linear-gradient(150deg,#22489f 0%,#0f1f4b 70%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.08);display:grid;place-items:center;position:relative}
+.logo .wm{font:700 190px/1 var(--d);letter-spacing:-.06em;transform:skewX(-8deg);display:flex;align-items:baseline}
+.logo .wm .v{color:#fff}.logo .wm .e{color:var(--hot)}
+.logo .tag{position:absolute;right:52px;bottom:70px;font:600 30px var(--d);color:#fff;letter-spacing:-.01em}
+.intro .kick{font:600 18px var(--d);color:var(--hot)}
+.intro h1{font-size:56px;color:#fff;margin-top:8px}
+.intro .lead{font-size:20px;color:#d7def3;margin-top:14px;max-width:640px}
+.intro .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.intro .meta span{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:5px 14px;font:600 15px var(--t)}
+.members{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;margin-top:34px;border-top:1px solid rgba(255,255,255,.25);padding-top:20px}
+.members b{display:block;font:700 19px var(--d)}
+.members span{color:#b9c6e8;font-size:15px}
+.members .lead-m b::after{content:" · trưởng nhóm";color:var(--hot);font-weight:600;font-size:15px}
 /* slide 1 */
 .stat{display:grid;grid-template-columns:90px 1fr;gap:4px 14px;align-items:center;padding:7px 0;font-size:16px;border-top:1px solid var(--line)}
 .bar{height:8px;background:#dfe5f5;border-radius:4px;overflow:hidden;grid-column:2}
@@ -43,7 +59,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 .f.ghost{color:#8b93a8}
 .f.key{width:360px;border:2px solid var(--ink);padding:14px 16px;font-size:15px}
 .f.key.a{border-color:var(--hot)}
-.tagx{display:inline-block;background:var(--hot);color:#fff;font:700 14px var(--d);padding:4px 10px;border-radius:4px}
+.tagx{display:inline-block;background:var(--hot);color:var(--ink);font:700 14px var(--d);padding:4px 10px;border-radius:4px}
 .quote{border-left:4px solid var(--co);padding:4px 0 4px 14px;font-size:16px}
 .impact{display:flex;align-items:center;gap:22px;background:var(--ink);color:#fff;border-radius:6px;padding:10px 20px;font-size:16px}
 .impact .num{font-size:34px;color:#fff;flex-shrink:0}
@@ -51,7 +67,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 /* slide 2 */
 .route{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;position:relative}
 .st{position:relative;padding:14px 18px 14px 18px;background:var(--zone);border-right:3px solid #fff}
-.st:first-child{border-radius:6px 0 0 6px}.st:last-child{border-radius:0 6px 6px 0;background:var(--co);color:#fff;border-right:0}
+.st:first-child{border-radius:6px 0 0 6px}.st:last-child{border-radius:0 6px 6px 0;background:var(--navy);color:#fff;border-right:0}
 .st .k{font:700 13px var(--d);color:var(--co);margin-bottom:4px}
 .st:last-child .k{color:#c9d5ff}
 .st .h{font:700 18px/1.2 var(--d);margin-bottom:6px}
@@ -86,7 +102,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 .case{display:grid;grid-template-columns:84px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.38}
 .case b{font:700 15px var(--d)}
 .pill{display:inline-block;font:700 12px var(--t);padding:2px 8px;border-radius:999px;color:#fff;margin-bottom:3px}
-.pill.ok{background:var(--ok)}.pill.no{background:var(--hot)}
+.pill.ok{background:var(--ok)}.pill.no{background:var(--hot);color:var(--ink)}
 .kv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .kv>div{border-top:2px solid var(--ink);padding-top:8px;font-size:15px}
 .kv .num{font-size:24px}
@@ -102,7 +118,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 .list{list-style:none;display:flex;flex-direction:column;gap:9px;font-size:15.5px;line-height:1.4}
 .list li{display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:start}
 .list li::before{content:attr(data-n);font:700 15px var(--d);color:#fff;background:var(--co);width:24px;height:24px;border-radius:50%;display:grid;place-items:center}
-.list.warn li::before{background:var(--hot)}
+.list.warn li::before{background:var(--hot);color:var(--ink)}
 .team{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 1.7fr;gap:12px;border-top:2px solid var(--ink);padding-top:12px;font-size:14px}
 .team b{display:block;font:700 16px var(--d)}
 .team a{color:var(--co);font-weight:600;text-decoration:none}
@@ -136,9 +152,30 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 <body>
 <div class="deck">
 
+<!-- 0 · Giới thiệu nhóm -->
+<section class="slide intro">
+  <div class="body">
+    <div class="logo r" style="--i:0" aria-label="Logo nhóm V88"><div class="wm"><span class="v">V</span><span class="e">88</span></div><div class="tag">.lab</div></div>
+    <div>
+      <div class="r" style="--i:1">
+        <div class="kick">Nhóm V88 · AI in Action · lớp L3A</div>
+        <h1>Lab Compass</h1>
+        <p class="lead">Trợ lý tra cứu tài liệu bài lab: chỉ đúng file và mục, gợi bước tiếp theo, không bao giờ làm hộ, và chuyển học viên sang Lab Coach khi tài liệu không đủ.</p>
+        <div class="meta"><span>Track A · EdTech</span><span>A6 · Hỗ trợ lab</span><span>Người dùng: học viên L3</span></div>
+      </div>
+      <div class="members r" style="--i:2">
+        <div class="lead-m"><b>Lê Gia Hưng</b><span>spec, thiết kế giải pháp, slide</span></div>
+        <div><b>Nguyễn Thế Hoàng</b><span>codebase, Web UI, demo</span></div>
+        <div><b>Đặng Đức Cương</b><span>bộ câu thử, eval, chi phí</span></div>
+        <div><b>Hà Minh Thắng</b><span>dữ liệu, khảo sát, người dùng thử</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- 1 · Người dùng & pain -->
 <section class="slide">
-  <div class="strip"><span><b>Lab Compass</b> · Nhóm V88 · Track A EdTech (A6 · Hỗ trợ lab)</span><span>1 / 4</span></div>
+  <div class="strip"><span><b>Lab Compass</b> · Nhóm V88 · Track A EdTech (A6 · Hỗ trợ lab)</span><span>2 / 5</span></div>
   <div class="body">
     <div class="r" style="--i:0">
       <h1>Học viên L3 mất từ 15 phút mỗi mốc chỉ để tìm yêu cầu nằm rải rác trong 3–16 file</h1>
@@ -178,7 +215,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 
 <!-- 2 · Giải pháp & demo -->
 <section class="slide">
-  <div class="strip"><span><b>Lab Compass</b> · Giải pháp</span><span>2 / 4</span></div>
+  <div class="strip"><span><b>Lab Compass</b> · Giải pháp</span><span>3 / 5</span></div>
   <div class="body">
     <div class="r" style="--i:0">
       <h1>Chỉ đúng file và mục, gợi bước tiếp theo, không bao giờ làm hộ</h1>
@@ -208,7 +245,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 
 <!-- 3 · Đánh giá -->
 <section class="slide">
-  <div class="strip"><span><b>Lab Compass</b> · Đánh giá</span><span>3 / 4</span></div>
+  <div class="strip"><span><b>Lab Compass</b> · Đánh giá</span><span>4 / 5</span></div>
   <div class="body">
     <div class="r" style="--i:0">
       <h1>Cả hai lượt vượt chuẩn khoá từ CP2, cùng 28/30; lượt 2 sửa được B23, trượt mới B21</h1>
@@ -240,7 +277,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 
 <!-- 4 · Chi phí, quyết định, tuần tới -->
 <section class="slide">
-  <div class="strip"><span><b>Lab Compass</b> · Chi phí và bước tiếp theo</span><span>4 / 4</span></div>
+  <div class="strip"><span><b>Lab Compass</b> · Chi phí và bước tiếp theo</span><span>5 / 5</span></div>
   <div class="body">
     <div class="r" style="--i:0">
       <h1>Khoảng 1.000 ₫ mỗi người mỗi tháng: đề xuất chạy thử có kiểm soát với lớp L3</h1>
