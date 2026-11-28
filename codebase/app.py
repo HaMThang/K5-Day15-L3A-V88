@@ -1,4 +1,5 @@
 """Giao diện CLI (`python run.py`) và Web cục bộ (`python codebase/app.py --web`) — Nhóm V88."""
+import base64
 import json
 import os
 import re
@@ -148,7 +149,7 @@ def serve_web() -> int:
     upload_root = Path(tempfile.mkdtemp(prefix="labcompass-"))
     uploads: dict[str, tuple[float, str]] = {}
     upload_hits: dict[str, list[float]] = {}
-    upload_ttl, max_uploads, max_upload_bytes = 3600, 30, 2_000_000
+    upload_ttl, max_uploads, max_upload_bytes = 3600, 30, 4_000_000
 
     def drop_upload(lab_id: str) -> None:
         _, path = uploads.pop(lab_id, (0.0, ""))
@@ -184,11 +185,17 @@ def serve_web() -> int:
         saved = skipped = 0
         for item in files:
             parts = safe_parts(item.get("path", "")) if isinstance(item, dict) else None
-            content = item.get("content") if parts else None
-            if not parts or not isinstance(content, str) or saved >= tools._MAX_SCAN_FILES:
+            # Trình duyệt gửi nội dung dạng base64: tường lửa của Render chặn request chứa mã nguồn thô.
+            encoded = item.get("content_b64") if parts else None
+            if not parts or not isinstance(encoded, str) or saved >= tools._MAX_SCAN_FILES:
                 skipped += 1
                 continue
-            data = content.encode("utf-8")
+            try:
+                data = base64.b64decode(encoded, validate=True)
+                data.decode("utf-8")
+            except ValueError:
+                skipped += 1
+                continue
             dest = lab_dir.joinpath(*parts).resolve()
             if len(data) > tools._MAX_FILE_BYTES or not str(dest).startswith(str(lab_dir) + os.sep):
                 skipped += 1

@@ -27,6 +27,19 @@ function isSecret(name) {
   return /\.(pem|key|pfx)$/.test(low) || low.includes('credentials') || low.includes('secret');
 }
 
+// Gửi nội dung dạng base64: tường lửa của Render chặn request chứa mã nguồn thô.
+async function toBase64(file) {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  let binary = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(binary);
+}
+
+async function readJson(response) {
+  try { return await response.json(); }
+  catch (_) { return {error: `Máy chủ từ chối yêu cầu (HTTP ${response.status}). Hãy thử thư mục nhỏ hơn hoặc thử lại sau.`}; }
+}
+
 function setLab(id, label) {
   labId = id;
   labChosen.textContent = label || NO_LAB;
@@ -63,13 +76,13 @@ labFiles.addEventListener('change', async () => {
   pickLab.disabled = true;
   labChosen.textContent = `Đang gửi ${chosen.length} file…`;
   try {
-    const files = await Promise.all(chosen.map(async ({file, parts}) => ({path: parts.join('/'), content: await file.text()})));
+    const files = await Promise.all(chosen.map(async ({file, parts}) => ({path: parts.join('/'), content_b64: await toBase64(file)})));
     const response = await fetch('/api/upload_lab', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({name: root, files}),
     });
-    const data = await response.json();
+    const data = await readJson(response);
     if (!response.ok) throw new Error(data.error || 'Không gửi được thư mục.');
     const left = all.length - data.files;
     setLab(data.lab_id, `${data.name} · ${data.files} file${left > 0 ? ` (bỏ qua ${left})` : ''} · hết hạn sau ${data.ttl_minutes} phút`);
@@ -187,7 +200,7 @@ form.addEventListener('submit', async event => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({question: current, mode: mode.value, repo_path: labId ? '' : repoPath.value, lab_id: labId}),
     });
-    const data = await response.json();
+    const data = await readJson(response);
     if (data.lab_expired) setLab('', 'Thư mục đã hết hạn · hãy chọn lại');
     if (!response.ok) throw new Error(data.error || 'Không thể tra cứu lúc này.');
     addResponse(data.output);
