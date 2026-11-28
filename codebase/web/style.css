@@ -58,3 +58,6 @@ button:focus-visible,textarea:focus-visible{outline:2px solid #8be1ff;outline-of
 .markdown blockquote{margin:12px 0 0;padding:10px 12px;border-left:3px solid #58c8ff;background:#0f2747;border-radius:0 8px 8px 0;color:#d6e8fb}
 .markdown blockquote p{margin:0 0 6px}
 .markdown blockquote .copy{margin-top:4px;font-size:10px}
+.markdown .sources-label{margin:12px 0 4px;font-size:11px;color:#a8c3df;border-top:1px solid #2b4a6e;padding-top:10px}
+.markdown .sources{margin:0 0 10px;padding-left:18px;font-size:11px;color:#a8c3df}
+.markdown .sources code{font-size:11px}

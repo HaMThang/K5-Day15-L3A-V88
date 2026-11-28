@@ -594,7 +594,7 @@ def draft_coach_question(question: str, reason: str, cited_codes: str = "") -> s
     reason = reason.strip().rstrip(".;:, ")
     if reason[1:2].islower():  # "Tài liệu..." -> "tài liệu..." sau chữ "Vì"; giữ nguyên "CHECKPOINTS.md..."
         reason = reason[0].lower() + reason[1:]
-    checked = f" (em đã tra mục {cited_codes})" if cited_codes else " (em đã kiểm tra các file hướng dẫn của bài lab)"
+    checked = f" (em đã xem {cited_codes})" if cited_codes else " (em đã kiểm tra các file hướng dẫn của bài lab)"
     return (
         f"[Bản nháp hỏi Lab Coach, bạn xem lại rồi tự gửi]\n"
         f"\"Chào anh/chị Lab Coach, em đang vướng câu hỏi: '{q_clean}'{checked}. "

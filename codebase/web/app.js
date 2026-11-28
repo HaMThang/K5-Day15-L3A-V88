@@ -79,6 +79,20 @@ function addResponse(text) {
   const bubble = document.createElement('div');
   bubble.className = 'bubble response-bubble markdown';
   bubble.innerHTML = renderMarkdown(text);
+  // Danh sách nguồn: chỉ hiện file:dòng; mã mục nội bộ chuyển vào tooltip cho gọn.
+  bubble.querySelectorAll('p').forEach(p => {
+    const list = p.nextElementSibling;
+    if (!/^Nguồn/.test(p.textContent) || !list || list.tagName !== 'UL') return;
+    p.classList.add('sources-label');
+    list.classList.add('sources');
+    list.querySelectorAll('li').forEach(li => {
+      const ids = [...li.querySelectorAll('code')].filter(c => c.textContent.includes('#'));
+      if (!ids.length || ids.length === li.querySelectorAll('code').length) return;
+      li.title = 'Mã mục: ' + ids.map(c => c.textContent).join(', ');
+      ids.forEach(c => c.remove());
+      li.innerHTML = li.innerHTML.replace(/\s*·\s*$/, '');
+    });
+  });
   bubble.querySelectorAll('blockquote').forEach(quote => {
     const draft = quote.querySelectorAll('p')[1] || quote;
     const button = document.createElement('button');
