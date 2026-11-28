@@ -172,7 +172,7 @@ def _chunk_markdown(repo_name: str, rel_path: str, fname: str, lines: list[str])
             "file": f"{rel_path}:{start_ln}-{end_ln}",
             "title": f"{rel_path} · {title}",
             "keywords": [],
-            "summary": body_txt[:420],
+            "summary": "\n".join(x.strip() for x in buf if x.strip())[:1500],  # đủ dài để giữ trọn bảng/danh sách của mục
             "quote": body_txt[:220],
             "conflicts_with": [],
         })
