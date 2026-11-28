@@ -152,6 +152,8 @@ form.addEventListener('submit', async event => {
       throw new Error((data.error || 'Bản demo đang giới hạn số lượt hỏi.') + when);
     }
     if (!response.ok) throw new Error(data.error || 'Không thể tra cứu lúc này.');
+    // Kết quả đã lưu: chờ ngắn cho nhịp giống lúc model trả lời; nhãn "Kết quả đã lưu" vẫn luôn hiện bên dưới.
+    if (data.saved) await new Promise(done => setTimeout(done, 2000 + Math.random() * 1500));
     addResponse(data.output);
     const details = document.createElement('div');
     details.className = 'conversation-meta';
