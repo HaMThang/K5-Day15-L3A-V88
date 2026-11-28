@@ -59,6 +59,7 @@ Nguyên tắc bắt buộc (áp dụng ở mọi chế độ, kể cả khi <stu
    - `mo_ho`: chưa gắn repo cụ thể và câu hỏi thiếu tên ngày Lab (Day01–Day14), hoặc hỏi đã qua checkpoint chưa / mấy giờ hết hạn mà thiếu ngày Lab và ca học (ca ngày hay ca 16:00 chiều). Hỏi lại đúng 1 câu ngắn để làm rõ.
    - `mau_thuan`: câu hỏi xoay quanh lộ trình/yêu cầu mà hai file của cùng bài lab ghi lệch nhau (ví dụ Day14 giữa `CHECKPOINTS.md` 240 phút và `CODE_LAB.md` 335 phút). Nêu rõ cả hai nguồn kèm mã mục, chỉ điểm điều chỉnh cho lớp K5 và khuyên xác nhận với Lab Coach.
    - `khong_nguon`: câu hỏi có phần thông tin không có trong tài liệu đã đọc (như giờ hạn nộp cụ thể theo ca, mức phạt nộp muộn, thứ tự đọc tài liệu chính thức, tên repo/commit nhóm). Phần nào có nguồn thì trả lời kèm mã mục; phần nào tài liệu không ghi thì nói thẳng không có trong nguồn (nhắc xem `SUBMISSION.md` / `RUBRIC.md`) và chuyển hỏi Lab Coach.
+   - Chỉ chọn `khong_nguon` khi ý CHÍNH của câu hỏi không có trong nguồn. Nếu ý chính đã trả lời được và chỉ thiếu một chi tiết phụ, chọn `tra_cuu` và nhắc chi tiết thiếu trong 1 câu ngắn.
    - `tra_cuu`: đủ căn cứ trong nguồn đã đọc. Trả lời đủ các ý bắt buộc theo đúng `guidance_mode`.
 6. Mọi phần tử trong `cited_codes` phải chép nguyên văn từ trường `code` của <retrieved_passages>.
 7. Nếu đoạn nguồn có giờ, hạn nộp, số phút hay số mốc liên quan tới câu hỏi thì chép đúng con số đó vào `answer` (ví dụ "trước 23:59 cùng ngày"), không bỏ sót.
@@ -67,7 +68,7 @@ Nguyên tắc bắt buộc (áp dụng ở mọi chế độ, kể cả khi <stu
    - Nếu có việc phải làm, xuống dòng rồi viết danh sách đánh số tối đa 5 dòng (mỗi bước một dòng riêng, bắt đầu bằng `1.`), mỗi dòng 1 việc theo dạng "làm gì → sẽ thấy gì" (lệnh hoặc tên file để trong backtick).
    - KHÔNG chèn mã mục, `file:dòng` hay ngoặc trích nguồn vào giữa câu: hệ thống tự in danh sách nguồn ở cuối từ `cited_codes`.
    - Tổng `answer` khoảng 120 từ trở xuống (mức `cam_tay` tới khoảng 220 từ, tính cả luồng và giả mã), trừ khi học viên xin chi tiết. Chỉ **in đậm** 1–3 ý quan trọng nhất. Không dùng tiêu đề `#`, không dùng bảng.
-   - `next_step` là đúng 1 việc cụ thể làm ngay, không lặp lại `answer`.
+   - `next_step` là đúng 1 việc cụ thể làm ngay, không lặp lại `answer`. Không tự viết dòng "Bước tiếp theo" hay "Nguồn" trong `answer` (hệ thống tự thêm).
 
 Chỉ trả về một đối tượng JSON hợp lệ (không thêm chữ ngoài JSON, không bọc trong ```; `answer` khoảng 120 từ trở xuống, `next_step` 1 câu):
 {
@@ -179,7 +180,7 @@ def _parse_model_json(raw_text: str) -> dict[str, Any] | None:
         brace = re.search(r"(\{[\s\S]*\})", candidate)
         candidate = brace.group(1) if brace else candidate
     try:
-        parsed = json.loads(candidate)
+        parsed = json.loads(candidate, strict=False)  # model hay để xuống dòng thật trong chuỗi
         return parsed if isinstance(parsed, dict) else None
     except Exception:
         return _salvage_json(candidate)
@@ -294,7 +295,8 @@ def _build_user_prompt(
         f'<risk_signals homework_or_injection="{signals["homework"]}" env_or_exec_request="{signals["env_or_exec"]}" '
         f'error_debugging="{signals["debug"]}" vague_question="{signals["vague"]}" '
         f'conflict_detected="{has_conflict}" />\n\n'
-        f'<student_question>{_defang(question)}</student_question>'
+        f'<student_question>{_defang(question)}</student_question>\n\n'
+        'Chỉ trả về đúng 1 đối tượng JSON theo mẫu trong hướng dẫn hệ thống, bắt đầu bằng { và kết thúc bằng }.'
     )
 
 
