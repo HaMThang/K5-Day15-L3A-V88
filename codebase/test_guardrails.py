@@ -43,6 +43,11 @@ class GuardrailTests(unittest.TestCase):
         self.assertIn("**Nguồn tài liệu Lab:**\n- `A/B#c`", out)
         self.assertIn("> **Bản nháp**\n>\n> \"Chào coach\"", out)
 
+    def test_unindexed_day_never_borrows_other_day(self):
+        out = agent.answer("Day03 hướng dẫn làm từng checkpoint", mode="goi_y")["output"]
+        self.assertIn("chưa có tài liệu của Day03", out)
+        self.assertNotIn("K5-Day02", out)
+
     def test_model_error_returns_honest_message(self):
         original = agent.call_model
         agent.call_model = lambda *_: (_ for _ in ()).throw(RuntimeError("HTTP 529"))

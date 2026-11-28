@@ -8,7 +8,7 @@ import unicodedata
 from typing import Any
 
 from ai import call_model
-from tools import draft_coach_question, get_section, scan_lab_codebase, search_docs
+from tools import _day_of, draft_coach_question, get_section, scan_lab_codebase, search_docs
 from tracing import note
 
 MAX_INPUT_CHARS = 2000
@@ -326,6 +326,19 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
 
     codebase_map = scan_lab_codebase(repo_path=repo_path, lab_hint=clean_input)
     passages = search_docs(clean_input, k=5, repo_path=repo_path)
+    asked_day = _day_of(clean_input)
+    refusing = signals["homework"] or signals["env_or_exec"]  # câu tấn công/nhờ làm hộ vẫn đi nhánh từ chối
+    if asked_day and not has_local_repo and not refusing and not any(_day_of(p["code"]) == asked_day for p in passages):
+        # Guardrail: không mượn tài liệu ngày khác để trả lời; nói thẳng là chưa có và chỉ cách đọc trực tiếp.
+        note(f"guardrail: Day{asked_day} chưa có trong chỉ mục -> không gọi model")
+        return {"output": _compose(
+            f"Mình **chưa có tài liệu của Day{asked_day}** trong chỉ mục, nên không trả lời bằng tài liệu của ngày khác để tránh chỉ sai.",
+            next_step=(
+                f"Dán đường dẫn thư mục bài lab Day{asked_day} đã clone vào ô **Thư mục lab trên máy** rồi hỏi lại. "
+                "Mình sẽ đọc thẳng `README.md`, các checklist và file `.md` khác của bài đó. "
+                "Nếu chưa clone bài, bạn hỏi Lab Coach của ca mình."
+            ),
+        )}
     conflict_pair = _find_conflict_pair(passages)
     valid_map = {p["code"].lower(): p["code"] for p in passages}
     file_map = {p["code"]: p.get("file", "") for p in passages}

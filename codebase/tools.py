@@ -48,6 +48,12 @@ def _normalize_day_mentions(folded: str) -> str:
     return f"{folded} {' '.join(extras)}" if extras else folded
 
 
+def _day_of(text: str) -> str:
+    """Số ngày Lab ("03") nhắc trong câu hỏi, tên thư mục hoặc mã mục; "" nếu không có."""
+    m = _DAY_RE.search(_strip_accents((text or "").lower()))
+    return f"{int(m.group(1)):02d}" if m and 1 <= int(m.group(1)) <= 30 else ""
+
+
 def _tokenize(text: str) -> list[str]:
     folded = _normalize_day_mentions(_strip_accents(text.lower()))
     tokens: list[str] = []
@@ -318,13 +324,22 @@ def search_docs(query: str, k: int = 5, repo_path: str = "") -> list:
     doc_lens = list(kb["doc_lens"])
     by_code = dict(kb["by_code"])
 
-    if repo_path and repo_path.strip():
-        local = _index_local_repo(repo_path.strip())
-        if local.get("exists") and local["sections"]:
-            sections.extend(local["sections"])
-            tf_maps.extend(local["tf_maps"])
-            doc_lens.extend(local["doc_lens"])
-            by_code.update(local["by_code"])
+    # Chỉ giữ mục chỉ mục của đúng ngày Lab đang hỏi (+ quy ước chung), tránh trích nhầm bài ngày khác.
+    want_day = _day_of(query)
+    local = _index_local_repo(repo_path.strip()) if repo_path and repo_path.strip() else {}
+    if local.get("exists"):
+        want_day = want_day or _day_of(local["repo_name"])
+    if want_day or local.get("exists"):
+        keep = [i for i, sec in enumerate(sections) if _day_of(sec["code"]) in ("", want_day)]
+        sections = [sections[i] for i in keep]
+        tf_maps = [tf_maps[i] for i in keep]
+        doc_lens = [doc_lens[i] for i in keep]
+
+    if local.get("exists") and local["sections"]:
+        sections.extend(local["sections"])
+        tf_maps.extend(local["tf_maps"])
+        doc_lens.extend(local["doc_lens"])
+        by_code.update(local["by_code"])
 
     if not sections:
         return []
