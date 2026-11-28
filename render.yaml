@@ -1,0 +1,28 @@
+# Render Blueprint — bản dùng thử trực tuyến của Lab Compass (chỉ thư viện chuẩn Python, không cần build).
+# API_KEY và PUBLIC_ORIGIN điền trong Render Dashboard; KHÔNG ghi key vào file này.
+services:
+  - type: web
+    name: lab-compass
+    runtime: python
+    plan: free
+    branch: feat/cuong-deploy-render
+    buildCommand: "echo no build"
+    startCommand: python codebase/app.py --web
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: HOST
+        value: 0.0.0.0
+      - key: MODEL_PROVIDER
+        value: anthropic
+      - key: MODEL_NAME
+        value: claude-haiku-5-5
+      - key: RATE_LIMIT_PER_HOUR
+        value: "10"
+      - key: RATE_LIMIT_PER_DAY
+        value: "200"
+      - key: API_KEY
+        sync: false
+      - key: PUBLIC_ORIGIN
+        sync: false

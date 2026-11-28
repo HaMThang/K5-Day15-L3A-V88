@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+import time
 import traceback
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -108,7 +109,35 @@ def serve_web() -> int:
     import tracing
     from agent import MODE_LABELS, answer
 
-    address = "127.0.0.1:8000"
+    # Local: không đặt biến nào -> giữ nguyên 127.0.0.1:8000 như trước.
+    # Render: đặt HOST=0.0.0.0, PUBLIC_ORIGIN=https://<tên>.onrender.com; Render tự cấp PORT.
+    host = os.environ.get("HOST", "127.0.0.1")
+    port = int(os.environ.get("PORT", "8000"))
+    public_origin = os.environ.get("PUBLIC_ORIGIN", "").strip().rstrip("/")
+    address = public_origin.split("://", 1)[-1] if public_origin else f"127.0.0.1:{port}"
+    origin = public_origin or f"http://{address}"
+    # Bản công khai không cho đọc thư mục trên server (repo_path) và giới hạn lượt hỏi để giữ chi phí.
+    allow_repo = not public_origin
+    per_ip_limit = int(os.environ.get("RATE_LIMIT_PER_HOUR", "0"))
+    daily_limit = int(os.environ.get("RATE_LIMIT_PER_DAY", "0"))
+    hits: dict[str, list[float]] = {}
+    day_hits: list[float] = []
+
+    def over_limit(ip: str) -> bool:
+        now = time.time()
+        if per_ip_limit:
+            recent = [t for t in hits.get(ip, []) if now - t < 3600]
+            hits[ip] = recent
+            if len(recent) >= per_ip_limit:
+                return True
+        if daily_limit:
+            day_hits[:] = [t for t in day_hits if now - t < 86400]
+            if len(day_hits) >= daily_limit:
+                return True
+        hits.setdefault(ip, []).append(now)
+        day_hits.append(now)
+        return False
+
     assets = {
         "/": ("index.html", "text/html"),
         "/app.js": ("app.js", "text/javascript"),
@@ -133,6 +162,9 @@ def serve_web() -> int:
             self.send_body(code, "application/json", json.dumps(data).encode("utf-8"))
 
         def do_GET(self) -> None:
+            if self.path == "/healthz":
+                self.send_body(200, "text/plain", b"ok")
+                return
             if self.headers.get("Host") != address or self.path not in assets:
                 self.send_error(404)
                 return
@@ -143,8 +175,13 @@ def serve_web() -> int:
             if self.path != "/api/answer":
                 self.send_json(404, {"error": "Không tìm thấy đường dẫn."})
                 return
-            if self.headers.get("Host") != address or self.headers.get("Origin") != f"http://{address}":
+            if self.headers.get("Host") != address or self.headers.get("Origin") != origin:
                 self.send_json(403, {"error": "Hãy gửi câu hỏi từ giao diện Lab Compass."})
+                return
+            forwarded = self.headers.get("X-Forwarded-For", "")
+            client_ip = forwarded.split(",")[0].strip() if public_origin and forwarded else self.client_address[0]
+            if over_limit(client_ip):
+                self.send_json(429, {"error": "Đã hết lượt hỏi thử, vui lòng quay lại sau."})
                 return
             try:
                 size = int(self.headers.get("Content-Length", "0"))
@@ -163,6 +200,9 @@ def serve_web() -> int:
                 return
 
             repo = repo.strip()
+            if repo and not allow_repo:
+                self.send_json(400, {"error": "Bản dùng thử trực tuyến không đọc thư mục lab; hãy để trống đường dẫn."})
+                return
             if repo and (repo.startswith(("\\\\", "//")) or not os.path.isdir(repo)):
                 self.send_json(400, {"error": "Không tìm thấy thư mục lab trên máy này."})
                 return
@@ -186,8 +226,8 @@ def serve_web() -> int:
             })
 
     try:
-        with HTTPServer(("127.0.0.1", 8000), Handler) as server:
-            print(f"Lab Compass · http://{address} · Ctrl+C để thoát", flush=True)
+        with HTTPServer((host, port), Handler) as server:
+            print(f"Lab Compass · {origin} · Ctrl+C để thoát", flush=True)
             server.serve_forever()
     except KeyboardInterrupt:
         return 0
