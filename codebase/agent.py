@@ -413,7 +413,10 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
                 "Mình cũng không kết luận thay bạn là đã qua checkpoint, phần đó bạn tự kiểm trên máy. "
                 "Bạn đang làm Day mấy (ví dụ Day06, Day11, Day14), đến CP mấy, và học ca ngày hay ca 16:00 chiều?"
             )
-        return {"output": _sanitize_inline_codes(ans_text, valid_map)[0]}
+        ans_text, cited = _sanitize_inline_codes(ans_text, valid_map)
+        cited += [valid_map[str(c).lower()] for c in raw_codes if str(c).lower() in valid_map and valid_map[str(c).lower()] not in cited]
+        # Có nêu dữ kiện từ nguồn thì vẫn in nguồn để học viên mở kiểm (G11); câu hỏi lại thuần thì không.
+        return {"output": _compose(ans_text, _format_sources(cited) if cited and not signals["vague"] else "")}
 
     verified = []
     for c in raw_codes:
