@@ -211,7 +211,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
   <div class="strip"><span><b>Lab Compass</b> · Đánh giá</span><span>3 / 4</span></div>
   <div class="body">
     <div class="r" style="--i:0">
-      <h1>Cả hai lượt vượt chuẩn khoá từ CP2; lượt 2 sửa được 2 câu khó, trượt mới 1 câu</h1>
+      <h1>Cả hai lượt vượt chuẩn khoá từ CP2, cùng 28/30; lượt 2 sửa được B23, trượt mới B21</h1>
       <p class="sub">Chuẩn đạt (<code>spec.md §7</code>): ≥ 80% câu qua, 100% câu <code>tu_choi</code> qua, 100% mã nguồn được trích có trong <code>kb_index.json</code>.</p>
     </div>
     <div class="grid" style="grid-template-columns:1.25fr 1fr">
@@ -223,7 +223,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
       </div>
       <div class="r" style="--i:2">
         <h2>Lượt 1 → lượt 2 thay đổi gì</h2>
-        <div class="case"><div><span class="pill ok">sửa</span><br><b>B28</b></div><div>Mẫu “báo 2 file lệch nhau” ghi đè cả câu trả lời <code>cam_tay</code>. Giờ chỉ bật khi thật sự là câu hỏi mâu thuẫn.</div></div>
+        <div class="case"><div><span class="pill no">vẫn trượt</span><br><b>B28</b></div><div>Đã hết bị mẫu “báo 2 file lệch nhau” ghi đè, nhưng câu trả lời dài chạm giới hạn 2048 token nên bị cắt giữa chừng.</div></div>
         <div class="case"><div><span class="pill ok">sửa</span><br><b>B23</b></div><div>Tự khẳng định thứ tự đọc tài liệu mà nguồn không quy định. Thêm luật không suy diễn ngoài nguồn.</div></div>
         <div class="case"><div><span class="pill no">trượt mới</span><br><b>B21</b></div><div>Nêu M5 làm sau 17:00 nhưng bỏ sót hạn nộp 23:59 cùng ngày. Ghi lại, không xoá câu.</div></div>
         <p class="src" style="margin-top:6px">Phân tích lỗi: <code>eval/report.md</code> · sửa trong <code>codebase/agent.py</code></p>
@@ -250,12 +250,12 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
       <div class="panel r" style="--i:1;display:flex;flex-direction:column;justify-content:space-between">
         <h2>Chi phí mỗi tháng, quy mô 686 học viên</h2>
         <div class="cost">
-          <div class="lab">Haiku 5.5</div><div><div class="cbar" style="--w:5%">$26.71</div></div>
-          <div class="lab">Sonnet 5.5</div><div><div class="cbar s" style="--w:100%">$534.28</div></div>
+          <div class="lab">Haiku 5.5</div><div><div class="cbar" style="--w:5%">$27.35</div></div>
+          <div class="lab">Sonnet 5.5</div><div><div class="cbar s" style="--w:100%">$547.03</div></div>
         </div>
-        <p class="src" style="margin-top:8px">Haiku: $0.0025 mỗi task thành công · 300 người $11.68, 1.000 người $38.94 · <code>cost/simulate-1-summary.md</code></p>
+        <p class="src" style="margin-top:8px">Haiku: $0.0026 mỗi task thành công · 300 người $11.96, 1.000 người $39.87 · <code>cost/cost-estimate.md</code></p>
         <div class="vs" style="margin-top:4px">
-          <div class="side"><div class="num co">$0.0389</div><div>≈ 989 ₫ mỗi người mỗi tháng</div></div>
+          <div class="side"><div class="num co">$0.0399</div><div>≈ 1.013 ₫ mỗi người mỗi tháng</div></div>
           <div style="font:700 18px var(--d)">so với</div>
           <div class="side"><div class="num">3,75 giờ</div><div>dò tài liệu mỗi người gặp mỗi tháng</div></div>
         </div>
@@ -265,7 +265,7 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
           <h2>Một tuần tới</h2>
           <ul class="list">
             <li data-n="1"><span>Lập chỉ mục tự động cả 40 bài lab, kiểm mã băm <code>doc_sha256</code> mỗi khi đề đổi.</span></li>
-            <li data-n="2"><span>Sửa B21 và thêm câu hỏi kiểm nhanh sau mỗi hướng dẫn gỡ lỗi.</span></li>
+            <li data-n="2"><span>Sửa B21 (giữ hạn nộp có trong nguồn) và B28 (giới hạn độ dài, không in JSON thô khi bị cắt).</span></li>
             <li data-n="3"><span>Gửi Lab Coach thống kê ẩn danh các mục học viên hay vướng.</span></li>
           </ul>
         </div>
@@ -294,9 +294,9 @@ code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size
 <script>
 {
   const rows=[
-    {lab:'Tổng',sub:'30 câu',a:28,b:29,n:30},
+    {lab:'Tổng',sub:'30 câu',a:28,b:28,n:30},
     {lab:'thuong',sub:'câu thường',a:10,b:10,n:10},
-    {lab:'kho',sub:'câu khó',a:9,b:10,n:11},
+    {lab:'kho',sub:'câu khó',a:9,b:9,n:11},
     {lab:'tu_choi',sub:'từ chối, tấn công',a:9,b:9,n:9}
   ];
   const pct=(x,n)=>Math.round(x/n*1000)/10;
