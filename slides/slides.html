@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>V88 · Lab Compass — Trợ lý Đọc tĩnh Codebase & Hướng dẫn Làm Lab 3 Mức Sư phạm</title>
+  <title>V88 · Lab Compass — Trợ lý hướng dẫn làm bài Lab L3</title>
   <style>
     @page {
       size: 1280px 720px;
@@ -85,7 +85,7 @@
     }
     .grid-2 {
       display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
+      grid-template-columns: 1.05fr 0.95fr;
       gap: 18px;
     }
     .grid-2-eq {
@@ -246,63 +246,61 @@
 </head>
 <body>
 
-  <!-- SLIDE 1: PAIN & EVIDENCE -->
   <section class="slide">
     <div class="header">
       <div>
         <div class="tag">Nhóm V88 · Lớp L3A · Track A (A6 · Hỗ trợ Lab) · Phòng H201</div>
-        <h1>1. Người dùng &amp; Nỗi đau thật khi làm bài Lab hàng ngày ở Lớp L3</h1>
+        <h1>1. Người dùng &amp; Vướng mắc thực tế khi làm bài Lab hàng ngày ở Lớp L3</h1>
       </div>
       <div class="slide-num">Trang 1 / 8</div>
     </div>
 
     <div class="content">
       <div class="card card-accent">
-        <strong>Người dùng &amp; Pain (không chữ AI):</strong> Học viên lớp L3 (<strong>686 học viên toàn khoá</strong>, 3 tuần đầu Phase 1 mỗi ngày làm 1 bài lab ~240 phút) phải mở đối chiếu cùng lúc <strong>3–16 file <code>.md</code></strong> (giờ mốc ≠ hạn nộp thật <code>23:59</code> / <code>11:59</code>, có bài 2 file lệch nhau) để biết mỗi checkpoint cần làm gì và thế nào là đạt → mất thời gian tra cứu, dễ sót yêu cầu và làm đối phó cho kịp hạn.
+        <strong>Người dùng &amp; Pain (không chữ AI):</strong> Học viên lớp L3 (<strong>686 học viên toàn khoá</strong>, 3 tuần đầu Phase 1 mỗi ngày làm 1 bài lab ~240 phút) phải mở đối chiếu cùng lúc <strong>3–16 file <code>.md</code></strong> (giờ mốc khác hạn nộp thật <code>23:59</code> / <code>11:59</code>, có bài 2 file ghi lệch nhau) để biết mỗi checkpoint cần nộp gì và thế nào là đạt → mất thời gian tìm kiếm và dễ bỏ sót yêu cầu, mất điểm bài lab.
       </div>
 
       <div class="grid-3">
         <div class="card">
           <div class="kpi">3–16 file .md</div>
-          <div class="kpi-label">Kiểm đếm 40 đơn vị bài Lab L3</div>
-          <p class="small">12 lab ngày K5 có TB <strong>5,8 CP/lab</strong> (37,9 phút/CP). Day14 <code>CHECKPOINTS.md</code> trỏ sang 6 file khác và lệch trực tiếp với <code>CODE_LAB.md</code> (240p vs 335p). 5 file phải cảnh báo đầu trang <em>"mốc không phải deadline"</em>.</p>
+          <div class="kpi-label">Thống kê 40 đơn vị bài Lab L3</div>
+          <p class="small">12 lab ngày K5 có TB <strong>5,8 CP/bài</strong> (37,9 phút/CP). Day14 <code>CHECKPOINTS.md</code> dẫn sang 6 file khác và lệch trực tiếp với <code>CODE_LAB.md</code> (240p so với 335p). 5 file phải ghi chú đầu trang <em>"mốc không phải hạn nộp"</em>.</p>
         </div>
         <div class="card">
           <div class="kpi">22,5% skip</div>
-          <div class="kpi-label">Đào log preclass (107.709 sự kiện)</div>
-          <p class="small"><strong>102/453</strong> lượt <code>lab_completed</code> có <code>skipped=true</code> (trên <strong>63/123 = 51,2%</strong> học viên hoàn thành lab). Trong 1.260 tin <code>chat_sent</code>, chỉ <strong>14/1.260 (1,11%)</strong> gắn <code>lab_key</code>.</p>
+          <div class="kpi-label">Nhật ký preclass (107.709 sự kiện)</div>
+          <p class="small"><strong>102/453</strong> lượt <code>lab_completed</code> có <code>skipped=true</code> (xảy ra ở <strong>63/123 = 51,2%</strong> học viên hoàn thành lab). Trong 1.260 tin <code>chat_sent</code>, chỉ <strong>14/1.260 (1,11%)</strong> gắn <code>lab_key</code>.</p>
         </div>
         <div class="card">
           <div class="kpi">80,8% ≥ 15p/mốc</div>
-          <div class="kpi-label">Khảo sát 52 phản hồi học viên L3</div>
-          <p class="small"><strong>42/52 (80,8%)</strong> tự báo mất ≥ 15 phút/mốc để đọc &amp; tra yêu cầu; <strong>43/52 (82,7%)</strong> mở ≥ 3 loại tài liệu cùng lúc; <strong>35/52 (67,3%)</strong> từng bỏ sót/nộp thiếu/hiểu nhầm tiêu chí; <strong>55,8%</strong> hỏi AI chung đầu tiên.</p>
+          <div class="kpi-label">Khảo sát 52 học viên L3 ngoài nhóm</div>
+          <p class="small"><strong>42/52 (80,8%)</strong> mất ≥ 15 phút/mốc để đọc &amp; tra yêu cầu; <strong>43/52 (82,7%)</strong> phải mở ≥ 3 loại tài liệu cùng lúc; <strong>35/52 (67,3%)</strong> từng bỏ sót/nộp thiếu/hiểu nhầm tiêu chí; <strong>55,8%</strong> hỏi AI chung đầu tiên.</p>
         </div>
       </div>
 
       <div class="grid-2-eq">
         <div class="quote">
-          “Đọc GUIDE không hiểu phải mở CHECKPOINT, xong lại check lại RULES xem đã làm đúng chưa rồi mới làm tiếp”
-          <br /><span>— Khảo sát học viên L3 ẩn danh (evidence/survey/results.csv, dòng 32)</span>
+          "Đọc GUIDE không hiểu phải mở CHECKPOINT, xong lại check lại RULES xem đã làm đúng chưa rồi mới làm tiếp"
+          <br /><span>— Khảo sát học viên L3 (evidence/survey/results.csv, dòng 32)</span>
         </div>
         <div class="quote">
-          “Tôi cứ phải đảo quanh các file rule, submission, guide, readme để tìm kiếm thông tin, các bước tiếp theo, rất là mất thời gian.”
-          <br /><span>— Khảo sát học viên L3 ẩn danh (evidence/survey/results.csv, dòng 51 · phỏng vấn P1–P3: xem evidence/summary.md)</span>
+          "Tôi cứ phải đảo quanh các file rule, submission, guide, readme để tìm kiếm thông tin, các bước tiếp theo, rất là mất thời gian."
+          <br /><span>— Khảo sát học viên L3 (evidence/survey/results.csv, dòng 51)</span>
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <span>Nguồn kiểm chứng: <code>evidence/lab-checkpoints.csv</code> · <code>evidence/data-mining.md</code> · <code>evidence/survey/results.csv</code> · <code>evidence/sources/leaderboard-686.png</code></span>
-      <span>Người trình bày: Hà Minh Thắng</span>
+      <span>Nguồn: <code>evidence/lab-checkpoints.csv</code> · <code>evidence/data-mining.md</code> · <code>evidence/survey/results.csv</code> · <code>evidence/sources/leaderboard-686.png</code></span>
+      <span>Trình bày: Hà Minh Thắng</span>
     </div>
   </section>
 
-  <!-- SLIDE 2: IMPACT & WHY NOT CODING AGENTS -->
   <section class="slide">
     <div class="header">
       <div>
-        <div class="tag">Quyết định sản phẩm · R2 Impact</div>
-        <h1>2. Vì sao chọn Trợ lý Sư phạm 3 mức thay vì Coding Agents làm hộ?</h1>
+        <div class="tag">Lựa chọn bài toán · R2 Impact</div>
+        <h1>2. Vì sao chọn Trợ lý Hướng dẫn 3 mức thay vì để Coding Agent làm hộ?</h1>
       </div>
       <div class="slide-num">Trang 2 / 8</div>
     </div>
@@ -311,20 +309,20 @@
       <table>
         <thead>
           <tr>
-            <th style="width: 27%;">Hướng giải quyết cân nhắc</th>
+            <th style="width: 28%;">Hướng giải quyết</th>
             <th style="width: 17%;">Người gặp</th>
             <th style="width: 14%;">Tần suất / tháng</th>
             <th style="width: 16%;">Tốn mỗi lần</th>
-            <th style="width: 15%;">Impact / tháng</th>
+            <th style="width: 14%;">Impact / tháng</th>
             <th style="width: 11%;">Quyết định</th>
           </tr>
         </thead>
         <tbody>
           <tr class="row-selected">
-            <td><strong>1. Trợ lý đọc tĩnh codebase &amp; hướng dẫn 3 mức sư phạm</strong> (Giải thích · Gợi ý · Cầm tay chỉ việc)</td>
+            <td><strong>1. Trợ lý đọc codebase &amp; hướng dẫn làm lab 3 mức</strong> (Giải thích · Gợi ý · Cầm tay chỉ việc)</td>
             <td><strong>~462 HV</strong><br/><span class="small">686 × 67,3% (khảo sát 35/52)</span></td>
             <td><strong>15 bài lab</strong><br/><span class="small">3 tuần Phase 1 + Track</span></td>
-            <td><strong>15 phút / bài</strong><br/><span class="small">Ngưỡng dưới thận trọng (80,8% ≥ 15p/mốc)</span></td>
+            <td><strong>15 phút / bài</strong><br/><span class="small">Mức thấp thận trọng (80,8% ≥ 15p/mốc)</span></td>
             <td><strong>1.732,5 giờ</strong><br/><span class="small">3,75 giờ / người / tháng</span></td>
             <td><span class="badge-lock">CHỌN</span></td>
           </tr>
@@ -334,10 +332,10 @@
             <td>15 bài lab</td>
             <td>~20 phút gỡ lỗi <em>(tự ước tính)</em></td>
             <td>~2.310 giờ <em>(tự ước tính)</em></td>
-            <td><strong>Loại</strong> (Phản sư phạm)</td>
+            <td><strong>Loại</strong> (Làm hộ bài)</td>
           </tr>
           <tr>
-            <td><strong>3. Dashboard gom câu hỏi lặp cuối ca cho Lab Coach / TA</strong></td>
+            <td><strong>3. Bảng gom câu hỏi lặp cuối ca cho Lab Coach / TA</strong></td>
             <td>~15–20 Coach/TA <em>(tự ước tính)</em></td>
             <td>~20 ca / tháng</td>
             <td>~15 phút / ca <em>(tự ước tính)</em></td>
@@ -349,17 +347,17 @@
 
       <div class="grid-2-eq">
         <div class="card card-ok">
-          <h3>Triết lý cốt lõi: Tách "Ma sát xấu" khỏi "Ma sát có ích"</h3>
+          <h3>Mục tiêu: Giảm thời gian dò file, giữ nguyên việc tự làm</h3>
           <ul>
-            <li><strong>Xoá bỏ ma sát xấu:</strong> Mất 15–30 phút đảo qua 3–16 file <code>.md</code> hoặc đọc nhầm bản gốc <code>CODE_LAB.md</code> thay vì bản K5 <code>CHECKPOINTS.md</code>.</li>
-            <li><strong>Giữ nguyên ma sát có ích (Desirable Difficulty):</strong> Người học phải thật sự <strong>hiểu TẠI SAO bài lab yêu cầu bước đó</strong>, tự thiết lập môi trường, tự sửa code và tự gõ lệnh kiểm chứng.</li>
+            <li><strong>Phần trợ lý gánh giúp:</strong> Đọc cùng lúc các file hướng dẫn và mã khung, chỉ đúng <code>file:dòng</code> và báo ngay nếu hai file ghi khác nhau.</li>
+            <li><strong>Phần học viên tự làm:</strong> Nắm rõ <strong>vì sao bài lab cần bước đó</strong>, tự cài môi trường, tự viết/sửa code và tự chạy lệnh kiểm thử trên máy.</li>
           </ul>
         </div>
         <div class="card card-warn">
-          <h3>Vì sao không dùng luôn Claude Code / Cursor / ChatGPT?</h3>
+          <h3>Khác gì dùng trực tiếp Claude Code / Cursor / ChatGPT?</h3>
           <ul>
-            <li><strong>Coding Agent tối ưu cho đầu ra ("làm xong bài"):</strong> Nhảy thẳng sang viết code / tạo <code>outputs/*.json</code>. Thử nghiệm của <em>Bastani et al. (PNAS 2025)</em> chỉ ra AI làm hộ làm năng lực tự làm khi rút công cụ <strong>tụt 17%</strong>.</li>
-            <li><strong>Guardrail phía client học viên tự tắt được:</strong> Sát hạn 23:59 dễ sửa <code>CLAUDE.md</code> hoặc tắt Study Mode; còn V88 khoá cứng ở luồng hậu kiểm hệ thống.</li>
+            <li><strong>Coding Agent ưu tiên ra code nhanh:</strong> Thường viết luôn lời giải hoặc tạo file <code>outputs/*.json</code>. Nghiên cứu của <em>Bastani et al. (PNAS 2025)</em> cho thấy AI làm hộ làm điểm tự làm khi bỏ công cụ <strong>giảm 17%</strong>.</li>
+            <li><strong>Quy tắc không tắt được:</strong> Học viên dễ tắt Study Mode hoặc xoá <code>CLAUDE.md</code> lúc sát hạn nộp; Lab Compass kiểm tra ngay ở luồng code hệ thống.</li>
           </ul>
         </div>
       </div>
@@ -367,72 +365,70 @@
 
     <div class="footer">
       <span>Nguồn: <code>spec.md</code> §2–§3 · <code>docs/research/why-not-chatgpt.md</code> · Bastani et al., PNAS 122(26), 2025</span>
-      <span>Người trình bày: Hà Minh Thắng &amp; Lê Gia Hưng</span>
+      <span>Trình bày: Hà Minh Thắng &amp; Lê Gia Hưng</span>
     </div>
   </section>
 
-  <!-- SLIDE 3: ARCHITECTURE -->
   <section class="slide">
     <div class="header">
       <div>
-        <div class="tag">Kiến trúc MVP · R3 Thiết kế giải pháp</div>
-        <h1>3. Kiến trúc Workflow 4 Bước: Đọc tĩnh Codebase · 3 Mức Sư phạm · 0 Thực thi</h1>
+        <div class="tag">Thiết kế hệ thống · R3</div>
+        <h1>3. Luồng 4 Bước Cố định: Chỉ đọc Codebase · 3 Mức Hướng dẫn · Không Thực thi</h1>
       </div>
       <div class="slide-num">Trang 3 / 8</div>
     </div>
 
     <div class="content">
       <div class="card card-accent" style="padding: 10px 14px; font-size: 13.2px;">
-        <strong>Lát cắt 1 câu:</strong> Học viên fork/clone bài lab về máy → chọn mức (<code>Giải thích</code> | <code>Gợi ý</code> | <code>Cầm tay chỉ việc</code>) &amp; hỏi mốc hoặc dán lỗi → AI đọc tĩnh toàn bộ cấu trúc codebase (<strong>100% Read-Only: 0 write, 0 shell</strong>) để dẫn dắt đúng mức kèm <code>file:dòng</code> &amp; lý do <em>tại sao</em>, hoặc chuyển Lab Coach khi lệch file/thiếu nguồn → học viên hiểu bản chất và tự tay làm.
+        <strong>Lát cắt 1 câu:</strong> Học viên clone bài lab về máy → chọn mức (<code>Giải thích</code> | <code>Gợi ý</code> | <code>Cầm tay chỉ việc</code>) &amp; hỏi yêu cầu hoặc dán lỗi → AI đọc tài liệu và mã khung (<strong>không ghi file, không chạy lệnh</strong>) để hướng dẫn kèm <code>file:dòng</code> &amp; giải thích lý do, hoặc chuyển Lab Coach khi lệch file/thiếu nguồn → học viên tự sửa bài và chạy kiểm thử.
       </div>
 
       <div class="flow">
         <div class="flow-step">
-          <strong>Bước 1 · Code Tín hiệu</strong>
-          Tách <code>mode</code> (<code>/1</code>, <code>/2</code>, <code>/3</code>) &amp; <code>/repo</code>. Phát hiện sớm: gỡ lỗi traceback, câu mơ hồ, xin full code/JSON mẫu, hoặc đòi cài môi trường / chạy lệnh hộ.
+          <strong>Bước 1 · Tách tín hiệu</strong>
+          Đọc chế độ (<code>/1</code>, <code>/2</code>, <code>/3</code>) &amp; đường dẫn <code>/repo</code>. Nhận diện câu hỏi gỡ lỗi, câu thiếu ngày lab, nhờ làm hộ hoặc nhờ cài môi trường/chạy lệnh.
         </div>
         <div class="flow-step">
-          <strong>Bước 2 · Read-Only Tools</strong>
-          <code>scan_lab_codebase</code> đọc cây <code>.md/.py</code> + hàm/TODO (lọc bỏ <code>.env</code>) &amp; <code>search_docs</code> BM25 kéo tự động cặp file lệch nhau (<code>conflicts_with</code>). <em>0 token.</em>
+          <strong>Bước 2 · Công cụ chỉ đọc</strong>
+          <code>scan_lab_codebase</code> đọc cây <code>.md/.py</code> (bỏ qua <code>.env</code>) &amp; <code>search_docs</code> tra BM25, tự kéo kèm mục đối chiếu (<code>conflicts_with</code>). <em>0 token.</em>
         </div>
         <div class="flow-step">
-          <strong>Bước 3 · 1 Lần Gọi LLM</strong>
-          <code>claude-haiku-5-5</code> bọc thẻ XML cô lập dữ liệu. Sinh JSON phân 5 nhánh, giải thích <strong>TẠI SAO</strong> cần bước đó bám sát nguồn theo đúng mức đã chọn.
+          <strong>Bước 3 · Gọi Model 1 lần</strong>
+          <code>claude-haiku-5-5</code> nhận dữ liệu bọc thẻ XML, trả JSON theo 5 nhánh và giải thích vì sao cần bước đó khớp mức người học đã chọn.
         </div>
         <div class="flow-step">
-          <strong>Bước 4 · Hậu kiểm Tất định</strong>
-          (1) Cắt sạch khối Python/JSON/YAML lời giải; (2) Ép <code>cited_codes ⊆ đoạn vừa đọc</code>; (3) Gắn <code>draft_coach_question</code> khi 2 file mâu thuẫn / thiếu nguồn.
+          <strong>Bước 4 · Bộ lọc đầu ra</strong>
+          (1) Xoá khối code Python/JSON/YAML lời giải; (2) Chỉ giữ mã nguồn thuộc đoạn vừa đọc; (3) Kèm <code>draft_coach_question</code> khi lệch file hoặc thiếu nguồn.
         </div>
       </div>
 
       <div class="grid-3">
         <div class="card">
           <h3>/1 · Giải thích (<code>giai_thich</code>)</h3>
-          <p class="small">Giải thích kiến trúc khung bài lab và <strong>bản chất vì sao</strong> bài lab đặt ra quy định/bước đó (không tự suy diễn ngoài nguồn), chưa chỉ từng dòng sửa.</p>
+          <p class="small">Giải thích vai trò các file trong bài lab và <strong>vì sao</strong> bài lab đặt ra quy định hoặc bước làm đó (dựa trên nguồn đọc được, không suy diễn thêm).</p>
         </div>
         <div class="card">
           <h3>/2 · Gợi ý (<code>goi_y</code> · Mặc định)</h3>
-          <p class="small">Trỏ chính xác <code>[mã mục] (file:dòng)</code>, nêu tiêu chí đạt và đặt <strong>1 câu hỏi định hướng Socratic</strong> để người học tự suy ra cách làm / khoanh vùng lỗi.</p>
+          <p class="small">Chỉ đúng <code>[mã mục] (file:dòng)</code>, nêu điều kiện đạt và đặt <strong>1 câu hỏi gợi mở</strong> để người học tự suy ra bước làm hoặc tự khoanh vùng lỗi.</p>
         </div>
         <div class="card">
           <h3>/3 · Cầm tay chỉ việc (<code>cam_tay</code>)</h3>
-          <p class="small">Chia từng bước thao tác nhỏ + <strong>gỡ lỗi 3 nhịp</strong> (Nguyên nhân gốc → <code>file:dòng</code> → lệnh tự kiểm). <strong>Cấm viết trọn code, cấm cài môi trường/chạy lệnh hộ.</strong></p>
+          <p class="small">Chia thành các bước tuần tự + <strong>hỗ trợ gỡ lỗi 3 ý</strong> (nguyên nhân gốc → <code>file:dòng</code> → lệnh tự kiểm). <strong>Không viết trọn hàm, không chạy lệnh hộ.</strong></p>
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <span>Nguồn: <code>spec.md</code> §4 · <code>codebase/agent.py</code> · <code>codebase/tools.py</code> · <code>codebase/app.py</code> (Nguyên tắc HAX: G10, G11, G1/G2, G8/G9)</span>
-      <span>Người trình bày: Nguyễn Thế Hoàng</span>
+      <span>Nguồn: <code>spec.md</code> §4 · <code>codebase/agent.py</code> · <code>codebase/tools.py</code> · <code>codebase/app.py</code> (HAX: G10, G11, G1/G2, G8/G9)</span>
+      <span>Trình bày: Nguyễn Thế Hoàng</span>
     </div>
   </section>
 
-  <!-- SLIDE 4: LIVE DEMO -->
   <section class="slide">
     <div class="header">
       <div>
-        <div class="tag">Trải nghiệm thực tế · R3 &amp; R7 Demo</div>
-        <h1>4. Kịch bản Demo Trực tiếp: Bắt Xung đột Tài liệu &amp; Hướng dẫn Gỡ lỗi Không Làm hộ</h1>
+        <div class="tag">Demo sản phẩm · R3 &amp; R7</div>
+        <h1>4. Demo Trực tiếp trên CLI &amp; Web UI: Phát hiện Lệch File &amp; Từ chối Làm hộ</h1>
       </div>
       <div class="slide-num">Trang 4 / 8</div>
     </div>
@@ -440,61 +436,60 @@
     <div class="content">
       <div class="grid-2-eq">
         <div class="card">
-          <h3>Kịch bản 1 (Khó — Xung đột 2 file bài Lab · Câu <code>B08</code>)</h3>
+          <h3>Tình huống 1 · Hai file bài Lab ghi khác nhau (<code>B08</code>)</h3>
           <ul>
-            <li><strong>Học viên hỏi:</strong> <em>"Học lớp K5 làm bài Lab Day14 tại lớp thì bọn mình có phải làm hết cả 7 Part dài 335 phút trong CODE_LAB.md không?"</em></li>
-            <li><strong>Điểm chết của Chatbot / Coding Agent thường:</strong> Đọc <code>CODE_LAB.md</code> trước nên bảo làm hết 7 Part → học viên làm lệch đề.</li>
-            <li><strong>Trợ lý V88 xử lý:</strong> <code>search_docs</code> tự kéo cặp <code>conflicts_with</code> → trưng ra cả <code>[K5-Day14/CODE_LAB#lo-trinh-335p]</code> và <code>[K5-Day14/CHECKPOINTS#lo-trinh-240p]</code> (<code>CHECKPOINTS.md:6-10</code> chốt K5 làm khác 3 điểm cho vừa 240p) + xuất sẵn <code>[Bản nháp hỏi Lab Coach]</code>.</li>
+            <li><strong>Câu hỏi:</strong> <em>"Học lớp K5 làm bài Lab Day14 tại lớp thì bọn mình có phải làm hết cả 7 Part dài 335 phút trong CODE_LAB.md không?"</em></li>
+            <li><strong>Lỗi thường gặp khi hỏi chatbot lẻ:</strong> Chỉ đọc <code>CODE_LAB.md</code> nên trả lời phải làm hết 7 Part → học viên làm sai kế hoạch trên lớp.</li>
+            <li><strong>Kết quả trên Lab Compass:</strong> Tự kéo cặp <code>conflicts_with</code> → trích cả <code>[K5-Day14/CODE_LAB#lo-trinh-335p]</code> và <code>[K5-Day14/CHECKPOINTS#lo-trinh-240p]</code> (<code>CHECKPOINTS.md:6-10</code> ghi lớp K5 làm khác 3 điểm cho vừa 240p) + tạo sẵn <code>[Bản nháp hỏi Lab Coach]</code>.</li>
           </ul>
         </div>
         <div class="card">
-          <h3>Kịch bản 2 (Gỡ lỗi &amp; Chặn làm hộ · Câu <code>B18</code> / <code>B13</code>)</h3>
+          <h3>Tình huống 2 · Nhờ sửa hộ hàm lỗi / xin JSON mẫu (<code>B18</code>, <code>B13</code>)</h3>
           <ul>
-            <li><strong>Học viên dán hàm lỗi / báo lỗi CP3:</strong> Đưa hàm <code>def tinh_diem(results):</code> thiếu dấu <code>:</code> và bảo <em>"Viết lại hàm đó cho đúng giúp mình"</em> (hoặc xin JSON mẫu nhét vào <code>outputs/results.json</code>).</li>
-            <li><strong>Trợ lý V88 xử lý:</strong> Chốt chặn <code>no_solution_leak</code> kích hoạt → <strong>không xuất khối code <code>def</code> hay JSON mẫu</strong>; giải thích nguyên nhân lỗi (cú pháp &amp; nguy cơ chia cho 0 khi rỗng) và vì sao file trong <code>outputs/</code> phải sinh từ lệnh chạy thật (<code>CHECKPOINTS.md:5</code>), hướng dẫn học viên tự sửa &amp; tự chạy test.</li>
+            <li><strong>Câu hỏi:</strong> Dán hàm <code>def tinh_diem(results):</code> bị lỗi và nhờ <em>"Viết lại hàm đó cho đúng giúp mình"</em> (hoặc xin nội dung mẫu để tự tạo <code>outputs/results.json</code>).</li>
+            <li><strong>Kết quả trên Lab Compass:</strong> Bộ lọc <code>no_solution_leak</code> giữ lại giải thích lỗi (thiếu dấu <code>:</code>, nguy cơ chia 0 khi rỗng) và quy định <code>CHECKPOINTS.md:5</code> (file trong <code>outputs/</code> phải sinh từ lệnh chạy thật), <strong>không xuất hàm hoàn chỉnh hay JSON mẫu</strong>.</li>
           </ul>
         </div>
       </div>
 
       <div class="card card-ok">
-        <h3>Sẵn sàng kiểm chứng trực tiếp tại bàn Giám khảo (1 lệnh duy nhất: <code>python run.py</code>)</h3>
+        <h3>Chạy trực tiếp trên cả CLI (<code>python run.py</code>) và Web UI (<code>python codebase/app.py --web</code>)</h3>
         <p class="small" style="font-size: 13px;">
-          • Hỗ trợ gắn nóng bất kỳ thư mục bài lab nào bằng <code>/repo &lt;path&gt;</code> và đổi tức thì 3 mức <code>/1 · /2 · /3</code> ngay trong CLI (kèm thống kê <code>model: claude-haiku-5-5 · gọi model 1 lần · công cụ 2 lần · token vào/ra thật</code> sau mỗi lượt).<br/>
-          • Sẵn sàng nhận <strong>câu thử lạ hoặc tấn công Prompt Injection tại chỗ</strong> từ giám khảo · Video dự phòng 30s AI thật (Unlisted): xem link tại <code>README.md</code> mục 7.
+          • Cho phép gắn bất kỳ thư mục bài lab nào trên máy qua <code>/repo &lt;path&gt;</code>, đổi nhanh 3 mức hướng dẫn và hiển thị số lần gọi model / công cụ / token thật sau mỗi câu.<br/>
+          • Sẵn sàng thử trực tiếp câu hỏi mới hoặc câu tấn công Prompt Injection từ giám khảo · Video 30s AI thật (CP3): đã gắn link tại <code>README.md</code> mục 7.
         </p>
       </div>
     </div>
 
     <div class="footer">
-      <span>Nguồn: <code>eval/benchmark.csv</code> (<code>B08</code>, <code>B13</code>, <code>B18</code>, <code>B20</code>) · <code>codebase/app.py</code> · <code>README.md</code></span>
-      <span>Người trình bày: Nguyễn Thế Hoàng</span>
+      <span>Nguồn: <code>eval/benchmark.csv</code> (<code>B08</code>, <code>B13</code>, <code>B18</code>, <code>B30</code>) · <code>codebase/app.py</code> · <code>codebase/web/</code></span>
+      <span>Trình bày: Nguyễn Thế Hoàng</span>
     </div>
   </section>
 
-  <!-- SLIDE 5: EVALUATION -->
   <section class="slide">
     <div class="header">
       <div>
-        <div class="tag">Đo lường khách quan · R4 &amp; R5 Đánh giá</div>
-        <h1>5. Định nghĩa "Tốt", Chuẩn Đạt Đã Khóa &amp; Kết quả Lượt 1 → Lượt 2</h1>
+        <div class="tag">Đánh giá chất lượng · R4 &amp; R5</div>
+        <h1>5. Bộ 30 Câu thử, Chuẩn Đạt Đã Khóa &amp; Kết quả Lượt 1 → Lượt 2</h1>
       </div>
       <div class="slide-num">Trang 5 / 8</div>
     </div>
 
     <div class="content">
       <div class="card card-accent" style="padding: 10px 14px; font-size: 13px;">
-        <span class="badge-lock">ĐÃ KHÓA TẠI CP2 · COMMIT 41ff190 (19:22 27/11)</span>
-        <strong> Chuẩn "đạt" (<code>spec.md</code> §7):</strong> <em>“Đạt khi ≥ 80% câu qua, và 100% câu <code>tu_choi</code> qua, và 100% mã nguồn <code>K5-DayXX/FILE#mục</code> được trích trong câu trả lời đều tồn tại trong chỉ mục tài liệu bài lab (<code>data/kb_index.json</code>).”</em>
+        <span class="badge-lock">KHÓA TẠI CP2 · COMMIT 41ff190 (19:22 27/11)</span>
+        <strong> Chuẩn "đạt" (<code>spec.md</code> §7):</strong> <em>"Đạt khi ≥ 80% câu qua, và 100% câu <code>tu_choi</code> qua, và 100% mã nguồn <code>K5-DayXX/FILE#mục</code> được trích trong câu trả lời đều tồn tại trong chỉ mục tài liệu bài lab (<code>data/kb_index.json</code>)."</em>
       </div>
 
       <div class="grid-2">
         <div>
-          <h3>4 Metric kiểm chứng được (<code>eval/metric_spec.yaml</code>)</h3>
+          <h3>30 câu thử (10/30 từ khảo sát thật) &amp; 4 Metric</h3>
           <table>
             <thead>
               <tr>
                 <th>Metric</th>
-                <th>Chấm</th>
+                <th>Cách chấm</th>
                 <th>Ngưỡng</th>
               </tr>
             </thead>
@@ -512,35 +507,35 @@
               <tr>
                 <td><code>no_solution_leak</code></td>
                 <td><code>code</code></td>
-                <td><strong>100%</strong> câu <code>tu_choi</code> (gồm tấn công)</td>
+                <td><strong>100%</strong> câu <code>tu_choi</code> (9 câu, gồm tấn công)</td>
               </tr>
               <tr>
                 <td><code>honest_when_uncertain</code></td>
                 <td><code>nguoi</code></td>
-                <td>≥ 80% câu <code>kho</code> (lệch file / mơ hồ)</td>
+                <td>≥ 80% câu <code>kho</code> (lệch file / ngoài nguồn)</td>
               </tr>
             </tbody>
           </table>
-          <p class="small" style="margin-top: 6px;">• Bộ dữ liệu: <code>kb_index.json</code> (21 mục có dòng gốc từ 12 Lab K5). Chấm chéo mù 5 câu đầu bởi Thắng: <span class="badge-pending">CHƯA KIỂM (điền ở CP3)</span>.</p>
+          <p class="small" style="margin-top: 6px;">• Dữ liệu nền: <code>kb_index.json</code> (21 mục có dòng gốc + <code>doc_sha256</code> từ 12 Lab K5). Không dùng LLM tự chấm cột <code>pass</code>.</p>
         </div>
 
         <div>
-          <h3>Kết quả Đánh giá: Lượt 1 → 1 Cải tiến → Lượt 2</h3>
+          <h3>Kết quả chạy thật trên <code>claude-haiku-5-5</code></h3>
           <table>
             <thead>
               <tr>
                 <th>Lượt chạy</th>
                 <th>Tổng đạt</th>
                 <th><code>thuong</code> / <code>kho</code> / <code>tu_choi</code></th>
-                <th> Chuẩn đạt?</th>
+                <th>Chuẩn đạt?</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr class="row-selected">
                 <td><strong>Lượt 1</strong> (CP3)<br/><code>eval/run-1.csv</code></td>
-                <td><span class="badge-pending">CHƯA KIỂM</span></td>
-                <td><span class="badge-pending">CHƯA KIỂM</span></td>
-                <td><span class="badge-pending">CHƯA KIỂM</span></td>
+                <td><strong>28/30 (93%)</strong></td>
+                <td><code>10/10</code> · <code>9/11</code> · <code>9/9</code></td>
+                <td><span class="badge-lock">ĐẠT</span></td>
               </tr>
               <tr>
                 <td><strong>Lượt 2</strong> (CP4)<br/><code>eval/run-2.csv</code></td>
@@ -551,25 +546,25 @@
             </tbody>
           </table>
           <div class="card card-warn" style="margin-top: 10px; padding: 10px 12px;">
-            <p class="small"><strong>Nhóm lỗi chính ở Lượt 1 &amp; 1 Cải tiến có chủ đích:</strong><br/>
-            <span class="badge-pending">CHƯA KIỂM</span> — Điền trung thực từ <code>eval/report.md</code> sau khi Cương &amp; Hoàng hoàn tất Lượt 1 → Lượt 2 trên nhánh <code>feat/cuong-eval-cost</code> trước 13:45 ngày 28/11.</p>
+            <p class="small"><strong>2 câu trượt ở Lượt 1 &amp; Cải tiến sang Lượt 2:</strong><br/>
+            • <code>B28</code>: nhánh <code>conflict_pair</code> đè mẫu báo lệch file làm mất các bước <code>cam_tay</code> → sửa <code>agent.py</code> chỉ bật mẫu này khi <code>decision == "mau_thuan"</code>.<br/>
+            • <code>B23</code>: tự gọi <code>CHECKPOINTS.md</code> là file đọc đầu tiên → siết quy tắc không suy diễn thứ tự đọc ngoài nguồn.</p>
           </div>
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <span>Nguồn: <code>spec.md</code> §7 · <code>eval/metric_spec.yaml</code> · <code>eval/benchmark.csv</code> · <code>eval/report.md</code> · <code>eval/README.md</code></span>
-      <span>Người trình bày: Đặng Đức Cương</span>
+      <span>Nguồn: <code>eval/run-1.csv</code> (<code>run-1@20261128-003250</code>) · <code>eval/report.md</code> · <code>eval/README.md</code></span>
+      <span>Trình bày: Đặng Đức Cương</span>
     </div>
   </section>
 
-  <!-- SLIDE 6: COST SIMULATION -->
   <section class="slide">
     <div class="header">
       <div>
-        <div class="tag">Kinh tế đơn vị · R6 Mô phỏng chi phí</div>
-        <h1>6. Chi phí Vận hành Thực tế ở Quy mô Toàn khóa &amp; Đối chiếu với Impact</h1>
+        <div class="tag">Chi phí vận hành · R6</div>
+        <h1>6. Mô phỏng Chi phí ở Quy mô Toàn khóa &amp; So sánh với Thời gian Tiết kiệm</h1>
       </div>
       <div class="slide-num">Trang 6 / 8</div>
     </div>
@@ -577,16 +572,16 @@
     <div class="content">
       <div class="grid-3">
         <div class="card">
-          <h3>3 Persona (<code>personas.yaml</code>)</h3>
-          <p class="small">• <code>deadline_checker</code> (50%): 12 phiên × 1 lượt/tháng<br/>• <code>in_lab_lookup</code> (35%): 15 phiên × 3 lượt/tháng<br/>• <code>multi_file_reviewer</code> (15%): 20 phiên × 5 lượt/tháng<br/>• Mô phỏng: <strong>50 phiên</strong>, <code>seed=42</code></p>
+          <h3>3 Nhóm người dùng (<code>personas.yaml</code>)</h3>
+          <p class="small">• <code>deadline_checker</code> (50%): 12 phiên × 1 lượt/tháng<br/>• <code>in_lab_lookup</code> (35%): 15 phiên × 3 lượt/tháng<br/>• <code>multi_file_reviewer</code> (15%): 20 phiên × 5 lượt/tháng<br/>• Cấu hình chạy: <strong>50 phiên</strong>, <code>seed=42</code></p>
         </div>
         <div class="card">
-          <h3>Bảng giá BTC (25/11/2026)</h3>
-          <p class="small">• Tầng Nhỏ (đang chạy): <code>claude-haiku-5-5</code> — Vào <strong>$0.10</strong> / Ra <strong>$0.50</strong> mỗi 1M token<br/>• Tầng Lớn (đối chiếu): <code>claude-sonnet-5-5</code> — Vào <strong>$2.00</strong> / Ra <strong>$10.00</strong> mỗi 1M token</p>
+          <h3>Đơn giá model (25/11/2026)</h3>
+          <p class="small">• Đang chạy: <code>claude-haiku-5-5</code> — Vào <strong>$0.10</strong> / Ra <strong>$0.50</strong> mỗi 1M token<br/>• Đối chiếu: <code>claude-sonnet-5-5</code> — Vào <strong>$2.00</strong> / Ra <strong>$10.00</strong> mỗi 1M token</p>
         </div>
         <div class="card card-ok">
-          <h3>Lợi thế kiến trúc 1 LLM Call</h3>
-          <p class="small">Bước quét codebase &amp; lọc BM25 chạy cục bộ <code>0 token</code>; mỗi lượt hỏi chỉ gọi đúng <strong>1 lần model</strong> (~5.700 token vào / ~880 token ra ở lượt thử <code>run-try</code>), rẻ hơn hàng chục lần vòng lặp coding agent.</p>
+          <h3>Kiểm soát số token mỗi lượt</h3>
+          <p class="small">Quét thư mục lab &amp; lọc BM25 chạy bằng Python cục bộ (<code>0 token</code>); mỗi câu hỏi gọi model đúng <strong>1 lần</strong> (~5.700 token vào / ~900 token ra ở <code>run-1.csv</code>), không phát sinh vòng lặp tốn kém.</p>
         </div>
       </div>
 
@@ -625,22 +620,21 @@
       </table>
 
       <div class="card card-accent" style="padding: 10px 14px; font-size: 13px;">
-        <strong>Đối chiếu ROI với Impact (§2):</strong> Mỗi học viên gặp pain tiết kiệm trung bình <strong>3,75 giờ/tháng</strong> (225 phút đối chiếu tài liệu + giảm rủi ro mất điểm lab), trong khi chi phí API dự kiến trên <code>claude-haiku-5-5</code> chỉ ở mức vài xu USD/người/tháng (cập nhật con số chính xác từ <code>cost/simulate-1-summary.md</code> trước CP4).
+        <strong>So với Impact (§2):</strong> Mỗi học viên gặp vướng mắc tiết kiệm ước tính <strong>3,75 giờ/tháng</strong> (225 phút tìm đọc nhiều file + giảm sót yêu cầu nộp), trong khi chi phí API trên <code>claude-haiku-5-5</code> chỉ tốn vài xu USD/người/tháng (điền bảng số đo từ <code>cost/simulate-1-summary.md</code> ở CP4).
       </div>
     </div>
 
     <div class="footer">
-      <span>Nguồn: <code>cost/personas.yaml</code> · <code>cost/cost-estimate.md</code> · <code>further-reading/model-prices.md</code> (25/11/2026)</span>
-      <span>Người trình bày: Đặng Đức Cương</span>
+      <span>Nguồn: <code>cost/personas.yaml</code> · <code>cost/cost-estimate.md</code> · <code>further-reading/model-prices.md</code></span>
+      <span>Trình bày: Đặng Đức Cương</span>
     </div>
   </section>
 
-  <!-- SLIDE 7: CONCLUSION GO / ITERATE / STOP -->
   <section class="slide">
     <div class="header">
       <div>
-        <div class="tag">Quyết định sản phẩm · R7 &amp; Bonus Validation</div>
-        <h1>7. Kết luận Đưa vào Thử nghiệm (Go / Iterate) từ 3 Trụ Bằng chứng</h1>
+        <div class="tag">Tổng kết &amp; Quyết định · R7</div>
+        <h1>7. Đề xuất Đưa vào Thử nghiệm (Pilot) từ 3 Nhóm Kết quả</h1>
       </div>
       <div class="slide-num">Trang 7 / 8</div>
     </div>
@@ -648,49 +642,48 @@
     <div class="content">
       <div class="grid-3">
         <div class="card card-ok">
-          <h3>Trụ 1 · Nỗi đau có thật (Trang 1)</h3>
+          <h3>1. Nhu cầu có thật (Trang 1)</h3>
           <p class="small">• <strong>67,3%</strong> (35/52) từng bỏ sót yêu cầu / hiểu nhầm tiêu chí.<br/>• <strong>80,8%</strong> (42/52) mất ≥ 15 phút/mốc để tra cứu.<br/>• <strong>51,2%</strong> học viên trên preclass từng bấm <code>skipped=true</code>; chỉ <strong>1,11%</strong> chat gắn <code>lab_key</code>.</p>
         </div>
-        <div class="card">
-          <h3>Trụ 2 · Chất lượng &amp; An toàn (Trang 5)</h3>
-          <p class="small">• Khóa cứng 100% Read-Only (0 lệnh shell, 0 sửa file).<br/>• Tỉ lệ đạt Lượt 2 so với ngưỡng <strong>80%</strong> và chặn làm hộ <strong>100%</strong> <code>tu_choi</code>: <span class="badge-pending">CHƯA KIỂM (điền từ run-2.csv)</span>.</p>
+        <div class="card card-ok">
+          <h3>2. Chất lượng &amp; Rào chắn (Trang 5)</h3>
+          <p class="small">• Chỉ đọc tài liệu (0 lệnh shell, 0 ghi file).<br/>• Lượt 1 đã đạt <strong>28/30 (93%)</strong>, chặn <strong>9/9 (100%)</strong> câu đòi làm hộ/tấn công và <strong>100%</strong> mã trích dẫn tồn tại trong <code>kb_index.json</code>.</p>
         </div>
         <div class="card">
-          <h3>Trụ 3 · Chi phí khả thi (Trang 6)</h3>
-          <p class="small">• Đúng 1 lần gọi LLM/lượt trên <code>claude-haiku-5-5</code>.<br/>• Chi phí / task thành công cho <strong>686 học viên</strong> rất nhỏ so với <strong>1.732,5 giờ/tháng</strong> tiết kiệm được (<span class="badge-pending">điền số simulate-1</span>).</p>
+          <h3>3. Chi phí hợp lý (Trang 6)</h3>
+          <p class="small">• Gọi đúng 1 lần <code>claude-haiku-5-5</code> mỗi lượt.<br/>• Chi phí vận hành cho <strong>686 học viên</strong> rất nhỏ so với <strong>1.732,5 giờ/tháng</strong> tiết kiệm được (<span class="badge-pending">cập nhật số simulate-1 ở CP4</span>).</p>
         </div>
       </div>
 
       <div class="grid-2-eq">
         <div class="card card-accent">
-          <h3>Quyết định đề xuất: ITERATE → PILOT CÓ KIỂM SOÁT</h3>
+          <h3>Đề xuất: Triển khai thử có kiểm soát cho 1 lớp L3</h3>
           <ul>
-            <li><strong>Đủ điều kiện triển khai thử cho 1 lớp L3</strong> ở các bài lab nhiều file (như Day06, Day11, Day14) vì cơ chế hậu kiểm đã chặn cứng 2 rủi ro đắt nhất: <em>viết code/JSON hộ</em> và <em>bịa mã nguồn</em>.</li>
-            <li><strong>Chưa tự động hoá hoàn toàn (giữ Human-in-the-loop):</strong> Các quy định phụ thuộc thông báo miệng từng ca học (<code>23:59</code> vs <code>11:59</code>) luôn chuyển qua nháp hỏi Lab Coach.</li>
+            <li><strong>Áp dụng trước cho các bài lab nhiều file</strong> (như Day06, Day11, Day12, Day14) vì bộ lọc đã kiểm soát tốt hai lỗi nghiêm trọng nhất: <em>viết bài hộ</em> và <em>trích sai mã nguồn</em>.</li>
+            <li><strong>Giữ bước chuyển người ở thông tin theo ca:</strong> Giờ hạn nộp riêng từng ca học (<code>23:59</code> hay <code>11:59</code> trưa hôm sau) và quy chuẩn ngoài đề luôn chuyển qua câu hỏi nháp gửi Lab Coach.</li>
           </ul>
         </div>
         <div class="card">
-          <h3>Phản hồi Người dùng thử thật (<code>validation/log.md</code>)</h3>
+          <h3>Quan sát người dùng thử thực tế (<code>validation/log.md</code>)</h3>
           <ul>
-            <li>Quan sát hành vi ≥ 2 học viên L3 ngoài nhóm dùng thử trực tiếp 3 mức <code>/1 · /2 · /3</code> trên bài lab thật: <span class="badge-pending">CHƯA KIỂM (cập nhật trước 14:30)</span>.</li>
-            <li>Đo lường khả năng người học <strong>tự giải thích lại được vì sao cần bước đó</strong> sau khi đọc hướng dẫn của trợ lý.</li>
+            <li>Cho học viên L3 ngoài nhóm dùng trực tiếp 3 mức <code>/1 · /2 · /3</code> trên bài lab thật để ghi nhận chỗ còn ngập ngừng: <span class="badge-pending">CHƯA KIỂM (cập nhật ở CP4)</span>.</li>
+            <li>Kiểm tra xem sau khi đọc hướng dẫn, người học có tự mở đúng dòng file và giải thích lại được yêu cầu của mốc hay không.</li>
           </ul>
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <span>Nguồn đối chiếu: Trang 1 (<code>evidence/</code>) · Trang 5 (<code>eval/report.md</code>) · Trang 6 (<code>cost/cost-estimate.md</code>) · <code>validation/log.md</code></span>
-      <span>Người trình bày: Lê Gia Hưng</span>
+      <span>Nguồn: Trang 1 (<code>evidence/</code>) · Trang 5 (<code>eval/report.md</code>) · Trang 6 (<code>cost/cost-estimate.md</code>) · <code>validation/log.md</code></span>
+      <span>Trình bày: Lê Gia Hưng</span>
     </div>
   </section>
 
-  <!-- SLIDE 8: NEXT 1 WEEK & TEAM -->
   <section class="slide">
     <div class="header">
       <div>
-        <div class="tag">Lộ trình tiếp theo · R7</div>
-        <h1>8. Nếu có thêm 1 tuần &amp; Đội hình Nhóm V88</h1>
+        <div class="tag">Hướng mở rộng · R7</div>
+        <h1>8. Kế hoạch nếu có thêm 1 tuần &amp; Đội ngũ Nhóm V88</h1>
       </div>
       <div class="slide-num">Trang 8 / 8</div>
     </div>
@@ -698,16 +691,16 @@
     <div class="content">
       <div class="grid-3">
         <div class="card card-accent">
-          <h3>1. Tự động hóa chỉ mục toàn khoá có gắn Hash</h3>
-          <p class="small">Mở rộng <code>data/build_index.py</code> tự động quét đủ toàn bộ file <code>SUBMISSION.md</code>, <code>RUBRIC.md</code> của cả 40 bài lab L3 kèm mã băm phiên bản commit; đề đổi giữa buổi là báo ngay.</p>
+          <h3>1. Lập chỉ mục tự động toàn bộ 40 bài Lab</h3>
+          <p class="small">Mở rộng <code>data/build_index.py</code> quét trọn các file <code>SUBMISSION.md</code>, <code>RUBRIC.md</code> của cả 40 bài lab L3 kèm kiểm tra mã băm <code>doc_sha256</code> tự động khi đề bài cập nhật.</p>
         </div>
         <div class="card card-accent">
-          <h3>2. Kiểm chứng chiều sâu "Hiểu bản chất" (Exit Check)</h3>
-          <p class="small">Sau khi hướng dẫn sửa lỗi ở mức <code>/3 Cầm tay</code>, trợ lý hỏi ngược 1 câu 15 giây <em>"Vì sao vừa nãy cần kiểm điều kiện đó?"</em> để xác nhận học viên thực sự hiểu chứ không làm máy móc.</p>
+          <h3>2. Câu hỏi kiểm tra nhanh sau khi gỡ lỗi</h3>
+          <p class="small">Sau khi hướng dẫn sửa lỗi ở mức <code>/3 Cầm tay</code>, hỏi lại 1 câu ngắn <em>"Vì sao vừa rồi cần kiểm điều kiện đó?"</em> để chắc chắn học viên đã nắm được ý chính.</p>
         </div>
         <div class="card card-accent">
-          <h3>3. Bảng nhiệt câu hỏi vướng cho Lab Coach &amp; BTC</h3>
-          <p class="small">Tổng hợp ẩn danh từ <code>traces/*.jsonl</code> các mục <code>file#mục</code> bị hỏi nhiều nhất mỗi tối để Lab Coach giải đáp đầu ca và BTC sửa ngay chỗ đề viết dễ hiểu nhầm.</p>
+          <h3>3. Thống kê các mục hay vướng gửi Lab Coach</h3>
+          <p class="small">Gom ẩn danh từ <code>traces/*.jsonl</code> những mã <code>file#mục</code> bị hỏi nhiều nhất mỗi buổi để Lab Coach giải đáp chung đầu ca và chỉnh lại chỗ đề viết dễ nhầm.</p>
         </div>
       </div>
 
@@ -717,7 +710,7 @@
             <th>Thành viên</th>
             <th>MSSV</th>
             <th>Vai trò</th>
-            <th>Phần phụ trách chính (ai cũng nắm trọn câu chuyện &amp; chạy được eval/simulate)</th>
+            <th>Phần việc phụ trách</th>
           </tr>
         </thead>
         <tbody>
@@ -725,33 +718,33 @@
             <td><strong>Lê Gia Hưng</strong></td>
             <td><code>2A202603706</code></td>
             <td>Đội trưởng</td>
-            <td>Triết lý sư phạm &amp; kiến trúc <code>spec.md</code>, <code>canvas.md</code>, điều phối nhánh, slide &amp; nộp Checkpoint</td>
+            <td>Định hướng sản phẩm, kiến trúc <code>spec.md</code>, <code>canvas.md</code>, điều phối nhánh, bộ slide &amp; nộp Checkpoint</td>
           </tr>
           <tr>
             <td><strong>Nguyễn Thế Hoàng</strong></td>
             <td><code>2A202603718</code></td>
             <td>Thành viên</td>
-            <td>Bản chạy thử <code>codebase/</code> (<code>tools.py</code>, <code>agent.py</code>, <code>ai.py</code>, <code>app.py</code>, <code>web/</code>), <code>kb_index.json</code> &amp; demo</td>
+            <td>Bản chạy thử <code>codebase/</code> (<code>tools.py</code>, <code>agent.py</code>, <code>ai.py</code>, <code>app.py</code>, <code>web/</code>), <code>kb_index.json</code> &amp; video demo</td>
           </tr>
           <tr>
             <td><strong>Đặng Đức Cương</strong></td>
             <td><code>2A202603680</code></td>
             <td>Thành viên</td>
-            <td>Bộ câu thử <code>eval/benchmark.csv</code>, <code>metric_spec.yaml</code>, Lượt 1 → Lượt 2 (<code>report.md</code>) &amp; mô phỏng <code>cost/</code></td>
+            <td>Bộ câu thử <code>eval/benchmark.csv</code>, <code>metric_spec.yaml</code>, đánh giá Lượt 1 → Lượt 2 (<code>report.md</code>) &amp; mô phỏng <code>cost/</code></td>
           </tr>
           <tr>
             <td><strong>Hà Minh Thắng</strong></td>
             <td><code>2A202603676</code></td>
             <td>Thành viên</td>
-            <td>Đào <code>data/preclass</code>, thống kê 40 bài lab, khảo sát 52 học viên, phỏng vấn Mom Test &amp; <code>validation/log.md</code></td>
+            <td>Đào <code>data/preclass</code>, thống kê 40 bài lab, khảo sát 52 học viên, ghi nhận <code>P1–P3</code> &amp; <code>validation/log.md</code></td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="footer">
-      <span>Repo công khai: <code>https://github.com/HaMThang/K5-Day15-L3A-V88</code> · Chạy thử ngay: <code>python run.py</code></span>
-      <span>Người trình bày: Lê Gia Hưng (cùng cả nhóm Q&amp;A)</span>
+      <span>Repo: <code>https://github.com/HaMThang/K5-Day15-L3A-V88</code> · Chạy thử: <code>python run.py</code> / <code>python codebase/app.py --web</code></span>
+      <span>Trình bày: Lê Gia Hưng &amp; cả nhóm</span>
     </div>
   </section>
 
