@@ -8,7 +8,7 @@ import unicodedata
 from typing import Any
 
 from ai import call_model
-from tools import _day_of, draft_coach_question, get_section, scan_lab_codebase, search_docs
+from tools import _day_of, draft_coach_question, get_section, resolve_lab_source, scan_lab_codebase, search_docs
 from tracing import note
 
 MAX_INPUT_CHARS = 2000
@@ -191,6 +191,7 @@ def _salvage_json(s: str) -> dict[str, Any] | None:
     return out if out.get("answer") else None
 
 
+_INLINE_SOURCE_RE = re.compile(r"https?://\S+|\b[A-Za-z]:[\\/][^\s\"'<>|?*]+")
 _UNKNOWN_CODE = "mã bạn đưa ra"
 
 
@@ -320,6 +321,14 @@ def answer(text: str, *, mode: str | None = None, repo_path: str = "") -> dict:
         clean_input = clean_input[:MAX_INPUT_CHARS]
         note(f"cắt đầu vào về {MAX_INPUT_CHARS} ký tự")
 
+    if not repo_path:
+        # Học viên dán link GitHub hoặc đường dẫn thư mục ngay trong câu hỏi: dùng nó làm nguồn (qua cùng guardrail).
+        found = _INLINE_SOURCE_RE.search(clean_input)
+        if found:
+            repo_path, source_error = resolve_lab_source(found.group(0).rstrip(".,;:)!?"))
+            if source_error:
+                note("guardrail: nguồn dán trong câu hỏi bị từ chối")
+                return {"output": source_error}
     has_local_repo = bool(repo_path and os.path.isdir(repo_path))
     signals = _detect_signals(clean_input, has_mounted_repo=has_local_repo)
     note(f"mode={mode} · local_repo={has_local_repo} · debug={signals['debug']}")

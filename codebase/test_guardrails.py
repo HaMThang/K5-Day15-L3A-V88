@@ -67,6 +67,11 @@ class GuardrailTests(unittest.TestCase):
             self.assertTrue(error, source)
         self.assertEqual(resolve_lab_source(""), ("", ""))
 
+    def test_link_pasted_in_question_goes_through_guardrail(self):
+        out = agent.answer("Day15 cần nộp gì? https://github.com/torvalds/linux", mode="goi_y")["output"]
+        self.assertIn("VinUni-AI20k", out)
+        self.assertNotIn("chưa có tài liệu của Day15", out)
+
     def test_model_error_returns_honest_message(self):
         original = agent.call_model
         agent.call_model = lambda *_: (_ for _ in ()).throw(RuntimeError("HTTP 529"))
