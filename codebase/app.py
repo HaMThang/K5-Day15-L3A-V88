@@ -1,7 +1,11 @@
 """Giao diện CLI (`python run.py`) và Web cục bộ (`python codebase/app.py --web`) — Nhóm V88."""
 import json
 import os
+import re
+import secrets
+import shutil
 import sys
+import tempfile
 import time
 import traceback
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -138,6 +142,72 @@ def serve_web() -> int:
         day_hits.append(now)
         return False
 
+    # Thư mục lab chọn từ trình duyệt: lưu tạm trên server, mỗi lần chọn một thư mục riêng, tự xoá sau 1 giờ.
+    import tools
+
+    upload_root = Path(tempfile.mkdtemp(prefix="labcompass-"))
+    uploads: dict[str, tuple[float, str]] = {}
+    upload_hits: dict[str, list[float]] = {}
+    upload_ttl, max_uploads, max_upload_bytes = 3600, 30, 2_000_000
+
+    def drop_upload(lab_id: str) -> None:
+        _, path = uploads.pop(lab_id, (0.0, ""))
+        if path:
+            tools._REPO_CACHE.pop(os.path.abspath(path), None)
+            shutil.rmtree(os.path.dirname(path), ignore_errors=True)
+
+    def prune_uploads() -> None:
+        now = time.time()
+        for lab_id, (created, _) in list(uploads.items()):
+            if now - created > upload_ttl:
+                drop_upload(lab_id)
+        for lab_id, _ in sorted(uploads.items(), key=lambda kv: kv[1][0])[: max(0, len(uploads) - max_uploads + 1)]:
+            drop_upload(lab_id)
+
+    def safe_parts(rel: str) -> list[str] | None:
+        parts = rel.replace("\\", "/").split("/")
+        if any(p in ("", ".", "..") or ":" in p for p in parts):
+            return None
+        if any(d in tools._SKIP_DIRS or d.startswith(".") for d in parts[:-1]):
+            return None
+        name = parts[-1]
+        if os.path.splitext(name)[1].lower() not in tools._ALLOWED_EXTS or tools._is_secret_filename(name):
+            return None
+        return parts
+
+    def save_upload(name: str, files: list) -> tuple[str, str, int, int]:
+        prune_uploads()
+        lab_id = secrets.token_urlsafe(12)
+        folder = re.sub(r"[^\w.-]", "_", name)[:80].strip("._") or "lab"
+        lab_dir = (upload_root / lab_id / folder).resolve()
+        lab_dir.mkdir(parents=True)
+        saved = skipped = 0
+        for item in files:
+            parts = safe_parts(item.get("path", "")) if isinstance(item, dict) else None
+            content = item.get("content") if parts else None
+            if not parts or not isinstance(content, str) or saved >= tools._MAX_SCAN_FILES:
+                skipped += 1
+                continue
+            data = content.encode("utf-8")
+            dest = lab_dir.joinpath(*parts).resolve()
+            if len(data) > tools._MAX_FILE_BYTES or not str(dest).startswith(str(lab_dir) + os.sep):
+                skipped += 1
+                continue
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(data)
+            saved += 1
+        if not saved:
+            shutil.rmtree(lab_dir.parent, ignore_errors=True)
+            raise ValueError
+        uploads[lab_id] = (time.time(), str(lab_dir))
+        return lab_id, folder, saved, skipped
+
+    def upload_limited(ip: str) -> bool:
+        now = time.time()
+        recent = [t for t in upload_hits.get(ip, []) if now - t < 3600]
+        upload_hits[ip] = recent + [now]
+        return len(recent) >= 20
+
     assets = {
         "/": ("index.html", "text/html"),
         "/app.js": ("app.js", "text/javascript"),
@@ -165,14 +235,27 @@ def serve_web() -> int:
             if self.path == "/healthz":
                 self.send_body(200, "text/plain", b"ok")
                 return
+            if self.path == "/api/config" and self.headers.get("Host") == address:
+                self.send_json(200, {"allow_repo_path": allow_repo, "upload_ttl_minutes": upload_ttl // 60,
+                                     "max_files": tools._MAX_SCAN_FILES, "max_file_bytes": tools._MAX_FILE_BYTES})
+                return
             if self.headers.get("Host") != address or self.path not in assets:
                 self.send_error(404)
                 return
             name, mime = assets[self.path]
             self.send_body(200, mime, (web_root / name).read_bytes())
 
+        def read_json(self, limit: int) -> dict:
+            size = int(self.headers.get("Content-Length", "0"))
+            if not 0 < size <= limit or self.headers.get_content_type() != "application/json":
+                raise ValueError
+            data = json.loads(self.rfile.read(size))
+            if not isinstance(data, dict):
+                raise ValueError
+            return data
+
         def do_POST(self) -> None:
-            if self.path != "/api/answer":
+            if self.path not in ("/api/answer", "/api/upload_lab"):
                 self.send_json(404, {"error": "Không tìm thấy đường dẫn."})
                 return
             if self.headers.get("Host") != address or self.headers.get("Origin") != origin:
@@ -180,18 +263,16 @@ def serve_web() -> int:
                 return
             forwarded = self.headers.get("X-Forwarded-For", "")
             client_ip = forwarded.split(",")[0].strip() if public_origin and forwarded else self.client_address[0]
+            if self.path == "/api/upload_lab":
+                self.handle_upload(client_ip)
+                return
             if over_limit(client_ip):
                 self.send_json(429, {"error": "Đã hết lượt hỏi thử, vui lòng quay lại sau."})
                 return
             try:
-                size = int(self.headers.get("Content-Length", "0"))
-                if not 0 < size <= 16384 or self.headers.get_content_type() != "application/json":
-                    raise ValueError
-                data = json.loads(self.rfile.read(size))
-                if not isinstance(data, dict):
-                    raise ValueError
-                question, mode, repo = (data.get(k, "") for k in ("question", "mode", "repo_path"))
-                if not all(isinstance(v, str) for v in (question, mode, repo)):
+                data = self.read_json(16384)
+                question, mode, repo, lab_id = (data.get(k, "") for k in ("question", "mode", "repo_path", "lab_id"))
+                if not all(isinstance(v, str) for v in (question, mode, repo, lab_id)):
                     raise ValueError
                 if not 0 < len(question.strip()) <= 1500 or mode not in MODE_LABELS:
                     raise ValueError
@@ -200,10 +281,16 @@ def serve_web() -> int:
                 return
 
             repo = repo.strip()
-            if repo and not allow_repo:
+            if lab_id:
+                prune_uploads()
+                if lab_id not in uploads:
+                    self.send_json(410, {"error": "Thư mục lab đã chọn đã hết hạn, hãy chọn lại thư mục.", "lab_expired": True})
+                    return
+                repo = uploads[lab_id][1]
+            elif repo and not allow_repo:
                 self.send_json(400, {"error": "Bản dùng thử trực tuyến không đọc thư mục lab; hãy để trống đường dẫn."})
                 return
-            if repo and (repo.startswith(("\\\\", "//")) or not os.path.isdir(repo)):
+            if repo and not lab_id and (repo.startswith(("\\\\", "//")) or not os.path.isdir(repo)):
                 self.send_json(400, {"error": "Không tìm thấy thư mục lab trên máy này."})
                 return
 
@@ -225,6 +312,25 @@ def serve_web() -> int:
                 **{k: summary[k] for k in ("model_calls", "tool_calls", "tokens_in", "tokens_out")},
             })
 
+        def handle_upload(self, client_ip: str) -> None:
+            if upload_limited(client_ip):
+                self.send_json(429, {"error": "Bạn đã chọn thư mục quá nhiều lần, vui lòng thử lại sau."})
+                return
+            try:
+                data = self.read_json(max_upload_bytes)
+                name, files = data.get("name", ""), data.get("files")
+                if not isinstance(name, str) or not isinstance(files, list) or not files:
+                    raise ValueError
+                lab_id, folder, saved, skipped = save_upload(name, files)
+            except (ValueError, OSError):
+                self.send_json(400, {"error": "Thư mục không có file tài liệu phù hợp (.md, .py, .yaml, .txt) hoặc quá lớn."})
+                return
+            self.send_json(200, {"lab_id": lab_id, "name": folder, "files": saved, "skipped": skipped,
+                                 "ttl_minutes": upload_ttl // 60})
+
+    # Render dừng server bằng SIGTERM: đổi thành thoát bình thường để khối finally dọn thư mục tạm.
+    import signal
+    signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
     try:
         with HTTPServer((host, port), Handler) as server:
             print(f"Lab Compass · {origin} · Ctrl+C để thoát", flush=True)
@@ -234,6 +340,8 @@ def serve_web() -> int:
     except OSError as error:
         print(f"Không mở được cổng Web UI: {error}", file=sys.stderr)
         return 1
+    finally:
+        shutil.rmtree(upload_root, ignore_errors=True)
 
 
 if __name__ == "__main__":

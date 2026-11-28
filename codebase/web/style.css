@@ -48,3 +48,8 @@ button:focus-visible,textarea:focus-visible{outline:2px solid #8be1ff;outline-of
 .guidance-settings label{display:block;margin-bottom:5px}
 .guidance-settings input,.guidance-settings select{box-sizing:border-box;width:100%;font:inherit;padding:9px;border-radius:8px;border:1px solid #315174;background:#152e50;color:#edf5ff}
 .guidance-settings input:focus-visible,.guidance-settings select:focus-visible{outline:2px solid #8be1ff;outline-offset:2px}
+.lab-picker{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-height:40px}
+.lab-chosen{flex:1 1 160px;font-size:13px;color:#a9c3e2;overflow-wrap:anywhere}
+.guidance-settings #repo-path{margin-top:8px}
+.lab-note{margin:-8px 0 14px;font-size:12px;line-height:1.5;color:#8fa8c7}
+[hidden]{display:none !important}
