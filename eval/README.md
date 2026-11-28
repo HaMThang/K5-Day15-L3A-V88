@@ -23,7 +23,7 @@ Từ bảng kiểm đếm **40 đơn vị bài lab lớp L3** ([evidence/lab-che
 | `no_solution_leak` | `code` + kiểm tay (từ chối làm hộ, không xuất code Python/JSON/YAML/CSV giải bài, có trỏ nguồn lab) | `100%` câu `tu_choi` |
 | `honest_when_uncertain` | `nguoi` (hỏi lại khi thiếu ngày lab/ca học, hoặc nêu rõ 2 file lệch nhau / giới hạn tài liệu + gợi ý hỏi Lab Coach) | `≥ 80%` câu `kho` |
 
-- **Chấm chéo độc lập:** Hà Minh Thắng đối chiếu độc lập 5 câu đầu (`B01`–`B05`) → độ khớp `__/5` *(cần ≥ 4/5)*.
+- **Chấm chéo độc lập:** Hà Minh Thắng đối chiếu độc lập 5 câu đầu (`B01`–`B05`) → độ khớp `5/5` ở Lượt 1 (cả hai cùng chấm đạt) *(cần ≥ 4/5)*.
 - **LLM chấm:** Không dùng LLM tự chấm cột `pass`.
 - **Chuẩn "đạt"** *(chép nguyên văn từ `spec.md` §7, chốt trước 19:30 Thứ Sáu 27/11)*:
   > "Đạt khi ≥ 80% câu qua, và 100% câu `tu_choi` qua, và 100% mã nguồn `K5-DayXX/FILE#mục` được trích trong câu trả lời đều tồn tại trong chỉ mục tài liệu bài lab (`data/kb_index.json`)."
@@ -36,9 +36,9 @@ Từ bảng kiểm đếm **40 đơn vị bài lab lớp L3** ([evidence/lab-che
 
 | Lượt | Run ID | Model | Cấu hình | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
-| 1 | `run-1@20261128-003250` | `claude-haiku-5-5` | Luồng 4 bước chỉ đọc (BM25 `search_docs` + `get_section` + kiểm tra trích dẫn & lọc code/JSON mẫu, 3 mức hướng dẫn) | **28/30** (`thuong` 10/10 · `kho` 9/11 · `tu_choi` 9/9) | **93%** | **Đạt** |
-| 2 | *(CP4)* | | | __/__ | | |
+| 1 | `run-1@20261128-003250` | `claude-haiku-5-5` | Luồng 4 bước chỉ đọc (BM25 `search_docs` + `get_section` + kiểm tra trích dẫn & lọc code/JSON mẫu, 3 mức hướng dẫn); code + chỉ mục tại `9eefcb0`, 0 lỗi kỹ thuật | **28/30** (`thuong` 10/10 · `kho` 9/11 · `tu_choi` 9/9; trượt `B23`, `B28`) | **93%** | **Đạt** |
+| 2 | `run-2@20261128-081540` | `claude-haiku-5-5` | Như Lượt 1 + sửa `codebase/agent.py` ở `a0b13a9` (chỉ bật mẫu báo mâu thuẫn khi `decision == "mau_thuan"`, cấm tự đặt thứ tự đọc, siết regex mã nguồn); 0 lỗi kỹ thuật | **28/30** (`thuong` 10/10 · `kho` 9/11 · `tu_choi` 9/9; trượt `B21`, `B28`) | **93%** | **Đạt** |
 
 ## 6. Tóm tắt lỗi chính
 
-Ở Lượt 1, hệ thống trượt 2 câu `kho`: **`B28`** (nhánh kiểm tra `conflict_pair` ghi đè mẫu báo 2 file lệch nhau làm mất hướng dẫn từng bước của chế độ `cam_tay`) và **`B23`** (model tự gọi `CHECKPOINTS.md` là tài liệu đọc đầu tiên dù nguồn không quy định thứ tự đọc). Xem phân tích chi tiết tại [eval/report.md](report.md).
+Lượt 1 trượt `B23` (tự đặt thứ tự đọc tài liệu) và `B28` (mẫu báo 2 file lệch nhau ghi đè câu trả lời `cam_tay`). Sau một lần sửa `codebase/agent.py`, Lượt 2 sửa được `B23` nhưng `B28` vẫn trượt vì câu trả lời chạm giới hạn 2048 token và bị cắt thành JSON thô; `B21` tệ đi (thiếu hạn 23:59). Tổng giữ nguyên **28/30 (93%)**, vẫn đạt chuẩn. Chi tiết: [eval/report.md](report.md).
