@@ -1,36 +1,31 @@
-# Mô phỏng chi phí khi dùng thật — điền ở guide bước 4.2.
-# Mọi số phải có nguồn (data / phỏng vấn / khảo sát / quy mô khoá có nguồn) hoặc ghi rõ "(tự ước tính)".
-# Chạy: python run.py simulate --try   (10 phiên, kiểm khung — làm trước CP3)
-#       python run.py simulate         (đủ số phiên dưới đây — bản nộp CP4)
-
-sessions: 50        # số phiên mô phỏng — bản nộp >=50
-seed: 42            # giữ cố định để chạy lại ra cùng chuỗi phiên
+sessions: 50
+seed: 42
 
 users:
   low: 300
   base: 686
   high: 1000
-  source: "Kịch bản cơ sở 686 học viên lấy theo tổng sĩ số thực tế lớp L3 khoá K5; cao 1000 học viên theo quy mô toàn khoá K5 (tracks/track-a-edtech.md: 'hơn 1.000 học viên'); thấp 300 học viên là (tự ước tính) số học viên tra cứu thường xuyên mỗi đợt."
+  source: "Cơ sở 686 học viên lấy từ bảng xếp hạng XP toàn khoá trên cổng học (chụp 27/11: evidence/sources/leaderboard-686.png); cao 1000 học viên theo quy mô khoá K5 trong tracks/track-a-edtech.md ('hơn 1.000 học viên'); thấp 300 học viên là (tự ước tính) số người tra cứu thường xuyên mỗi đợt."
 
 personas:
   - name: deadline_checker
     share: 0.5
     uses_per_month: 12
     turns_per_session: 1
-    source: "(tự ước tính) bám sát nhịp mỗi ngày làm 1 bài lab trong 3 tuần đầu Phase 1: học viên mở tra nhanh 1 câu yêu cầu file nộp trước hạn 23:59 hoặc 11:59 trưa hôm sau — cập nhật từ phỏng vấn ở CP3"
+    source: "(tự ước tính) theo nhịp mỗi ngày 1 bài lab trong 3 tuần đầu Phase 1: học viên mở kiểm nhanh 1 câu về file phải nộp và điều kiện đạt trước hạn 23:59 hoặc 11:59 trưa hôm sau"
   - name: in_lab_lookup
     share: 0.35
     uses_per_month: 15
     turns_per_session: 3
-    source: "(tự ước tính) học viên tra cứu đối chiếu các mốc checkpoint (trung bình 5,8 CP/lab) ngay trong buổi lab 240 phút mỗi ngày — cập nhật từ phỏng vấn ở CP3"
+    source: "(tự ước tính) học viên hỏi đối chiếu các mốc checkpoint (trung bình 5,8 CP/bài) ngay trong buổi lab 240 phút"
   - name: multi_file_reviewer
     share: 0.15
     uses_per_month: 20
     turns_per_session: 5
     types: [thuong, kho, tu_choi]
-    source: "(tự ước tính) học viên / nhóm trưởng rà kỹ các file CHECKPOINTS.md, CODE_LAB.md, RUBRIC.md, SUBMISSION.md cho cả nhóm — cập nhật từ phỏng vấn ở CP3"
+    source: "(tự ước tính) học viên hoặc nhóm trưởng rà kỹ nhiều file hướng dẫn (CHECKPOINTS.md, CODE_LAB.md, RUBRIC.md, SUBMISSION.md) và hỏi gỡ lỗi"
 
-prices:             # USD / 1 triệu token — chép từ further-reading/model-prices.md (xem 25/11/2026). >=2 mức model
+prices:
   - model: claude-haiku-5-5
     input: 0.10
     output: 0.50
@@ -42,4 +37,4 @@ prices:             # USD / 1 triệu token — chép từ further-reading/model
 
 usd_to_vnd:
   rate: 25400
-  source: "(tự ước tính) tỷ giá tham khảo USD/VND tháng 11/2026 để quy đổi minh hoạ sang tiền Việt"
+  source: "(tự ước tính) tỷ giá tham khảo USD/VND tháng 11/2026"
