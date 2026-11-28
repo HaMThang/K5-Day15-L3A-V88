@@ -23,6 +23,13 @@ class GuardrailTests(unittest.TestCase):
         self.assertNotIn("</student_question>", cleaned)
         self.assertNotIn("<system>", cleaned)
 
+    def test_unknown_code_is_removed(self):
+        text, used = agent._sanitize_inline_codes("Theo `K5-Day15/RULES#bonus` và `A/B#c`", {"a/b#c": "A/B#c"})
+        self.assertNotIn("K5-Day15/RULES#bonus", text)
+        self.assertNotIn("`mã bạn", text)
+        self.assertEqual(agent._sanitize_inline_codes("vì mã `X/Y#z` lạ", {})[0], "vì mã bạn đưa ra lạ")
+        self.assertEqual(used, ["A/B#c"])
+
     def test_coach_draft_has_no_double_punctuation(self):
         draft = draft_coach_question("Hạn nộp Day06 là mấy giờ?", "Tài liệu không ghi hạn nộp.", "K5-Day06/X#y")
         self.assertNotIn("., ", draft)

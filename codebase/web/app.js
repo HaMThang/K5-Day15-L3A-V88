@@ -151,6 +151,8 @@ form.addEventListener('submit', async event => {
     reset.disabled = false;
     submit.innerHTML = 'Gửi câu hỏi <span>→</span>';
     question.focus();
-    conversation.scrollTop = conversation.scrollHeight;
+    // Đưa đầu câu trả lời mới lên trên để học viên đọc từ câu đầu, không phải từ cuối.
+    const last = [...conversation.querySelectorAll('.assistant-message')].pop();
+    conversation.scrollTop = last ? last.offsetTop - conversation.offsetTop - 8 : conversation.scrollHeight;
   }
 });

@@ -395,14 +395,13 @@ def draft_coach_question(question: str, reason: str, cited_codes: str = "") -> s
     Input: question (str) — câu hỏi gốc; reason (str) — lý do cần xác nhận; cited_codes (str) — mã mục đã tra.
     Output: chuỗi văn bản bản nháp để học viên tự kiểm và gửi.
     Tác động ra ngoài: Không tự gửi tin (chỉ tạo bản nháp chờ người dùng duyệt)."""
-    q_clean = " ".join((question or "").strip().split())
+    q_clean = " ".join((question or "").strip().split()).rstrip(" .")
     if len(q_clean) > 160:
         q_clean = q_clean[:157] + "..."
     reason = re.sub(r"[;,]\s*(cần|nhờ)\s.*(xác nhận|hỏi).*$", "", (reason or "").strip(), flags=re.IGNORECASE)
     reason = reason.strip().rstrip(".;:, ")
     if reason[1:2].islower():  # "Tài liệu..." -> "tài liệu..." sau chữ "Do"; giữ nguyên "CHECKPOINTS.md..."
         reason = reason[0].lower() + reason[1:]
-    q_clean = q_clean.rstrip(" .")
     checked = f" (em đã tra mục {cited_codes})" if cited_codes else " (em đã kiểm tra các file hướng dẫn của bài lab)"
     return (
         f"[Bản nháp hỏi Lab Coach — học viên tự kiểm và tự gửi]\n"
