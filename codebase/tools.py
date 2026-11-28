@@ -28,6 +28,8 @@ _SKIP_DIRS = {
 _ALLOWED_EXTS = {".md", ".py", ".yaml", ".yml", ".toml", ".txt"}
 _MAX_SCAN_FILES = 60
 _MAX_FILE_BYTES = 48_000
+_PIECE_CHARS = 400          # độ dài tối đa một đoạn khi chia mục markdown dài (thư mục lab của học viên)
+_MAX_PIECES_PER_FILE = 40   # số đoạn tối đa mỗi file markdown
 
 _DAY_RE = re.compile(r"\b(?:day|lab|ngay)\s*[-_]?0?(\d{1,2})\b")
 _TOKEN_RE = re.compile(r"[a-z0-9_#.\-/]+")
@@ -149,20 +151,36 @@ def _chunk_markdown(repo_name: str, rel_path: str, fname: str, lines: list[str])
 
     outline_entry = f"{rel_path}: " + " | ".join(t for t, _, _ in chunks[:6])
     secs: list[dict[str, Any]] = []
-    for c_idx, (title, start_ln, buf) in enumerate(chunks[:12], start=1):
-        end_ln = start_ln + len(buf) - 1
+    for c_idx, (title, start_ln, buf) in enumerate(chunks, start=1):
         slug = re.sub(r"[^a-z0-9]+", "-", _strip_accents(title.lower())).strip("-")[:28] or f"sec{c_idx}"
-        body_txt = " ".join(x.strip() for x in buf if x.strip())
-        secs.append({
-            "code": f"{repo_name}/{rel_path}#{slug}",
-            "lab": repo_name,
-            "file": f"{rel_path}:{start_ln}-{end_ln}",
-            "title": f"{rel_path} · {title}",
-            "keywords": [],
-            "summary": body_txt[:420],
-            "quote": body_txt[:220],
-            "conflicts_with": [],
-        })
+        # Mục dài (vd bảng rubric) được chia thành nhiều đoạn theo dòng để không mất nội dung sau 420 ký tự đầu.
+        pieces: list[tuple[int, list[str]]] = []
+        p_start, p_buf, p_len = start_ln, [], 0
+        for offset, ln in enumerate(buf):
+            size = len(ln.strip()) + 1
+            if p_buf and p_len + size > _PIECE_CHARS:
+                pieces.append((p_start, p_buf))
+                p_start, p_buf, p_len = start_ln + offset, [], 0
+            p_buf.append(ln)
+            p_len += size
+        if p_buf:
+            pieces.append((p_start, p_buf))
+        for p_idx, (p_start, p_buf) in enumerate(pieces, start=1):
+            if len(secs) >= _MAX_PIECES_PER_FILE:
+                return outline_entry, secs
+            body_txt = " ".join(x.strip() for x in p_buf if x.strip())
+            if not body_txt:
+                continue
+            secs.append({
+                "code": f"{repo_name}/{rel_path}#{slug}" + (f"-p{p_idx}" if p_idx > 1 else ""),
+                "lab": repo_name,
+                "file": f"{rel_path}:{p_start}-{p_start + len(p_buf) - 1}",
+                "title": f"{rel_path} · {title}",
+                "keywords": [],
+                "summary": body_txt[:420],
+                "quote": body_txt[:220],
+                "conflicts_with": [],
+            })
     return outline_entry, secs
 
 
@@ -331,6 +349,13 @@ def search_docs(query: str, k: int = 5, repo_path: str = "") -> list:
 
     q_folded = _normalize_day_mentions(_strip_accents(query.lower()))
     idf = kb["idf"]
+    if len(sections) > len(kb["sections"]):
+        # Có thư mục lab của học viên: tính IDF trên toàn bộ đoạn đang tra để từ hiếm (vd "c1") được ưu tiên.
+        n_docs = len(tf_maps)
+        idf = {qt: math.log(1.0 + (n_docs - df + 0.5) / (df + 0.5))
+               for qt in set(q_tokens) for df in [sum(1 for tf_map in tf_maps if qt in tf_map)]}
+        # Mã mục ngắn như C1, CP2, B6, M5 là thứ học viên hay hỏi trực tiếp: nhân đôi trọng số.
+        idf = {qt: w * (2.0 if re.fullmatch(r"[a-z]{1,3}\d{1,2}", qt) else 1.0) for qt, w in idf.items()}
     avgdl = max(sum(doc_lens) / len(doc_lens), 1.0)
     k1, b = 1.5, 0.75
 
