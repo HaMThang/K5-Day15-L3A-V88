@@ -13,7 +13,7 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 | Rà câu hỏi phỏng vấn / khảo sát | Claude | Gợi ý 5 câu hỏi kiểu Mom Test (hỏi hành vi đã xảy ra, không dẫn dắt) | Thắng tự phỏng vấn người dùng thật ngoài nhóm và ghi chép nguyên văn | Hà Minh Thắng |
 | Viết câu thử (`eval/benchmark.csv`, `metric_spec.yaml`) | Claude, Antigravity (Gemini) | Chuẩn hoá 15 câu `tu_viet` đầu tiên từ các dòng quy định thật của 12 bài Lab ngày K5 (`Day02`–`Day14`) và nháp 4 metric | Cương kiểm lại từng mã `K5-DayXX/FILE#mục` & dòng gốc, bổ sung câu `nguoi_dung`/`data_that` thật trước CP3; Thắng chấm chéo 5 câu | Đặng Đức Cương |
 | Sinh data `synthetic` (nếu có) | Không dùng | Không sinh dữ liệu giả lập cho bằng chứng pain | — | — |
-| Chấm cột `pass` bằng LLM (nếu có) | Không dùng (người + code chấm) | `citation_exists` & `no_solution_leak` hỗ trợ kiểm bằng code; `requirement_accuracy` do người chấm | Cương chấm chính, Thắng chấm độc lập 5 câu đối chiếu | Đặng Đức Cương, Hà Minh Thắng |
+| Chấm cột `pass` bằng LLM (nếu có) | Không dùng LLM tự chấm (người chấm + code kiểm metric tất định) | Code kiểm `citation_exists` & `no_solution_leak`, Antigravity trình bày phiếu nguyên văn 30 câu không gợi ý điểm | Hưng/Cương đọc `pass_criterion` chốt tay `1/0` cho 30 câu, Thắng chấm chéo độc lập 5 câu đầu | Đặng Đức Cương, Lê Gia Hưng, Hà Minh Thắng |
 | Slide, văn bản (`spec.md`, `slides/`) | Claude, Antigravity (Gemini) | Gợi ý bố cục Mermaid và dàn trang slide từ số liệu có sẵn | Hưng đối chiếu mọi con số trên `spec.md` và slide với file nguồn trong repo | Lê Gia Hưng |
 
 **Không dùng AI để:** tạo người được phỏng vấn, trích dẫn, câu trả lời khảo sát; sửa kết quả các lượt đã chạy (`eval/run-*.csv`, `cost/simulate-*.csv`, `traces/`).

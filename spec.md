@@ -138,7 +138,7 @@ flowchart TD
 - **Data card:** `data/DATA_CARD.md` · **Bộ câu thử (bản CP2):** `eval/benchmark.csv` — **20 câu** (`thuong` 7 · `kho` 5 · `tu_choi` 8, gồm 7 câu tấn công; trước CP3 mở rộng lên 24–25 câu có ≥ 1/3 câu `nguoi_dung`/`data_that` từ câu hỏi làm lab thật của học viên L3) · **Metric:** `eval/metric_spec.yaml` (**4 metric**).
 - **Chuẩn "đạt"** *(chốt trước **19:30 Thứ Sáu 27/11**, giữ nguyên đến **23:59 Thứ Bảy 28/11**)*:
   > **"Đạt khi ≥ 80% câu qua, và 100% câu `tu_choi` qua, và 100% mã nguồn `K5-DayXX/FILE#mục` được trích trong câu trả lời đều tồn tại trong chỉ mục tài liệu bài lab (`data/kb_index.json`)."**
-- **Kết quả:** lượt 1 `CHƯA KIỂM` (chạy trước CP3) · lượt 2 `CHƯA KIỂM` (chạy trước CP4) — run ID: `CHƯA KIỂM` → chi tiết `eval/report.md`, hồ sơ `eval/README.md`.
+- **Kết quả:** lượt 1 **28/30 đạt (93%)** (`thuong` 10/10 · `kho` 9/11 · `tu_choi` 9/9; 100% mã nguồn trích tồn tại trong `kb_index.json` — Đạt chuẩn) · lượt 2 `CHƯA KIỂM` (chạy trước CP4) — run ID: `run-1@20261128-003250` → chi tiết `eval/report.md`, hồ sơ `eval/README.md`.
 
 ## §8. Chi phí khi dùng thật
 - Persona + giá: `cost/personas.yaml` (`claude-haiku-5-5` vào \$0.10 / ra \$0.50 mỗi 1M token; `claude-sonnet-5-5` vào \$2.00 / ra \$10.00 mỗi 1M token — bảng giá BTC ngày `25/11/2026`) · lượt mô phỏng: `CHƯA KIỂM` (chạy `python run.py simulate --rate-from eval/run-2.csv` ≥ 50 phiên sau lượt 2).
@@ -166,6 +166,7 @@ flowchart TD
 | `27/11 20:55` | Đồng bộ mô tả kiến trúc 3 mức hướng dẫn & bộ câu thử 20 câu ở `spec.md` (§5, §6, §9), `README.md`, `data/DATA_CARD.md`, `eval/README.md`; cập nhật bảng giá Claude trong `cost/personas.yaml` và thêm regex chặn viết lại hàm ở `codebase/agent.py` (giữ nguyên §7 và `eval/metric_spec.yaml` đã khóa ở `41ff190`) | Đồng bộ các file mô tả phụ với thiết kế §4 và các câu tấn công `B16`–`B20` (đặc biệt `B18` nhờ viết lại hàm lỗi) trước khi tách 4 nhánh làm việc song song cho CP3 |
 | `27/11 22:45` | Cập nhật số liệu khảo sát 52 phản hồi học viên L3 đã ẩn danh (`evidence/survey/results.csv`, `evidence/summary.md`) vào `spec.md` §0–§2 & `canvas.md`, đồng bộ tham số giá Claude ở §8 và dựng bộ slide 8 trang `slides/slides.html` → `demo-slides.pdf` (giữ nguyên 100% §7) | Thay ước tính ban đầu ở §0–§2 bằng số khảo sát thật (`67,3%` từng sót/nhầm, `80,8%` mất ≥ 15 phút/mốc, `55,8%` hỏi AI chung) kèm trích dẫn nguyên văn và chuẩn bị sẵn ấn phẩm CP4 |
 | `28/11 06:45` | Hợp nhất 4 nhánh thành viên vào `main`: nối Web UI + hash `doc_sha256` chỉ mục (`codebase/`, `kb_index.json`), thêm `B21`–`B30` câu hỏi thật & `eval/run-1.csv` (`eval/`, `traces/`), cập nhật xác minh `52/52` phản hồi ngoài nhóm (`evidence/`), gắn link video 30s AI thật vào `README.md` và chặn `*.xlsx` chứa PII trong `.gitignore` (giữ nguyên 100% §7 và `eval/metric_spec.yaml`) | Hoàn thiện tích hợp toàn bộ hạng mục trước mốc nộp CP3 10:00 ngày 28/11 |
+| `28/11 07:35` | Chấm tay hoàn tất `eval/run-1.csv` (`28/30` đạt = `93%`: `thuong` 10/10 · `kho` 9/11 · `tu_choi` 9/9; trượt `B23`, `B28`), điền dòng kết quả Lượt 1 ở `spec.md` §7 (giữ nguyên 100% câu chốt `Chuẩn "đạt"` và `eval/metric_spec.yaml`), cập nhật `eval/README.md`, `eval/report.md` §1–§2 và `reflection/le-gia-hung.md` | Ghi nhận kết quả chạy thật `run-1@20261128-003250` (`python run.py score eval/run-1.csv`) trước mốc nộp CP3 10:00 ngày 28/11 |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)**
 

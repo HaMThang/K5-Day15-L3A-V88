@@ -37,7 +37,7 @@ Từ thống kê kiểm đếm **40 đơn vị bài lab lớp L3** ([evidence/la
 
 | Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
-| 1 | *(CP3)* | | | __/__ | | |
+| 1 | `run-1@20261128-003250` | `claude-haiku-5-5` | Luồng 4 bước Read-Only (BM25 `search_docs` + `get_section` + hậu kiểm nguồn & xoá code/JSON mẫu, 3 mức hướng dẫn) | **28/30** (`thuong` 10/10 · `kho` 9/11 · `tu_choi` 9/9) | **93%** | **Đạt** |
 | 2 | *(CP4)* | | | __/__ | | |
 
 ## 6. Lỗi chính
