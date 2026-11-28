@@ -1,6 +1,4 @@
-# Giả thuyết — viết TRƯỚC khi tìm bằng chứng (5 phút, commit ngay)
-
-> Điền ở guide bước 1.1. Viết **trước** khi thực hiện các cuộc phỏng vấn người dùng ngoài nhóm chiều 27/11 để không sửa giả thuyết cho khớp kết quả.
+# Giả thuyết ban đầu (viết trước khi thu thập bằng chứng)
 
 - **Ngày giờ viết:** `2026-11-27 15:15 UTC+7`
 - **Người dùng chính (một vai cụ thể):** Học viên khoá AI20K lớp L3 (**686 học viên toàn khoá**, nguồn: bảng xếp hạng XP toàn khoá trên cổng học, chụp 27/11: `evidence/sources/leaderboard-686.png`; lộ trình học 6 tuần trong đó 3 tuần đầu học liên tục Phase 1 mỗi ngày đều làm 1 bài lab) đang làm các bài lab hàng ngày có nhiều mốc checkpoint (trung bình 5,8 CP/lab) và nhiều file hướng dẫn.

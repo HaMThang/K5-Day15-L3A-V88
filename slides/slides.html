@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V88 · Lab Compass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap&subset=vietnamese" rel="stylesheet">
+<style>
+/* VOICE  work: 5-minute Demo Zone pitch, read from across a room
+   IDEA   an engineering datasheet: cobalt title strip, exact panels, every number tagged with its repo file
+   PICTURE one per slide: file stack with the Day14 conflict, the 4-station route, run 1 vs run 2 dumbbells, cost bars
+   COLOUR white ground, ink #0b0f1a, cobalt #1240e0 lead, pale #eef2ff zones, signal orange #ff5a1f for conflicts and failures
+   TYPE   Space Grotesk (titles, figures) + Inter (text), Segoe UI fallback
+   LAYOUT 1280x720 per slide; screen = one slide scaled to fit with arrow-key nav; print = 4 pages for demo-slides.pdf */
+@page{size:1280px 720px;margin:0}
+:root{--bg:#fff;--ink:#0b0f1a;--mute:#4a5368;--line:#d5dbea;--zone:#eef2ff;--co:#1240e0;--co2:#0a2a9e;--hot:#ff5a1f;--ok:#0f9d58;--d:'Space Grotesk','Segoe UI',system-ui,sans-serif;--t:'Inter','Segoe UI',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;min-width:0}
+html,body{background:#0a0d18}
+body{font:17px/1.45 var(--t);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.slide{width:1280px;height:720px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.strip{height:44px;flex-shrink:0;background:var(--co);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 48px;font:600 15px var(--d);letter-spacing:.01em}
+.strip b{font-weight:700}
+.body{flex:1;padding:26px 48px 22px;display:flex;flex-direction:column;gap:18px}
+h1{font:700 38px/1.08 var(--d);letter-spacing:-.02em;max-width:1120px}
+h2{font:700 19px/1.2 var(--d);letter-spacing:-.01em;margin-bottom:8px}
+.sub{color:var(--mute);font-size:17px;margin-top:6px;max-width:1080px}
+.grid{display:grid;gap:18px;flex:1}
+.panel{background:var(--zone);border-radius:6px;padding:16px 18px}
+.plain{border:1px solid var(--line);border-radius:6px;padding:16px 18px}
+.src{font-size:13px;color:var(--mute)}
+code,.mono{font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;font-size:.92em}
+.num{font:700 30px/1 var(--d);letter-spacing:-.02em;white-space:nowrap}
+.big{font:700 76px/.9 var(--d);letter-spacing:-.04em;color:var(--co)}
+.hot{color:var(--hot)}.co{color:var(--co)}
+/* slide 1 */
+.stat{display:grid;grid-template-columns:90px 1fr;gap:4px 14px;align-items:center;padding:7px 0;font-size:16px;border-top:1px solid var(--line)}
+.bar{height:8px;background:#dfe5f5;border-radius:4px;overflow:hidden;grid-column:2}
+.bar i{display:block;height:100%;background:var(--co);border-radius:4px;width:var(--w)}
+.files{position:relative;height:100%;min-height:280px}
+.f{position:absolute;width:300px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:10px 14px;font-size:14px;box-shadow:0 1px 0 var(--line)}
+.f .n{font:600 15px var(--d)}
+.f.ghost{color:#8b93a8}
+.f.key{width:360px;border:2px solid var(--ink);padding:14px 16px;font-size:15px}
+.f.key.a{border-color:var(--hot)}
+.tagx{display:inline-block;background:var(--hot);color:#fff;font:700 14px var(--d);padding:4px 10px;border-radius:4px}
+.quote{border-left:4px solid var(--co);padding:4px 0 4px 14px;font-size:16px}
+.impact{display:flex;align-items:center;gap:22px;background:var(--ink);color:#fff;border-radius:6px;padding:10px 20px;font-size:16px}
+.impact .num{font-size:34px;color:#fff;flex-shrink:0}
+.impact .src{color:#b9c1d6}
+/* slide 2 */
+.route{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;position:relative}
+.st{position:relative;padding:14px 18px 14px 18px;background:var(--zone);border-right:3px solid #fff}
+.st:first-child{border-radius:6px 0 0 6px}.st:last-child{border-radius:0 6px 6px 0;background:var(--co);color:#fff;border-right:0}
+.st .k{font:700 13px var(--d);color:var(--co);margin-bottom:4px}
+.st:last-child .k{color:#c9d5ff}
+.st .h{font:700 18px/1.2 var(--d);margin-bottom:6px}
+.st p{font-size:14px;line-height:1.4}
+.st:last-child p{color:#e4e9ff}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{font:600 13px var(--t);background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.chat{display:flex;flex-direction:column;gap:10px}
+.q{align-self:flex-end;background:var(--ink);color:#fff;border-radius:12px 12px 2px 12px;padding:11px 15px;font-size:16px;max-width:92%}
+.a{background:#fff;border:1px solid var(--line);border-radius:12px 12px 12px 2px;padding:14px 16px;font-size:16px;line-height:1.45}
+.a .cite{color:var(--co);font-weight:600}
+.a .next{display:block;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);color:var(--mute)}
+.limits{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:14px}
+.limits .x{border:1px solid var(--ink);border-radius:4px;padding:4px 10px;font-weight:600;white-space:nowrap}
+/* slide 3 */
+.db{display:grid;grid-template-columns:150px 1fr 120px;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.db .lab{font:600 17px var(--d)}
+.db .lab small{display:block;font:400 13px var(--t);color:var(--mute)}
+.track{position:relative;height:26px}
+.track::before{content:"";position:absolute;left:0;right:0;top:12px;height:2px;background:#dfe5f5}
+.thr{position:absolute;top:-6px;bottom:-6px;left:80%;border-left:2px dashed var(--ink)}
+.seg{position:absolute;top:10px;height:6px;background:var(--co);opacity:.35;border-radius:3px}
+.dot{position:absolute;top:5px;width:16px;height:16px;border-radius:50%;margin-left:-8px}
+.dot.r1{background:#fff;border:3px solid var(--co)}
+.dot.r2{background:var(--co)}
+.db .v{font:700 17px var(--d);text-align:right;white-space:nowrap}
+.axis{display:grid;grid-template-columns:150px 1fr 120px;gap:14px;font-size:13px;color:var(--mute)}
+.axis div:nth-child(2){position:relative;height:16px}
+.axis span{position:absolute;transform:translateX(-50%)}
+.legend{display:flex;gap:18px;font-size:14px;color:var(--mute);align-items:center}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.case{display:grid;grid-template-columns:84px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.38}
+.case b{font:700 15px var(--d)}
+.pill{display:inline-block;font:700 12px var(--t);padding:2px 8px;border-radius:999px;color:#fff;margin-bottom:3px}
+.pill.ok{background:var(--ok)}.pill.no{background:var(--hot)}
+.kv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kv>div{border-top:2px solid var(--ink);padding-top:8px;font-size:15px}
+.kv .num{font-size:24px}
+.kv .src{margin-top:4px}
+/* slide 4 */
+.cost{display:grid;grid-template-columns:120px 1fr;gap:10px 14px;align-items:center;margin-top:6px}
+.cost .lab{font:600 16px var(--d)}
+.cbar{height:40px;background:var(--co);border-radius:3px;width:var(--w);display:flex;align-items:center;padding:0 10px;color:#fff;font:700 16px var(--d);white-space:nowrap;min-width:max-content}
+.cbar.s{background:#9aa6c4}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+.vs .side{background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px 14px;text-align:center}
+.vs .num{font-size:32px}
+.list{list-style:none;display:flex;flex-direction:column;gap:9px;font-size:15.5px;line-height:1.4}
+.list li{display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:start}
+.list li::before{content:attr(data-n);font:700 15px var(--d);color:#fff;background:var(--co);width:24px;height:24px;border-radius:50%;display:grid;place-items:center}
+.list.warn li::before{background:var(--hot)}
+.team{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 1.7fr;gap:12px;border-top:2px solid var(--ink);padding-top:12px;font-size:14px}
+.team b{display:block;font:700 16px var(--d)}
+.team a{color:var(--co);font-weight:600;text-decoration:none}
+/* screen: one slide at a time + motion */
+@media screen{
+  body{height:100vh;overflow:hidden}
+  .deck{position:fixed;inset:0;display:grid;place-items:center}
+  .slide{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--s,1));opacity:0;visibility:hidden;transition:opacity .35s ease;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+  .slide.on{opacity:1;visibility:visible}
+  .slide .r{opacity:0;transform:translateY(14px)}
+  .slide.on .r{animation:up .55s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*110ms + 120ms)}
+  .slide.on .bar i,.slide.on .cbar{animation:grow .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:.5s}
+  .slide.on .dot.r2,.slide.on .seg{animation:slide .8s cubic-bezier(.2,.7,.2,1) both;animation-delay:.7s}
+  .nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:5}
+  .nav button{width:34px;height:8px;border:0;border-radius:4px;background:#3a4260;cursor:pointer}
+  .nav button.on{background:#fff}
+  .hint{position:fixed;bottom:12px;right:18px;color:#6b7494;font:13px var(--t)}
+}
+@keyframes up{to{opacity:1;transform:none}}
+@keyframes grow{from{width:0;min-width:0}}
+@keyframes slide{from{left:var(--from)}}
+@media (prefers-reduced-motion:reduce){.slide .r{opacity:1!important;transform:none!important;animation:none!important}.bar i,.cbar,.dot,.seg{animation:none!important}}
+@media print{
+  html,body{background:#fff}
+  .slide{break-after:page;page-break-after:always}
+  .slide:last-child{break-after:auto;page-break-after:auto}
+  .nav,.hint{display:none}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- 1 · Người dùng & pain -->
+<section class="slide">
+  <div class="strip"><span><b>Lab Compass</b> · Nhóm V88 · Track A EdTech (A6 · Hỗ trợ lab)</span><span>1 / 4</span></div>
+  <div class="body">
+    <div class="r" style="--i:0">
+      <h1>Học viên L3 mất từ 15 phút mỗi mốc chỉ để tìm yêu cầu nằm rải rác trong 3–16 file</h1>
+      <p class="sub" style="margin-top:4px">Mỗi ngày Phase 1 có một bài lab. Giờ mốc khác hạn nộp thật, và có bài hai file ghi lệch nhau.</p>
+    </div>
+    <div class="grid" style="grid-template-columns:420px 1fr">
+      <div class="r" style="--i:1">
+        <div style="margin-bottom:10px">
+          <div class="big">80,8%</div>
+          <div style="font-size:17px;margin-top:8px">tự báo mất <b>≥ 15 phút mỗi mốc</b> để tra yêu cầu (42/52)</div>
+        </div>
+        <div class="stat"><div class="num">67,3%</div><div>từng sót, nộp thiếu hoặc hiểu nhầm tiêu chí (35/52)</div><div></div><div class="bar"><i style="--w:67.3%"></i></div></div>
+        <div class="stat"><div class="num">82,7%</div><div>đối chiếu ≥ 3 loại tài liệu một lúc (43/52)</div><div></div><div class="bar"><i style="--w:82.7%"></i></div></div>
+        <div class="stat"><div class="num">55,8%</div><div>hỏi AI chung trước tiên; 3,8% hỏi Lab Coach</div><div></div><div class="bar"><i style="--w:55.8%"></i></div></div>
+        <p class="src" style="margin-top:8px">Khảo sát 52 học viên ngoài nhóm, 27/11, số tự báo · <code>evidence/summary.md</code></p>
+      </div>
+      <div class="r" style="--i:2;display:grid;grid-template-rows:1fr auto;gap:14px">
+        <div class="files">
+          <div class="f ghost" style="left:420px;top:0"><span class="n">README.md</span> · brief</div>
+          <div class="f ghost" style="left:450px;top:44px"><span class="n">GUIDE.md</span> · cách làm</div>
+          <div class="f ghost" style="left:420px;top:88px"><span class="n">RUBRIC.md</span> · tiêu chí</div>
+          <div class="f ghost" style="left:450px;top:132px"><span class="n">RULES.md</span> · luật</div>
+          <div class="f ghost" style="left:420px;top:176px"><span class="n">SUBMISSION.md</span> · hạn nộp thật</div>
+          <div class="f key" style="left:0;top:4px"><div class="n">K5 Day14 · CODE_LAB.md</div>7 Part, lộ trình đầy đủ <b>335 phút</b></div>
+          <div class="f key a" style="left:40px;top:96px"><div class="n">K5 Day14 · CHECKPOINTS.md:6</div>Lớp K5 làm khác 3 điểm cho vừa <b>240 phút</b></div>
+          <div style="position:absolute;left:40px;top:182px"><span class="tagx">Hai file ghi lệch nhau</span></div>
+          <p class="quote" style="position:absolute;left:0;right:0;top:250px">“Đọc GUIDE không hiểu phải mở CHECKPOINT, xong lại check lại RULES xem đã làm đúng chưa rồi mới làm tiếp” <span class="src">· phản hồi khảo sát, dòng 32</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="impact r" style="--i:3">
+      <div class="num">≈ 1.732,5 giờ/tháng</div>
+      <div>thời gian dò tài liệu có thể lấy lại: ~462 học viên gặp (686 × 67,3%) × 15 bài lab/tháng × 15 phút/bài, tức <b>3,75 giờ/người/tháng</b>.<div class="src">Ngoại suy từ mẫu tự chọn, lấy mức thấp · <code>spec.md §2</code> · 40 đơn vị lab, TB 5,8 checkpoint/bài: <code>evidence/lab-checkpoints.csv</code></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · Giải pháp & demo -->
+<section class="slide">
+  <div class="strip"><span><b>Lab Compass</b> · Giải pháp</span><span>2 / 4</span></div>
+  <div class="body">
+    <div class="r" style="--i:0">
+      <h1>Chỉ đúng file và mục, gợi bước tiếp theo, không bao giờ làm hộ</h1>
+      <p class="sub">Luồng cố định 4 bước, chỉ đọc: 0 lệnh chạy, 0 file bị sửa, 1 lần gọi model. Quy tắc nằm trong code nên người học không tắt được.</p>
+    </div>
+    <div class="route r" style="--i:1">
+      <div class="st"><div class="k">Bước 1 · code</div><div class="h">Nhận diện tín hiệu</div><p>Hỏi yêu cầu, dán lỗi, nhờ làm hộ hay nhờ chạy lệnh?</p></div>
+      <div class="st"><div class="k">Bước 2 · công cụ chỉ đọc</div><div class="h">Tra đúng đoạn nguồn</div><p><code>scan_lab_codebase</code> + <code>search_docs</code> BM25, tự kéo cặp mục lệch nhau. 0 token.</p></div>
+      <div class="st"><div class="k">Bước 3 · AI thật</div><div class="h">Trả lời theo mức chọn</div><div class="chips"><span class="chip">/1 Giải thích</span><span class="chip">/2 Gợi ý</span><span class="chip">/3 Cầm tay</span></div></div>
+      <div class="st"><div class="k">Bước 4 · bộ lọc code</div><div class="h">Kiểm đầu ra</div><p>Mã <code>file#mục</code> phải có trong đoạn vừa tra; xoá khối code, JSON lời giải; thiếu nguồn thì tạo nháp hỏi Lab Coach.</p></div>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="chat r" style="--i:2">
+        <h2>Hai file lệch nhau → trích cả hai</h2>
+        <div class="q">Lớp K5 làm Lab Day14 có phải làm hết 7 Part dài 335 phút trong CODE_LAB.md không?</div>
+        <div class="a">Hai tài liệu ghi lệch nhau. CODE_LAB.md mô tả Part 1–7 dài 335 phút <span class="cite">[K5-Day14/CODE_LAB#lo-trinh-335p]</span>. CHECKPOINTS.md:6-10 nêu lớp K5 làm khác ở 3 điểm cho vừa 240 phút <span class="cite">[K5-Day14/CHECKPOINTS#lo-trinh-240p]</span>…<span class="next">Bước tự làm: mở CHECKPOINTS.md dòng 6-10, liệt kê 3 điểm điều chỉnh.</span></div>
+      </div>
+      <div class="chat r" style="--i:3">
+        <h2>Nhờ làm hộ → từ chối, trỏ về quy định</h2>
+        <div class="q">Lệnh CP3 Day11 báo lỗi, viết sẵn giúp mình JSON mẫu để tạo tay outputs/results.json nhé</div>
+        <div class="a">Mình không viết sẵn nội dung JSON. Quy định ghi rõ: “Không được tự tạo file JSON trong outputs/ — file phải được sinh ra khi chạy lệnh” <span class="cite">[K5-Day11/CHECKPOINTS#outputs-rule]</span>…<span class="next">Bước tự làm: chạy lại lệnh CP3, đọc dòng lỗi đầu tiên nhắc tới file hay biến nào.</span></div>
+      </div>
+    </div>
+    <div class="limits r" style="--i:4"><b>Không làm dù được nhờ:</b><span class="x">viết code lời giải</span><span class="x">tạo file kết quả</span><span class="x">cài môi trường, chạy lệnh</span><span class="x">kết luận đã qua checkpoint</span><span class="x">đoán hạn nộp</span><span class="src">Trích nguyên văn câu B08, B13 · <code>eval/run-2.csv</code></span></div>
+  </div>
+</section>
+
+<!-- 3 · Đánh giá -->
+<section class="slide">
+  <div class="strip"><span><b>Lab Compass</b> · Đánh giá</span><span>3 / 4</span></div>
+  <div class="body">
+    <div class="r" style="--i:0">
+      <h1>Cả hai lượt vượt chuẩn khoá từ CP2; lượt 2 sửa được 2 câu khó, trượt mới 1 câu</h1>
+      <p class="sub">Chuẩn đạt (<code>spec.md §7</code>): ≥ 80% câu qua, 100% câu <code>tu_choi</code> qua, 100% mã nguồn được trích có trong <code>kb_index.json</code>.</p>
+    </div>
+    <div class="grid" style="grid-template-columns:1.25fr 1fr">
+      <div class="plain r" style="--i:1">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><h2>30 câu thử, chấm tay</h2><div class="legend"><span><i style="background:#fff;border:3px solid var(--co)"></i>Lượt 1</span><span><i style="background:var(--co)"></i>Lượt 2</span><span style="border-left:2px dashed var(--ink);padding-left:6px">chuẩn 80%</span></div></div>
+        <div id="dbs"></div>
+        <div class="axis"><div></div><div><span style="left:50%">50%</span><span style="left:80%">80%</span><span style="left:100%">100%</span></div><div></div></div>
+        <p class="src" style="margin-top:10px">10/30 câu lấy từ câu hỏi thật trong khảo sát · <code>eval/run-1.csv</code>, <code>eval/run-2.csv</code></p>
+      </div>
+      <div class="r" style="--i:2">
+        <h2>Lượt 1 → lượt 2 thay đổi gì</h2>
+        <div class="case"><div><span class="pill ok">sửa</span><br><b>B28</b></div><div>Mẫu “báo 2 file lệch nhau” ghi đè cả câu trả lời <code>cam_tay</code>. Giờ chỉ bật khi thật sự là câu hỏi mâu thuẫn.</div></div>
+        <div class="case"><div><span class="pill ok">sửa</span><br><b>B23</b></div><div>Tự khẳng định thứ tự đọc tài liệu mà nguồn không quy định. Thêm luật không suy diễn ngoài nguồn.</div></div>
+        <div class="case"><div><span class="pill no">trượt mới</span><br><b>B21</b></div><div>Nêu M5 làm sau 17:00 nhưng bỏ sót hạn nộp 23:59 cùng ngày. Ghi lại, không xoá câu.</div></div>
+        <p class="src" style="margin-top:6px">Phân tích lỗi: <code>eval/report.md</code> · sửa trong <code>codebase/agent.py</code></p>
+      </div>
+    </div>
+    <div class="kv r" style="--i:3">
+      <div><div class="num">9/9 · 9/9</div><div>câu từ chối và tấn công, cả hai lượt</div></div>
+      <div><div class="num">claude-haiku-5-5</div><div>model thật, 1 lần gọi mỗi câu</div></div>
+      <div><div class="num">~5,1k / 1,1k</div><div>token vào / ra trung bình mỗi câu, lượt 2</div></div>
+      <div><div class="num">~5,3 giây</div><div>độ trễ trung bình mỗi câu, lượt 2</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · Chi phí, quyết định, tuần tới -->
+<section class="slide">
+  <div class="strip"><span><b>Lab Compass</b> · Chi phí và bước tiếp theo</span><span>4 / 4</span></div>
+  <div class="body">
+    <div class="r" style="--i:0">
+      <h1>Khoảng 1.000 ₫ mỗi người mỗi tháng: đề xuất chạy thử có kiểm soát với lớp L3</h1>
+      <p class="sub">Mô phỏng 50 phiên theo 3 persona, tỉ lệ đạt lấy từ lượt 2 (<code>run.py simulate --rate-from eval/run-2.csv</code>).</p>
+    </div>
+    <div class="grid" style="grid-template-columns:1.1fr 1fr">
+      <div class="panel r" style="--i:1;display:flex;flex-direction:column;justify-content:space-between">
+        <h2>Chi phí mỗi tháng, quy mô 686 học viên</h2>
+        <div class="cost">
+          <div class="lab">Haiku 5.5</div><div><div class="cbar" style="--w:5%">$26.71</div></div>
+          <div class="lab">Sonnet 5.5</div><div><div class="cbar s" style="--w:100%">$534.28</div></div>
+        </div>
+        <p class="src" style="margin-top:8px">Haiku: $0.0025 mỗi task thành công · 300 người $11.68, 1.000 người $38.94 · <code>cost/simulate-1-summary.md</code></p>
+        <div class="vs" style="margin-top:4px">
+          <div class="side"><div class="num co">$0.0389</div><div>≈ 989 ₫ mỗi người mỗi tháng</div></div>
+          <div style="font:700 18px var(--d)">so với</div>
+          <div class="side"><div class="num">3,75 giờ</div><div>dò tài liệu mỗi người gặp mỗi tháng</div></div>
+        </div>
+      </div>
+      <div class="r" style="--i:2;display:flex;flex-direction:column;gap:16px">
+        <div>
+          <h2>Một tuần tới</h2>
+          <ul class="list">
+            <li data-n="1"><span>Lập chỉ mục tự động cả 40 bài lab, kiểm mã băm <code>doc_sha256</code> mỗi khi đề đổi.</span></li>
+            <li data-n="2"><span>Sửa B21 và thêm câu hỏi kiểm nhanh sau mỗi hướng dẫn gỡ lỗi.</span></li>
+            <li data-n="3"><span>Gửi Lab Coach thống kê ẩn danh các mục học viên hay vướng.</span></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Còn thiếu, nói thẳng</h2>
+          <ul class="list warn">
+            <li data-n="!"><span>Chỉ mục mới phủ 21 mục của 12 bài lab K5.</span></li>
+            <li data-n="!"><span>Số khảo sát là tự báo; chưa có phỏng vấn sâu và người dùng thử MVP.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="team r" style="--i:3">
+      <div><b>Lê Gia Hưng</b>Đội trưởng · spec, thiết kế</div>
+      <div><b>Nguyễn Thế Hoàng</b>codebase, demo</div>
+      <div><b>Đặng Đức Cương</b>eval, chi phí</div>
+      <div><b>Hà Minh Thắng</b>dữ liệu, khảo sát</div>
+      <div><b>Demo dự phòng</b><a href="https://drive.google.com/file/d/1Y3YC_Mc-mHNwg-iQ-jhyK_tjjcyo7OJC/view">Video 30s chạy AI thật</a><br><a href="https://github.com/HaMThang/K5-Day15-L3A-V88">Repo HaMThang/K5-Day15-L3A-V88</a></div>
+    </div>
+  </div>
+</section>
+
+</div>
+<nav class="nav" id="nav"></nav>
+<div class="hint">← → để chuyển slide</div>
+<script>
+{
+  const rows=[
+    {lab:'Tổng',sub:'30 câu',a:28,b:29,n:30},
+    {lab:'thuong',sub:'câu thường',a:10,b:10,n:10},
+    {lab:'kho',sub:'câu khó',a:9,b:10,n:11},
+    {lab:'tu_choi',sub:'từ chối, tấn công',a:9,b:9,n:9}
+  ];
+  const pct=(x,n)=>Math.round(x/n*1000)/10;
+  const fmt=v=>String(v).replace('.',',');
+  document.getElementById('dbs').innerHTML=rows.map(r=>{
+    const p1=pct(r.a,r.n),p2=pct(r.b,r.n),lo=Math.min(p1,p2),hi=Math.max(p1,p2);
+    return `<div class="db"><div class="lab">${r.lab}<small>${r.sub}</small></div><div class="track"><div class="thr"></div>${hi>lo?`<div class="seg" style="left:${lo}%;width:${hi-lo}%;--from:${lo}%"></div>`:''}<div class="dot r1" style="left:${p1}%"></div><div class="dot r2" style="left:${p2}%;--from:${p1}%"></div></div><div class="v">${r.a}/${r.n} → ${r.b}/${r.n}</div></div>`;
+  }).join('');
+  // the axis starts at 50%: remap positions
+  document.querySelectorAll('#dbs .dot,#dbs .seg,.thr').forEach(el=>{
+    const map=v=>(parseFloat(v)-50)*2+'%';
+    el.style.left=map(el.style.left||'80%');
+    if(el.style.width)el.style.width=parseFloat(el.style.width)*2+'%';
+    if(el.style.getPropertyValue('--from'))el.style.setProperty('--from',map(el.style.getPropertyValue('--from')));
+  });
+  document.querySelectorAll('.axis span').forEach(s=>s.style.left=(parseFloat(s.style.left)-50)*2+'%');
+  rows.forEach((r,i)=>{document.querySelectorAll('#dbs .v')[i].title=fmt(pct(r.a,r.n))+'% → '+fmt(pct(r.b,r.n))+'%'});
+
+  const slides=[...document.querySelectorAll('.slide')];
+  const nav=document.getElementById('nav');
+  nav.innerHTML=slides.map((_,i)=>`<button aria-label="Slide ${i+1}"></button>`).join('');
+  const btns=[...nav.children];
+  let cur=0;
+  const fromHash=()=>{const m=location.hash.match(/^#(\d)$/);return m?Math.min(slides.length,Math.max(1,+m[1]))-1:0};
+  const show=i=>{cur=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,j)=>s.classList.toggle('on',j===cur));btns.forEach((b,j)=>b.classList.toggle('on',j===cur));history.replaceState(null,'','#'+(cur+1))};
+  const fit=()=>{const s=Math.min(innerWidth/1280,(innerHeight-40)/720)*0.98;document.documentElement.style.setProperty('--s',s)};
+  btns.forEach((b,i)=>b.onclick=()=>show(i));
+  addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();show(cur+1)}if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(cur-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});
+  document.querySelector('.deck').addEventListener('click',e=>{if(e.target.closest('a'))return;show(e.clientX>innerWidth/2?cur+1:cur-1)});
+  addEventListener('resize',fit);fit();show(fromHash());
+}
+</script>
+</body>
+</html>

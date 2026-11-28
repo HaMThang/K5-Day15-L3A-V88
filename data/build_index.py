@@ -8,12 +8,20 @@ Nguyên tắc trung thực dữ liệu (01-challenge-brief#data & data/DATA_CARD
 
 Chạy:
     python data/build_index.py
+    python data/build_index.py --source-root <thu_muc_chua_Lab>
+
+`doc_sha256_scope` ghi `source_file` nếu có tài liệu gốc, hoặc `indexed_excerpt`
+nếu hash chỉ phản ánh bản trích trong chỉ mục.
 """
 from __future__ import annotations
 
+import argparse
 import csv
+import hashlib
 import json
 import os
+import sys
+from pathlib import Path
 from typing import Any
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +31,6 @@ CORPUS_VERSION = "K5-L3-Phase1-Labs (2026-11-27)"
 
 
 SECTIONS: list[dict[str, Any]] = [
-    # ==================== K5 Day01 ====================
     {
         "code": "K5-Day01/CHECKPOINTS#lich-3-moc",
         "lab": "K5 Day01 — AI Foundation",
@@ -38,7 +45,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day02 ====================
     {
         "code": "K5-Day02/CHECKPOINTS#lich-8-moc",
         "lab": "K5 Day02 — Discovery & Problem Framing",
@@ -66,7 +72,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day04 ====================
     {
         "code": "K5-Day04/CHECKPOINTS#react-loop",
         "lab": "K5 Day04 — ReAct Loop Agent",
@@ -81,7 +86,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day06 ====================
     {
         "code": "K5-Day06/CHECKPOINTS#benchmark-20",
         "lab": "K5 Day06 — Data Ingestion Engineering",
@@ -110,7 +114,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day07 ====================
     {
         "code": "K5-Day07/CHECKPOINTS#lich-4-moc",
         "lab": "K5 Day07 — Retrieval & Context",
@@ -125,7 +128,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day08 ====================
     {
         "code": "K5-Day08/CHECKPOINTS#lich-va-deadline",
         "lab": "K5 Day08 — From Workflows to Agents",
@@ -141,7 +143,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day09 ====================
     {
         "code": "K5-Day09/CHECKPOINTS#moc-m0-m5",
         "lab": "K5 Day09 — Evaluation & Failure Analysis",
@@ -156,7 +157,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day10 ====================
     {
         "code": "K5-Day10/CHECKPOINTS#poc-to-pilot",
         "lab": "K5 Day10 — PoC to Pilot Gate 1",
@@ -171,7 +171,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day11 ====================
     {
         "code": "K5-Day11/CHECKPOINTS#outputs-rule",
         "lab": "K5 Day11 — Guardrails, HITL & Responsible AI",
@@ -214,7 +213,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day12 ====================
     {
         "code": "K5-Day12/CHECKPOINTS#lich-cp0-cp5",
         "lab": "K5 Day12 — AI SDLC",
@@ -243,7 +241,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day13 ====================
     {
         "code": "K5-Day13/CHECKPOINTS#gan-nhan-doc-lap",
         "lab": "K5 Day13 — Launch Economics",
@@ -259,7 +256,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== K5 Day14 (có cặp mâu thuẫn / lệch giữa CHECKPOINTS.md và CODE_LAB.md) ====================
     {
         "code": "K5-Day14/CHECKPOINTS#lo-trinh-240p",
         "lab": "K5 Day14 — Deployment, Benchmark & Observability",
@@ -316,7 +312,6 @@ SECTIONS: list[dict[str, Any]] = [
         "conflicts_with": [],
     },
 
-    # ==================== Quy ước chung của chuỗi Lab L3 K5 ====================
     {
         "code": "K5-L3-General/QUY-UOC#nhip-lab-va-han-nop",
         "lab": "Quy ước chung các bài Lab ngày lớp L3 K5",
@@ -343,8 +338,27 @@ def count_csv_stats() -> dict[str, int]:
     return {"total_units": len(rows), "k5_daily_labs": k5_daily}
 
 
-def build() -> dict[str, Any]:
+def build(source_root: Path | None = None) -> dict[str, Any]:
     stats = count_csv_stats()
+    sections = []
+    for section in SECTIONS:
+        ref = section["file"]
+        relative = ref.split(":", 1)[0].split("#", 1)[0].split(" (", 1)[0]
+        if relative.startswith("evidence/"):
+            source = Path(ROOT) / relative
+        else:
+            source = source_root / relative if source_root is not None else None
+        if source is not None and source.is_file():
+            content = source.read_bytes()
+            scope = "source_file"
+        else:
+            content = json.dumps(section, ensure_ascii=False, sort_keys=True).encode("utf-8")
+            scope = "indexed_excerpt"
+        sections.append({
+            **section,
+            "doc_sha256": hashlib.sha256(content).hexdigest()[:8],
+            "doc_sha256_scope": scope,
+        })
     payload = {
         "version": CORPUS_VERSION,
         "updated_at": "2026-11-27T15:15:00+07:00",
@@ -354,8 +368,8 @@ def build() -> dict[str, Any]:
             "chỉ lưu tóm tắt + trích đoạn ngắn (≤ 60 từ), không chứa tài liệu nguyên văn và không chứa nội dung Hackathon."
         ),
         "corpus_stats": stats,
-        "section_count": len(SECTIONS),
-        "sections": SECTIONS,
+        "section_count": len(sections),
+        "sections": sections,
     }
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, "w", encoding="utf-8", newline="\n") as f:
@@ -365,7 +379,13 @@ def build() -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    data = build()
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--source-root", type=Path, help="Thư mục tài liệu gốc chứa Lab/")
+    args = parser.parse_args()
+    if args.source_root is not None and not (args.source_root / "Lab").is_dir():
+        parser.error("--source-root phải chứa thư mục Lab/")
+    data = build(args.source_root)
     conflict_count = sum(1 for s in data["sections"] if s.get("conflicts_with"))
     print(
         f"Đã tạo {OUT_PATH}: {data['section_count']} mục từ {data['corpus_stats']['k5_daily_labs']} bài Lab ngày K5 "
