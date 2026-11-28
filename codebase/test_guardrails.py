@@ -41,7 +41,7 @@ class GuardrailTests(unittest.TestCase):
     def test_compose_is_one_markdown_block(self):
         out = agent._compose("Trả lời.", "- `A/B#c` · B.md:3", "Mở `B.md`.", "[Bản nháp]\n\"Chào coach\"")
         self.assertIn("**Nguồn tài liệu Lab:**\n- `A/B#c`", out)
-        self.assertIn("> **Bản nháp**\n> \"Chào coach\"", out)
+        self.assertIn("> **Bản nháp**\n>\n> \"Chào coach\"", out)
 
     def test_model_error_returns_honest_message(self):
         original = agent.call_model

@@ -57,3 +57,4 @@ button:focus-visible,textarea:focus-visible{outline:2px solid #8be1ff;outline-of
 .markdown code{font-family:Consolas,'Cascadia Code',monospace;font-size:12px;background:#0b2141;border:1px solid #2f5584;border-radius:4px;padding:1px 5px;color:#9fe0ff;overflow-wrap:anywhere}
 .markdown blockquote{margin:12px 0 0;padding:10px 12px;border-left:3px solid #58c8ff;background:#0f2747;border-radius:0 8px 8px 0;color:#d6e8fb}
 .markdown blockquote p{margin:0 0 6px}
+.markdown blockquote .copy{margin-top:4px;font-size:10px}

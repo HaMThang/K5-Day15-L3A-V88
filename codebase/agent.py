@@ -295,7 +295,7 @@ def _compose(body: str, sources: str = "", next_step: str = "", draft: str = "",
         parts.append(f"**Bước tiếp theo tự làm:** {next_step.strip()}")
     if draft:
         title, _, rest = draft.partition("\n")
-        parts.append(f"> **{title.strip('[]')}**\n> {rest.strip()}")
+        parts.append(f"> **{title.strip('[]')}**\n>\n> {rest.strip()}")
     return "\n\n".join(p for p in parts if p)
 
 

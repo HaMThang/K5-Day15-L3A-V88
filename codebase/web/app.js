@@ -79,6 +79,20 @@ function addResponse(text) {
   const bubble = document.createElement('div');
   bubble.className = 'bubble response-bubble markdown';
   bubble.innerHTML = renderMarkdown(text);
+  bubble.querySelectorAll('blockquote').forEach(quote => {
+    const draft = quote.querySelectorAll('p')[1] || quote;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'copy';
+    button.textContent = 'Chép bản nháp';
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(draft.innerText.replace(/^"|"$/g, ''));
+        button.textContent = 'Đã chép, bạn sửa rồi gửi nhé';
+      } catch (_) { button.textContent = 'Không chép được'; }
+    });
+    quote.append(button);
+  });
   message.append(heading, bubble);
   conversation.append(message);
 }
