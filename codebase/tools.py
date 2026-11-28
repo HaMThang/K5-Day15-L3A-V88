@@ -1,6 +1,7 @@
 """4 công cụ chỉ đọc (Read-Only) cho trợ lý bài Lab L3 — Nhóm V88."""
 from __future__ import annotations
 
+import ast
 import json
 import math
 import os
@@ -26,7 +27,7 @@ _SKIP_DIRS = {
     ".mypy_cache", "data-btc", ".idea", ".vscode", ".claude", ".gemini", ".codex",
 }
 _ALLOWED_EXTS = {".md", ".py", ".yaml", ".yml", ".toml", ".txt"}
-_MAX_SCAN_FILES = 60
+_MAX_SCAN_FILES = 150
 _MAX_FILE_BYTES = 48_000
 _PIECE_CHARS = 400          # độ dài tối đa một đoạn khi chia mục markdown dài (thư mục lab của học viên)
 _MAX_PIECES_PER_FILE = 40   # số đoạn tối đa mỗi file markdown
@@ -199,6 +200,49 @@ def _chunk_code(repo_name: str, rel_path: str, lines: list[str]) -> tuple[str, l
         meta += " · TODO: " + "; ".join(todos[:3])
 
     secs: list[dict[str, Any]] = []
+    # Docstring đầu file thường là hướng dẫn của bài lab: tách thành các đoạn riêng để tra cứu được.
+    try:
+        doc = ast.get_docstring(ast.parse("\n".join(lines))) or ""
+    except (SyntaxError, ValueError):
+        doc = ""
+    doc_lines = [x for x in doc.splitlines() if x.strip()]
+    piece: list[str] = []
+    pieces: list[list[str]] = []
+    for ln in doc_lines:
+        if piece and sum(len(x) + 1 for x in piece) + len(ln) > _PIECE_CHARS:
+            pieces.append(piece)
+            piece = []
+        piece.append(ln.strip())
+    if piece:
+        pieces.append(piece)
+    for p_idx, part in enumerate(pieces[:6], start=1):
+        text = " ".join(part)
+        secs.append({
+            "code": f"{repo_name}/{rel_path}#docstring" + (f"-p{p_idx}" if p_idx > 1 else ""),
+            "lab": repo_name,
+            "file": f"{rel_path}:1",
+            "title": f"{rel_path} · docstring đầu file",
+            "keywords": [],
+            "summary": text[:420],
+            "quote": text[:220],
+            "conflicts_with": [],
+        })
+    # Mỗi dòng TODO/FIXME kèm vài dòng xung quanh, để học viên hỏi "TODO CP3" thì tra đúng chỗ cần sửa.
+    todo_idx = [i for i, ln in enumerate(lines) if "TODO" in ln or "FIXME" in ln][:8]
+    for i in todo_idx:
+        s_i, e_i = max(0, i - 2), min(len(lines), i + 7)
+        block = [ln.rstrip() for ln in lines[s_i:e_i]]
+        text = " ".join(x.strip() for x in block if x.strip())
+        secs.append({
+            "code": f"{repo_name}/{rel_path}#todo-L{i + 1}",
+            "lab": repo_name,
+            "file": f"{rel_path}:{s_i + 1}-{e_i}",
+            "title": f"{rel_path} · {lines[i].strip()[:80]}",
+            "keywords": [],
+            "summary": text[:420],
+            "quote": "\n".join(f"L{s_i + 1 + k}: {x}" for k, x in enumerate(block))[:260],
+            "conflicts_with": [],
+        })
     step = 60
     for start_idx in range(0, min(len(lines), 240), step):
         chunk = lines[start_idx:start_idx + step]
@@ -230,36 +274,41 @@ def _index_local_repo(repo_path: str) -> dict[str, Any]:
     outline: list[str] = []
     sections: list[dict[str, Any]] = []
 
-    count = 0
+    # Gom mọi file phù hợp rồi ưu tiên .md và file nằm gần thư mục gốc, để giới hạn số file không cắt mất tài liệu chính.
+    candidates: list[tuple[int, int, str, str, str]] = []
     for cur_root, dirs, files in os.walk(abs_root):
         dirs[:] = sorted(d for d in dirs if d not in _SKIP_DIRS and not d.startswith("."))
         for fname in sorted(files):
-            if count >= _MAX_SCAN_FILES:
-                break
-            if _is_secret_filename(fname):
-                continue
             ext = os.path.splitext(fname)[1].lower()
-            if ext not in _ALLOWED_EXTS:
+            if ext not in _ALLOWED_EXTS or _is_secret_filename(fname):
                 continue
             full_path = os.path.join(cur_root, fname)
-            try:
-                if os.path.getsize(full_path) > _MAX_FILE_BYTES:
-                    continue
-                with open(full_path, encoding="utf-8", errors="replace") as f:
-                    lines = f.read().splitlines()
-            except OSError:
-                continue
-
-            count += 1
             rel_path = os.path.relpath(full_path, abs_root).replace(os.sep, "/")
-            if ext == ".md":
-                files_md.append(rel_path)
-                out_item, new_secs = _chunk_markdown(repo_name, rel_path, fname, lines)
-            else:
-                files_code.append(rel_path)
-                out_item, new_secs = _chunk_code(repo_name, rel_path, lines)
-            outline.append(out_item)
-            sections.extend(new_secs)
+            candidates.append((0 if ext == ".md" else 1, rel_path.count("/"), rel_path, full_path, fname))
+    candidates.sort()
+
+    count = 0
+    for _, _, rel_path, full_path, fname in candidates:
+        if count >= _MAX_SCAN_FILES:
+            break
+        ext = os.path.splitext(fname)[1].lower()
+        try:
+            if os.path.getsize(full_path) > _MAX_FILE_BYTES:
+                continue
+            with open(full_path, encoding="utf-8", errors="replace") as f:
+                lines = f.read().splitlines()
+        except OSError:
+            continue
+
+        count += 1
+        if ext == ".md":
+            files_md.append(rel_path)
+            out_item, new_secs = _chunk_markdown(repo_name, rel_path, fname, lines)
+        else:
+            files_code.append(rel_path)
+            out_item, new_secs = _chunk_code(repo_name, rel_path, lines)
+        outline.append(out_item)
+        sections.extend(new_secs)
 
     tf_maps: list[Counter[str]] = []
     doc_lens: list[int] = []

@@ -17,7 +17,7 @@ const clearLab = document.querySelector('#clear-lab');
 const SKIP_DIRS = new Set(['.git', '.venv', 'venv', '__pycache__', 'node_modules', '.pytest_cache', '.mypy_cache',
   'data-btc', '.idea', '.vscode', '.claude', '.gemini', '.codex']);
 const ALLOWED_EXTS = new Set(['.md', '.py', '.yaml', '.yml', '.toml', '.txt']);
-let limits = {max_files: 60, max_file_bytes: 48000};
+let limits = {max_files: 150, max_file_bytes: 48000};
 let labId = '';
 const NO_LAB = 'Chưa chọn · dùng chỉ mục 12 bài Lab K5';
 

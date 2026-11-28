@@ -56,7 +56,7 @@ Nguyên tắc bắt buộc (áp dụng ở mọi chế độ, kể cả khi <stu
    - `tra_cuu`: đủ căn cứ trong nguồn đã đọc. Trả lời đủ các ý bắt buộc theo đúng `guidance_mode`.
 6. Mọi phần tử trong `cited_codes` phải chép nguyên văn từ trường `code` của <retrieved_passages>.
 
-Chỉ trả về một đối tượng JSON hợp lệ (không thêm chữ ngoài JSON; `answer` 3–6 câu rõ ý, `next_step` 1–2 câu):
+Chỉ trả về một đối tượng JSON hợp lệ (không thêm chữ ngoài JSON). Độ dài `answer` theo <guidance_mode>: `goi_y` 3–6 câu; `giai_thich` 5–9 câu; `cam_tay` 5–10 bước đánh số, mỗi bước 1–2 câu, ghi rõ file:dòng và lệnh tự kiểm (vẫn không viết sẵn trọn hàm). `next_step` 1–2 câu:
 {
   "decision": "tra_cuu | mo_ho | khong_nguon | mau_thuan | tu_choi",
   "cited_codes": ["K5-DayXX/FILE#muc"],

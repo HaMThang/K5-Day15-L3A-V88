@@ -149,7 +149,7 @@ def serve_web() -> int:
     upload_root = Path(tempfile.mkdtemp(prefix="labcompass-"))
     uploads: dict[str, tuple[float, str]] = {}
     upload_hits: dict[str, list[float]] = {}
-    upload_ttl, max_uploads, max_upload_bytes = 3600, 30, 4_000_000
+    upload_ttl, max_uploads, max_upload_bytes = 3600, 30, 10_000_000
 
     def drop_upload(lab_id: str) -> None:
         _, path = uploads.pop(lab_id, (0.0, ""))

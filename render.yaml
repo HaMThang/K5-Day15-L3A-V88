@@ -18,6 +18,8 @@ services:
         value: anthropic
       - key: MODEL_NAME
         value: claude-haiku-5-5
+      - key: MAX_OUTPUT_TOKENS
+        value: "4096"
       - key: RATE_LIMIT_PER_HOUR
         value: "10"
       - key: RATE_LIMIT_PER_DAY
